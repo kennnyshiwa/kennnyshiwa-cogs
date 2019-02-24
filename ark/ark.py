@@ -5,7 +5,7 @@ from redbot.core import commands
 
  __author__="kennnyshiwa and Berju"
 
-class ARKCog:
+class ARKCog(Commands.Cog):
     """ARK lookup Cog"""
 
     special_queries = {

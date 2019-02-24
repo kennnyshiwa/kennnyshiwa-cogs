@@ -3,7 +3,7 @@ import requests
 from discord import Embed
 from redbot.core import commands
 
- __author__="kennnyshiwa and Berju"
+ __author__="kennnyshiwa and Beryju"
 
 class ARKCog(Commands.Cog):
     """ARK lookup Cog"""

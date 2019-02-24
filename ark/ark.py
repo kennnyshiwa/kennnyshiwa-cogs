@@ -1,7 +1,7 @@
 """discord red-bot ark search"""
 import requests
 from discord import Embed
-from discord.ext import commands
+from redbot.core import commands
 
 
 class ARKCog:

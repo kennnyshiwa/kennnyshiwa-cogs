@@ -11,7 +11,7 @@ Search through Intel's ARK database.
 ```
 !repo add kennnyshiwa https://github.com/kennnyshiwa/kennnyshiwa-cogs
 I agree
-!cog install BeryJu ark
+!cog install kennnyshiwa ark
 yes
 ```
 Contributors:

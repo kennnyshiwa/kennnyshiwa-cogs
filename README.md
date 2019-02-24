@@ -9,7 +9,7 @@ Search through Intel's ARK database.
 #### Installation
 
 ```
-!eepo add kennnyshiwa https://github.com/kennnyshiwa/kennnyshiwa-cogs
+!repo add kennnyshiwa https://github.com/kennnyshiwa/kennnyshiwa-cogs
 I agree
 !cog install BeryJu ark
 yes

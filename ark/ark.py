@@ -3,6 +3,7 @@ import requests
 from discord import Embed
 from redbot.core import commands
 
+ __author__="kennnyshiwa and Berju"
 
 class ARKCog:
     """ARK lookup Cog"""

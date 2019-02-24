@@ -14,5 +14,7 @@ I agree
 !cog install BeryJu ark
 yes
 ```
+Contributors:
 
+Thanks to Beryju for the orginial code, adapted to red v3 by kennnyshiwa
 "# kennnyshiwa-cogs" 

@@ -3,9 +3,9 @@ import requests
 from discord import Embed
 from redbot.core import commands
 
- __author__="kennnyshiwa and Beryju"
+__author__="kennnyshiwa and Beryju"
 
-class ARKCog(Commands.Cog):
+class ARKCog(commands.Cog):
     """ARK lookup Cog"""
 
     special_queries = {
@@ -64,6 +64,3 @@ class ARKCog(Commands.Cog):
             embed.add_field(name=field, value=cpu_data[field])
         await self.bot.say(embed=embed)
 
-def setup(bot):
-    """setup"""
-    bot.add_cog(ARKCog(bot))

@@ -1,0 +1,26 @@
+
+28 lines (28 sloc) 708 Bytes
+{
+    "author" : [
+        "Kennnyshiwa"
+    ],
+    "bot_version" : [
+        3,
+        0,
+        0
+    ],
+    "description" : "Retrieves info from Intel's ARK database.",
+    "disabled" : false,
+    "hidden" : false,
+    "install_msg" : "How to use, `[p]ark <query> <field_to_display>` ",
+    "min_python_version" : [
+        3,
+        6,
+        2
+    ],
+    "name" : "ark",
+    "required_cogs" : [],
+    "requirements" : [],
+    "short" : "Retrieves info from Intel's ARK database.",
+    "tags" : [],
+"type" : "COG"

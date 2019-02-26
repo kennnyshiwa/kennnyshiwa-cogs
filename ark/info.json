@@ -21,4 +21,5 @@
     "requirements" : [],
     "short" : "Retrieves info from Intel's ARK database.",
     "tags" : [],
-"type" : "COG"
+    "type" : "COG"
+}

@@ -19,7 +19,7 @@ You can reach me on Discord kennnyshiwa#1337
 
 You can also join my [Discord Server](https://discord.gg/eYFxDJC) . Feel free to DM if you need any help or have questions
 
-####Contributors:
+#### Contributors:
 
 Thanks to Beryju for the orginial code, adapted to red v3 by kennnyshiwa
 "# kennnyshiwa-cogs" 

@@ -6,7 +6,7 @@ class Invite(commands.Cog):
     def __init__(self,bot):
         self.bot = bot
 
-@commands.command()
+@invite.command()
 async def invite(self, ctx):
     """Show's Red's invite url"""
     embed=discord.Embed(description="Thanks for chossing to invite {name} to your server".format(name=ctx.bot.user.display_name), color=0xe78518)

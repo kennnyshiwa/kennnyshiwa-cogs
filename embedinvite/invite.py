@@ -3,7 +3,7 @@ import discord
 from redbot.core import commands, checks, Config
 
 class Invite(commands.Cog):
-    def __init__(self,bot):
+    def __init__(self, bot):
         self.bot = bot
 
 @invite.command()

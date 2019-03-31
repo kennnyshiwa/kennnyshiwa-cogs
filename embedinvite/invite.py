@@ -2,12 +2,12 @@ import discord
 
 from redbot.core import commands, checks, Config
 
-class invite(commands.Cog):
+class Invite(commands.Cog):
     def __init__(self,bot):
         self.bot = bot
 
 @commands.command()
-async def invite(self, ctx: commands.Context):
+async def invite(self, ctx):
     """Show's Red's invite url"""
     embed=discord.Embed(description="Thanks for chossing to invite {name} to your server".format(name=ctx.bot.user.display_name), color=0xe78518)
     embed.set_author(name=ctx.bot.user.name, icon_url=ctx.bot.user.avatar_url_as(static_format="png"))

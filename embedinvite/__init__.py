@@ -1,6 +1,6 @@
-from .invite import invite
+from .invite import Invite
 
 def setup(bot):
-    bot.add_cog(invite(bot))
+    bot.add_cog(Invite(bot))
     bot.remove_cog(invite)
     

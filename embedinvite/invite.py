@@ -1,6 +1,9 @@
 import discord
 
-bot.remove_command(invite)
+class invite(commands.Cog):
+    def __init__(self,bot):
+        self.bot = bot
+        
 @commands.command()
 async def invite(self, ctx: commands.Context):
     """Show's Red's invite url"""

@@ -5,6 +5,7 @@
 
 ## Cogs
 Ark - Retrieves info from Intel's ARK database for CPU's (Currently broken, do not install)
+
 Embedinvite - Removes the default invite command with a pretty embed that also includes options like support server for the bot and descriptions.
 
 #### Installation

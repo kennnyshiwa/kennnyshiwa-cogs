@@ -121,7 +121,7 @@ class Invite(commands.Cog):
         embed.set_thumbnail(url=ctx.bot.user.avatar_url_as(static_format="png"))
         embed.add_field(
             name="Bot Invite",
-            value="https://discordapp.com/oauth2/authorize?client_id={}&scope=bot&botpermissions={}".format(
+            value="https://discordapp.com/oauth2/authorize?client_id={}&scope=bot&permissions={}".format(
                 self.bot.user.id, permissions
             ),
         )

@@ -40,14 +40,18 @@ class Invite(commands.Cog):
 
     @inviteset.command()
     async def colour(self, ctx, colour: discord.Colour):
-        """Set colour of embed."""
+        """
+        Set colour of the embed.
+        Accepts either a hex value or color name.
+        Default: Black
+        """
         await self.config.colour.set(colour.value)
         await ctx.send("Embed colour set.")
 
     @inviteset.command()
     async def description(self, ctx, *, text: str = ""):
         """
-        Set embed description.
+        Set the embed description.
         Set to None if you don't want description.
         Default: "Thanks for choosing to invite {botname} to your server"
         """
@@ -62,7 +66,10 @@ class Invite(commands.Cog):
 
     @inviteset.command()
     async def support(self, ctx, toggle: bool = True):
-        """Choose if you want support field."""
+        """
+        Choose if you want support field.
+        Default: True
+        """
         if toggle:
             await self.config.support.set(True)
             await ctx.send("Support field set to `True`.")
@@ -72,7 +79,10 @@ class Invite(commands.Cog):
 
     @inviteset.command()
     async def supportserv(self, ctx, supportserver):
-        """Set support server."""
+        """
+        Set a support server.
+        Enter the invite link to your server.
+        """
         await self.config.support_serv.set(supportserver)
         await ctx.send("Support server set.")
 

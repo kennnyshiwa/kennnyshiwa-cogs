@@ -1,1 +1,1 @@
-from .invite import Invite    
+from .invite import setup    

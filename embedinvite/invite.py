@@ -89,7 +89,10 @@ class Invite(commands.Cog):
     @commands.command()
     @commands.bot_has_permissions(embed_links=True)
     async def invite(self, ctx):
-        """Send personalized invite for the bot."""
+        """
+        Send personalized invite for the bot.
+        By default this invite link has all permissions turned on.
+        """
         support_serv = await self.config.support_serv()
         support = await self.config.support()
         if support_serv is None and support is True:
@@ -103,7 +106,7 @@ class Invite(commands.Cog):
         embed.set_thumbnail(url=ctx.bot.user.avatar_url_as(static_format="png"))
         embed.add_field(
             name="Bot Invite",
-            value="https://discordapp.com/oauth2/authorize?client_id={}&scope=bot".format(
+            value="https://discordapp.com/oauth2/authorize?client_id={}&scope=bot&botpermissions=2146958847".format(
                 self.bot.user.id
             ),
         )

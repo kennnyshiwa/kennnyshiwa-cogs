@@ -9,9 +9,14 @@ old_invite = None
 
 class Invite(commands.Cog):
     def __init__(self, bot):
+        default = {"support_serv": None}
         self.bot = bot
+        self.config = Config.get_conf(self, 376564057517457408, force_registration=True)
+        self.config.register_global(**default)
 
-    def _unload(self):
+    def _unload(
+        self
+    ):  # We remove this version of invite command at unload of the cog, after that a restart is needed to restore original version
         global old_invite
         if old_invite:
             try:
@@ -20,11 +25,26 @@ class Invite(commands.Cog):
                 pass
             self.bot.add_command(old_invite)
 
-    @commands.command()
+    @checks.is_owner()
+    @commands.group()
+    async def inviteset(self, ctx):
+        """Settings for embedinvite cog."""
+        pass
+
+    @inviteset.command()
+    async def support(self, ctx, supportserver):  # A little example to how to use config
+        """Set support server."""
+        await self.config.support_serv.set(supportserver)
+        await ctx.send("Support server set.")
+
+    @commands.command()  # You need to use commands.command() / invite.command() would be for a command group
     async def invite(self, ctx):
         """Show's Red's invite url"""
+        support = await self.config.support_serv()
+        if support is None:  # Check if owner as set support server.
+            return await ctx.send("Owner need to set support server !")
         embed = discord.Embed(
-            description="Thanks for chossing to invite {name} to your server".format(
+            description="Thanks for choosing to invite {name} to your server".format(
                 name=ctx.bot.user.display_name
             ),
             color=0xE78518,
@@ -34,13 +54,15 @@ class Invite(commands.Cog):
         )
         embed.set_thumbnail(url=ctx.bot.user.avatar_url_as(static_format="png"))
         embed.add_field(
-            name="Bot Invite",
-            value="https://discordapp.com/oauth2/authorize?client_id=540694922307698690&scope=bot&permissions=2146958847",
+            name="Bot Invite",  # I don't know how to add permissions for a link like that, need to check it
+            value="https://discordapp.com/oauth2/authorize?client_id={}&scope=bot".format(
+                self.bot.user.id
+            ),
         )
-        embed.add_field(name="Support Server", value="https://discord.gg/eYFxDJC")
+        embed.add_field(name="Support Server", value="{}".format(support))
         embed.set_footer(
-            text="{name} made possible with the support of Red Discord Bot".format(
-                name=ctx.bot.user.display_name
+            text="{} made possible with the support of Red Discord Bot".format(
+                ctx.bot.user.display_name
             ),
             icon_url="https://cdn.discordapp.com/icons/133049272517001216/83b39ff510bb7c3f5aeb51270af09ad3.webp",
         )
@@ -51,6 +73,7 @@ def setup(bot):
     invite = Invite(bot)
     global old_invite
     old_invite = bot.get_command("invite")
-    if old_invite:
+    if old_invite:  # This used for removing old invite command, and then add the cog,
+        # otherwise you can't load it cause of already existing command
         bot.remove_command(old_invite.name)
     bot.add_cog(invite)

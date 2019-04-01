@@ -91,7 +91,6 @@ class Invite(commands.Cog):
     async def invite(self, ctx):
         """
         Send personalized invite for the bot.
-        By default this invite link has all permissions turned on.
         """
         support_serv = await self.config.support_serv()
         support = await self.config.support()

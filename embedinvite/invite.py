@@ -19,6 +19,7 @@ class Invite(commands.Cog):
             "description": "Thanks for choosing to invite {name} to your server".format(
                 name=self.bot.user.name
             ),
+            "setpermissions": ""
         }
         self.config = Config.get_conf(self, 376564057517457408, force_registration=True)
         self.config.register_global(**default)
@@ -86,16 +87,31 @@ class Invite(commands.Cog):
         await self.config.support_serv.set(supportserver)
         await ctx.send("Support server set.")
 
+    @inviteset.command()
+    async def setpermissions(self, ctx, *, text: int = ""):
+        """Set the default permissions value for your bot.
+        Get the permissions value from https://discordapi.com/permissions.html
+        """
+        if text == "":
+            await self.config.setpermissions.clear()
+            return await ctx.send("Permissions value reset")
+        elif text == "None":
+            await self.config.setpermission.set("")
+            return await ctx.send("Permissions value disabled")
+        await self.config.setpermissions.set(text)
+        await ctx.send("Permissions set")
+
     @commands.command()
     @commands.bot_has_permissions(embed_links=True)
     async def invite(self, ctx):
         """
         Send personalized invite for the bot.
         """
+        permissions = await self.config.setpermissions()
         support_serv = await self.config.support_serv()
         support = await self.config.support()
         if support_serv is None and support is True:
-            return await ctx.send("Owner need to set support server !")
+            return await ctx.send("Owner needs to set support server !")
         embed = discord.Embed(
             description=await self.config.description(), color=await self.config.colour()
         )
@@ -105,8 +121,8 @@ class Invite(commands.Cog):
         embed.set_thumbnail(url=ctx.bot.user.avatar_url_as(static_format="png"))
         embed.add_field(
             name="Bot Invite",
-            value="https://discordapp.com/oauth2/authorize?client_id={}&scope=bot&botpermissions=2146958839".format(
-                self.bot.user.id
+            value="https://discordapp.com/oauth2/authorize?client_id={}&scope=bot&botpermissions={}".format(
+                self.bot.user.id, permissions
             ),
         )
         if support:

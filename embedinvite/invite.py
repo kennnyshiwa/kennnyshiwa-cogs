@@ -1,6 +1,8 @@
+# Remove command logic originally from : https://github.com/mikeshardmind/SinbadCogs/tree/v3/messagebox
+
 import discord
 
-from redbot.core import commands
+from redbot.core import commands, checks, Config
 
 old_invite = None
 
@@ -45,14 +47,10 @@ class Invite(commands.Cog):
         await ctx.send(embed=embed)
 
 
-def _unload(bot):
-    bot.add_command("invite")
-
-
 def setup(bot):
     invite = Invite(bot)
     global old_invite
     old_invite = bot.get_command("invite")
     if old_invite:
-        bot.remove_command(old_invite)
+        bot.remove_command(old_invite.name)
     bot.add_cog(invite)

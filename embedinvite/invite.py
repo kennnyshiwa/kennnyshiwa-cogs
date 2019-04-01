@@ -9,7 +9,10 @@ old_invite = None
 
 class Invite(commands.Cog):
     def __init__(self, bot):
-        default = {"support_serv": None}
+        default = {
+            "support_serv": None,
+            "colour": 0
+        }
         self.bot = bot
         self.config = Config.get_conf(self, 376564057517457408, force_registration=True)
         self.config.register_global(**default)
@@ -32,14 +35,21 @@ class Invite(commands.Cog):
         pass
 
     @inviteset.command()
+    async def colour(self, ctx, colour: discord.Colour):
+        """Set colour of embed."""
+        await self.config.colour.set(colour.value)
+        await ctx.send("Embed colour set.")
+
+    @inviteset.command()
     async def support(self, ctx, supportserver):  # A little example to how to use config
         """Set support server."""
         await self.config.support_serv.set(supportserver)
         await ctx.send("Support server set.")
 
     @commands.command()  # You need to use commands.command() / invite.command() would be for a command group
+    @commands.bot_has_permissions(embed_links=True)
     async def invite(self, ctx):
-        """Show's Red's invite url"""
+        """Send personalized invite for the bot."""
         support = await self.config.support_serv()
         if support is None:  # Check if owner as set support server.
             return await ctx.send("Owner need to set support server !")
@@ -47,7 +57,7 @@ class Invite(commands.Cog):
             description="Thanks for choosing to invite {name} to your server".format(
                 name=ctx.bot.user.display_name
             ),
-            color=0xE78518,
+            color=await self.config.colour(),
         )
         embed.set_author(
             name=ctx.bot.user.name, icon_url=ctx.bot.user.avatar_url_as(static_format="png")

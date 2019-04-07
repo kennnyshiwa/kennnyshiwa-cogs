@@ -24,4 +24,5 @@ You can also join my [Discord Server](https://discord.gg/eYFxDJC) . Feel free to
 #### Contributors:
 
 Beryju - Ark cog (orginally for Red v2 adapted for Red v3)
+
 Preda - Embedinvite (helped with logic and user settable variables)

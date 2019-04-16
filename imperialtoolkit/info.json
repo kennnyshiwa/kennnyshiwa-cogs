@@ -1,0 +1,13 @@
+{
+	"author": [
+		"neuro and kennnyshiwa"
+	],
+	"description": "Creates a custom invite embed to display the bot invite and support server.",
+    "hidden" : true,
+    "install_msg": "Thanks for installing, have fun.",
+	"short": "Creates a custom invite embed to display the bot invite and support server.",
+	"tags": [
+		"bots"
+	],
+	"type": "COG"
+}

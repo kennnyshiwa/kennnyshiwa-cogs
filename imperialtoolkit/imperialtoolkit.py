@@ -8,7 +8,7 @@ from redbot.core import commands, checks, Config
 class ImperialToolkit(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
-        
+     
     @commands.command()
     async def clink(self, ctx, id: int):
         """Get a message link from a message id."""
@@ -23,6 +23,7 @@ class ImperialToolkit(commands.Cog):
         except:
             await ctx.send('Message not found.')
 
+    @checks.is_owner() 
     @commands.command()
     async def usage(self, ctx: commands.Context):
         """Get the latest usage of the bot"""

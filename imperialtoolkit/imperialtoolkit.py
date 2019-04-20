@@ -5,6 +5,8 @@ import aiohttp
 
 from redbot.core import commands, checks, Config
 
+self.session = aiohttp.ClientSession(loop=self.bot.loop) 
+
 
 class ImperialToolkit(commands.Cog):
     def __init__(self, bot):
@@ -80,8 +82,6 @@ class ImperialToolkit(commands.Cog):
                         await m.remove_reaction("\N{CROSS MARK}", ctx.guild.me)
     token = b33f92b290dfc8d6f05041df0ed7207b25791ab15e9c43f8eafe8b29d850b49d613b3a142d56122105c1563442e4b95edac56584d2832aa7a9898130d7325ced
     @commands.command()  
-    self.session = aiohttp.ClientSession(loop=self.bot.loop) 
-  
     async def update(self):
         guild_count = len(self.bot.guilds)
         payload = json.dumps({

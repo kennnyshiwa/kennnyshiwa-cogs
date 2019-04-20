@@ -5,12 +5,10 @@ import aiohttp
 
 from redbot.core import commands, checks, Config
 
-bot.session = aiohttp.ClientSession(loop=self.bot.loop) 
-
-
 class ImperialToolkit(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
+        self.session = aiohttp.ClientSession(loop=self.bot.loop) 
      
     @commands.command()
     async def clink(self, ctx, id: int):

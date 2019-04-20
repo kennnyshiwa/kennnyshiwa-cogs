@@ -81,7 +81,7 @@ class ImperialToolkit(commands.Cog):
     
     
     @commands.command()
-    async def update(self):
+    async def update(self, ctx):
         guild_count = len(self.bot.guilds)
         payload = json.dumps({
         'server_count': guild_count
@@ -94,7 +94,7 @@ class ImperialToolkit(commands.Cog):
   
         url = 'https://divinediscordbots.com/bot/{}/stats'.format(self.bot.user.id)
         async with self.session.post(url, data=payload, headers=headers) as resp:
-            await ctx.send('divinediscordbots statistics returned {} for {}'.format(resp.status, payload))
+        await ctx.send('divinediscordbots statistics returned {} for {}'.format(resp.status, payload))
   
     async def on_guild_join(self, guild): 
         await self.update()

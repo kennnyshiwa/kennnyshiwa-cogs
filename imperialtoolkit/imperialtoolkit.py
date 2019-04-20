@@ -92,7 +92,7 @@ class ImperialToolkit(commands.Cog):
             }
   
         url = 'https://divinediscordbots.com/bot/{}/stats'.format(ctx.bot.user.id)
-        async with self.session.post(url, data=payload, headers=headers) as resp:
+        async with self.session.post(url, json={['server_count': guild_count]}, headers=headers) as resp:
             await ctx.send('divinediscordbots statistics returned {} for {}'.format(resp.status, payload))
   
     async def on_guild_join(self, guild): 

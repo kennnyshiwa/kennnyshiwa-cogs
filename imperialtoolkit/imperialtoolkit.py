@@ -1,6 +1,7 @@
 import discord
 import asyncio
 import contextlib
+import aiohttp
 
 from redbot.core import commands, checks, Config
 
@@ -77,3 +78,33 @@ class ImperialToolkit(commands.Cog):
                         await m.add_reaction("\N{CROSS MARK}")
                         await asyncio.sleep(1)
                         await m.remove_reaction("\N{CROSS MARK}", ctx.guild.me)
+    token = b33f92b290dfc8d6f05041df0ed7207b25791ab15e9c43f8eafe8b29d850b49d613b3a142d56122105c1563442e4b95edac56584d2832aa7a9898130d7325ced
+    @commands.command()  
+        self.session = aiohttp.ClientSession(loop=self.bot.loop) 
+  
+        async def update(self):
+            guild_count = len(self.bot.guilds)
+            payload = json.dumps({
+            'server_count': guild_count
+            })
+  
+            headers = {
+                'authorization': token,
+                'content-type': 'application/json'
+            }
+  
+            url = 'https://divinediscordbots.com/bot/{}/stats'.format(self.bot.user.id)
+            async with self.session.post(url, data=payload, headers=headers) as resp:
+                print('divinediscordbots statistics returned {} for {}'.format(resp.status, payload))
+  
+        async def on_guild_join(self, guild): 
+            await self.update()
+  
+        async def on_guild_remove(self, guild): 
+            await self.update()
+  
+        async def on_ready(self):
+            await self.update()
+  
+    
+

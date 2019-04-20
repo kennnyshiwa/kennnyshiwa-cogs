@@ -94,8 +94,8 @@ class ImperialToolkit(commands.Cog):
             }
   
         url = 'https://divinediscordbots.com/bot/{}/stats'.format(self.bot.user.id)
-            async with self.session.post(url, data=payload, headers=headers) as resp:
-            print('divinediscordbots statistics returned {} for {}'.format(resp.status, payload))
+        async with self.session.post(url, data=payload, headers=headers) as resp:
+        print('divinediscordbots statistics returned {} for {}'.format(resp.status, payload))
   
     async def on_guild_join(self, guild): 
         await self.update()

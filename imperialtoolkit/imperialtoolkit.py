@@ -82,9 +82,8 @@ class ImperialToolkit(commands.Cog):
     
     @commands.command()
     async def update(self, ctx):
-        guild_count = len(self.bot.guilds)
-        payload = json.dumps({
-        'server_count': guild_count
+        guild_count = len(ctx.bot.guilds)
+        payload = guild_count
         })
   
         headers = {

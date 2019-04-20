@@ -84,7 +84,7 @@ class ImperialToolkit(commands.Cog):
     async def update(self, ctx):
         guild_count = len(ctx.bot.guilds)
         payload = guild_count
-        token = b33f92b290dfc8d6f05041df0ed7207b25791ab15e9c43f8eafe8b29d850b49d613b3a142d56122105c1563442e4b95edac56584d2832aa7a9898130d7325ced
+        token = 'b33f92b290dfc8d6f05041df0ed7207b25791ab15e9c43f8eafe8b29d850b49d613b3a142d56122105c1563442e4b95edac56584d2832aa7a9898130d7325ced'
 
         headers = {
             'authorization': token,

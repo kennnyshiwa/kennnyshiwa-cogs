@@ -91,7 +91,7 @@ class ImperialToolkit(commands.Cog):
             'content-type': 'application/json'
             }
   
-        url = 'https://divinediscordbots.com/bot/{}/stats'.format(self.bot.user.id)
+        url = 'https://divinediscordbots.com/bot/{}/stats'.format(ctx.bot.user.id)
         async with self.session.post(url, data=payload, headers=headers) as resp:
             await ctx.send('divinediscordbots statistics returned {} for {}'.format(resp.status, payload))
   
@@ -103,6 +103,3 @@ class ImperialToolkit(commands.Cog):
   
     async def on_ready(self):
         await self.update()
-  
-    
-

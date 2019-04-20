@@ -5,7 +5,7 @@ import aiohttp
 
 from redbot.core import commands, checks, Config
 
-self.session = aiohttp.ClientSession(loop=self.bot.loop) 
+bot.session = aiohttp.ClientSession(loop=self.bot.loop) 
 
 
 class ImperialToolkit(commands.Cog):

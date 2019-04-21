@@ -79,7 +79,7 @@ class ImperialToolkit(commands.Cog):
                         await asyncio.sleep(1)
                         await m.remove_reaction("\N{CROSS MARK}", ctx.guild.me)
     
-    
+    @checks.is_owner()
     @commands.command()
     async def update(self, ctx):
         guild_count = len(ctx.bot.guilds)
@@ -94,7 +94,9 @@ class ImperialToolkit(commands.Cog):
         url = 'https://divinediscordbots.com/bot/{}/stats'.format(ctx.bot.user.id)
         async with self.session.post(url, json={'server_count': guild_count}, headers=headers) as resp:
             embed = discord.Embed(
-                description="Sent Statistics to Divine Discord Bots"
+                title="Bot Stats",
+                description="Sent Statistics to Divine Discord Bots",
+                color=await self.config.colour()
             )
             embed.add_field(name="HTTP Return Code", value= "{}".format(resp.status), inline=True)
             embed.add_field(name="Number of guilds sent", value="{}".format(payload), inline=True)

@@ -9,6 +9,9 @@ class ImperialToolkit(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         self.session = aiohttp.ClientSession(loop=self.bot.loop)
+        default = {"colour": 0}
+        self.config = Config.get_conf(self, 376564057517457408, force_registration=True)
+        self.config.register_global(**default)
      
     @commands.command()
     async def clink(self, ctx, id: int):
@@ -96,7 +99,7 @@ class ImperialToolkit(commands.Cog):
             embed = discord.Embed(
                 title="Bot Stats",
                 description="Sent Statistics to Divine Discord Bots",
-                color=await bot.config.colour()
+                color=await self.config.colour()
             )
             embed.add_field(name="HTTP Return Code", value= "{}".format(resp.status), inline=True)
             embed.add_field(name="Number of guilds sent", value="{}".format(payload), inline=True)

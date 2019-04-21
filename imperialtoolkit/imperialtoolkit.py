@@ -8,7 +8,8 @@ from redbot.core import commands, checks, Config
 class ImperialToolkit(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
-        self.session = aiohttp.ClientSession(loop=self.bot.loop) 
+        self.session = aiohttp.ClientSession(loop=self.bot.loop)
+        self.config.register_global(**default)
      
     @commands.command()
     async def clink(self, ctx, id: int):

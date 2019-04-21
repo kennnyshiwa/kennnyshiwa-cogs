@@ -93,7 +93,12 @@ class ImperialToolkit(commands.Cog):
   
         url = 'https://divinediscordbots.com/bot/{}/stats'.format(ctx.bot.user.id)
         async with self.session.post(url, json={'server_count': guild_count}, headers=headers) as resp:
-            await ctx.send('divinediscordbots statistics returned {} for {}'.format(resp.status, payload))
+            embed = discord.Embed(
+                description="Sent Statistics to Divine Discord Bots"
+            )
+            embed.add_field(name="HTTP Return Code", value= "{}".format(resp.status) inline=True)
+            embed.add_field(name="Number of guilds sent", value="{}".format(payload) inline=True)
+            await ctx.send(embed=embed)
   
     async def on_guild_join(self, guild): 
         await self.update()

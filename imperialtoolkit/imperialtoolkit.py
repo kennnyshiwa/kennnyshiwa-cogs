@@ -10,6 +10,7 @@ class ImperialToolkit(commands.Cog):
         self.bot = bot
         self.session = aiohttp.ClientSession(loop=self.bot.loop)
         self.config.register_global(**default)
+        self.config = Config.get_conf(self, 376564057517457408, force_registration=True)
      
     @commands.command()
     async def clink(self, ctx, id: int):

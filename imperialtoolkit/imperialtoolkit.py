@@ -96,8 +96,8 @@ class ImperialToolkit(commands.Cog):
             embed = discord.Embed(
                 description="Sent Statistics to Divine Discord Bots"
             )
-            embed.add_field(name="HTTP Return Code", value= "{}".format(resp.status) inline=True)
-            embed.add_field(name="Number of guilds sent", value="{}".format(payload) inline=True)
+            embed.add_field(name="HTTP Return Code", value= "{}".format(resp.status), inline=True)
+            embed.add_field(name="Number of guilds sent", value="{}".format(payload), inline=True)
             await ctx.send(embed=embed)
   
     async def on_guild_join(self, guild): 

@@ -38,7 +38,7 @@ class ImperialToolkit(commands.Cog):
             f"**Messages received:** {self.bot.counter['messages_read']} messages\n"
             f"**Messages sent** (not including this one): {self.bot.counter['msg_sent']} messages\n"
             f"**Guilds joined:** {self.bot.counter['guild_join']} guilds\n"
-            f"**Guilds left:** {self.bot.counter['guild_left']} guilds"
+            f"**Guilds left:** {self.bot.counter['guild_remove']} guilds"
         )
         embed = discord.Embed(title="Usage of {} since the last restart".format(ctx.bot.user.name),
             color=await ctx.embed_color(), description=description)
@@ -48,10 +48,11 @@ class ImperialToolkit(commands.Cog):
             await m.add_reaction("\N{ANTICLOCKWISE DOWNWARDS AND UPWARDS OPEN CIRCLE ARROWS}")
             await m.add_reaction("\N{BLACK SQUARE FOR STOP}")
             await m.add_reaction("\N{BLACK RIGHT-POINTING TRIANGLE WITH DOUBLE VERTICAL BAR}")
+            await m.add_reaction("\N{NO ENTRY SIGN}")
 
             def check(reaction, user):
                 return (str(reaction.emoji) in ["\N{ANTICLOCKWISE DOWNWARDS AND UPWARDS OPEN CIRCLE ARROWS}", "\N{BLACK SQUARE FOR STOP}",
-                     "\N{BLACK RIGHT-POINTING TRIANGLE WITH DOUBLE VERTICAL BAR}"]) and (user.id == ctx.author.id) and (reaction.message.id == m.id)
+                     "\N{BLACK RIGHT-POINTING TRIANGLE WITH DOUBLE VERTICAL BAR}", "\N{NO ENTRY SIGN}"]) and (user.id == ctx.author.id) and (reaction.message.id == m.id)
             while True:
                 try:
                     reaction, user = await self.bot.wait_for("reaction_add", check=check, timeout=60.0)
@@ -81,6 +82,8 @@ class ImperialToolkit(commands.Cog):
                         await m.add_reaction("\N{CROSS MARK}")
                         await asyncio.sleep(1)
                         await m.remove_reaction("\N{CROSS MARK}", ctx.guild.me)
+                elif str(reaction.emoji) == "\N{NO ENTRY SIGN}":
+                    await m.delete()
     
     @checks.is_owner()
     @commands.command()

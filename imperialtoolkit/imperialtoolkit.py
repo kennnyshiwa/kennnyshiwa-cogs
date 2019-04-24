@@ -84,35 +84,3 @@ class ImperialToolkit(commands.Cog):
                         await m.remove_reaction("\N{CROSS MARK}", ctx.guild.me)
                 elif str(reaction.emoji) == "\N{NO ENTRY SIGN}":
                     await m.delete()
-    
-    @checks.is_owner()
-    @commands.command()
-    async def update(self, ctx):
-        guild_count = len(ctx.bot.guilds)
-        payload = guild_count
-        token = 'b33f92b290dfc8d6f05041df0ed7207b25791ab15e9c43f8eafe8b29d850b49d613b3a142d56122105c1563442e4b95edac56584d2832aa7a9898130d7325ced'
-
-        headers = {
-            'authorization': token,
-            'content-type': 'application/json'
-            }
-  
-        url = 'https://divinediscordbots.com/bot/{}/stats'.format(ctx.bot.user.id)
-        async with self.session.post(url, json={'server_count': guild_count}, headers=headers) as resp:
-            embed = discord.Embed(
-                title="Bot Stats",
-                description="Sent Statistics to Divine Discord Bots",
-                color=await self.config.colour()
-            )
-            embed.add_field(name="HTTP Return Code", value= "{}".format(resp.status), inline=True)
-            embed.add_field(name="Number of guilds sent", value="{}".format(payload), inline=True)
-            await ctx.send(embed=embed)
-    
-    async def on_guild_join(self, guild): 
-        await self.update()
-  
-    async def on_guild_remove(self, guild): 
-        await self.update()
-  
-    async def on_ready(self):
-        await self.update()

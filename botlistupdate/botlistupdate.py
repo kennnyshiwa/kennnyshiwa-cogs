@@ -8,8 +8,6 @@ from redbot.core import commands, checks, Config
 class BotListUpdate(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
-        self.config = Config.get_conf(self, 376564057517457408, force_registration=True)
-        self.config.register_global(**default)
 
 @checks.is_owner() 
 @commands.command()

@@ -11,7 +11,7 @@ class BotListUpdate(commands.Cog):
 
 @checks.is_owner() 
 @commands.command()
-async def _update(self):
+async def botlist(self):
     async with aiohttp.ClientSession(loop=self.bot.loop) as cs:
         await cs.post(
             f"https://botsfordiscord.com/api/bots/{self.id}",

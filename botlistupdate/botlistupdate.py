@@ -11,7 +11,7 @@ class BotListUpdate(commands.Cog):
         self.config = Config.get_conf(self, 376564057517457408, force_registration=True)
         self.config.register_global(**default)
 
-@checks.isowner()
+@checks.is_owner() 
 @commands.command()
 async def _update(self):
     async with aiohttp.ClientSession(loop=self.bot.loop) as cs:

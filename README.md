@@ -2,9 +2,7 @@
 [![Discord server](https://discordapp.com/api/guilds/489162733791739950/embed.png)](https://discord.gg/eYFxDJC)
 [![Red cogs](https://img.shields.io/badge/Red--DiscordBot-cogs-red.svg)](https://github.com/Cog-Creators/Red-DiscordBot/tree/V3/develop)
 [![discord.py](https://img.shields.io/badge/discord-py-blue.svg)](https://github.com/Rapptz/discord.py)
-<a href="https://discordbots.org/bot/540694922307698690" >
-  <img src="https://discordbots.org/api/widget/540694922307698690.svg" alt="BB-8" />
-</a>
+
 
 # Installation
 

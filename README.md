@@ -1,4 +1,5 @@
 # Kennnyshiwas-cogs
+
 [![Discord server](https://discordapp.com/api/guilds/574072168514584588/embed.png)](https://discord.gg/aBTTycG)
 [![Red cogs](https://img.shields.io/badge/Red--DiscordBot-cogs-red.svg)](https://github.com/Cog-Creators/Red-DiscordBot/tree/V3/develop)
 [![discord.py](https://img.shields.io/badge/discord-py-blue.svg)](https://github.com/Rapptz/discord.py)
@@ -20,7 +21,7 @@ Embedinvite - Removes the default invite command with a pretty embed that also i
 # Support/Contact
 You can reach me on Discord kennnyshiwa#1337
 
-You can also join my [Discord Server](https://discord.gg/eYFxDJC) . Feel free to DM if you need any help or have questions
+You can also join my [Discord Server](https://discord.gg/aBTTycG) . Feel free to DM if you need any help or have questions
 
 # Contributors:
 

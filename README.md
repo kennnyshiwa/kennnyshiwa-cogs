@@ -1,5 +1,5 @@
 # Kennnyshiwas-cogs
-[![Discord server](https://discordapp.com/api/guilds/489162733791739950/embed.png)](https://discord.gg/eYFxDJC)
+[![Discord server](https://discordapp.com/api/guilds/574072168514584588/embed.png)](https://discord.gg/aBTTycG)
 [![Red cogs](https://img.shields.io/badge/Red--DiscordBot-cogs-red.svg)](https://github.com/Cog-Creators/Red-DiscordBot/tree/V3/develop)
 [![discord.py](https://img.shields.io/badge/discord-py-blue.svg)](https://github.com/Rapptz/discord.py)
 

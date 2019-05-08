@@ -86,11 +86,11 @@ class ImperialToolkit(commands.Cog):
                     await m.delete()
 
     @commands.command()
-    async def donate(self, ctx)
+    async def donate(self, ctx):
         """Show Donation link for BB-8"""
         try:
             await ctx.author.send("<https://patreon.com/kennnyshiwa>")
         except discord.Forbidden:
             await ctx.send("Can't DM you, un-block me first")
 
-    return donate
+        return

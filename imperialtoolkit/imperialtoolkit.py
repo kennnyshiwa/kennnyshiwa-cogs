@@ -90,6 +90,7 @@ class ImperialToolkit(commands.Cog):
         """Show Donation link for BB-8"""
         try:
             await ctx.author.send("<https://patreon.com/kennnyshiwa>")
+            await ctx.tick()
         except discord.Forbidden:
             await ctx.send("Can't DM you, un-block me first")
 

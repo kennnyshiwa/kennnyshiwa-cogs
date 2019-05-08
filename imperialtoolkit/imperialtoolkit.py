@@ -86,7 +86,7 @@ class ImperialToolkit(commands.Cog):
                     await m.delete()
 
     @commands.command()
-    async def donate(ctx)
+    async def donate(self, ctx)
         """Show Donation link for BB-8"""
         try:
             await ctx.author.send("<https://patreon.com/kennnyshiwa>")

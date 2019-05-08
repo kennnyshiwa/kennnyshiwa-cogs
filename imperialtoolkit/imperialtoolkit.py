@@ -84,3 +84,13 @@ class ImperialToolkit(commands.Cog):
                         await m.remove_reaction("\N{CROSS MARK}", ctx.guild.me)
                 elif str(reaction.emoji) == "\N{NO ENTRY SIGN}":
                     await m.delete()
+
+    @commands.command()
+    async def donate(ctx)
+        """Show Donation link for BB-8"""
+        try:
+            await ctx.author.send("<https://patreon.com/kennnyshiwa>")
+        except discord.Forbidden:
+            await ctx.send("Can't DM you, un-block me first")
+
+    return donate

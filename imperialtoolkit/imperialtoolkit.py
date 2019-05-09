@@ -97,7 +97,7 @@ class ImperialToolkit(commands.Cog):
         return
 
     @commands.command()
-    async def oof(self, ctx, msg_id: int = None, channel: discord.TextChannel = None):
+    async def getfucked(self, ctx, msg_id: int = None, channel: discord.TextChannel = None):
         """
             react get fucked to a message
             `msg_id` must be the message ID for desited message within the channel

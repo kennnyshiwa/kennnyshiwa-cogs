@@ -104,7 +104,7 @@ class ImperialToolkit(commands.Cog):
             `channel` must be the channel where the desired message is defaults to current channel
             if the bot has manage messages permission it will attempt to delete the command
         """
-        emojis = ["g", "e", "t", "f", "u", "c", "k", "e", "d"]
+        emojis = ["g", "e", "t", "f", "u", "c", "k", "d"]
         if channel is None:
             channel = ctx.message.channel
         if msg_id is None:

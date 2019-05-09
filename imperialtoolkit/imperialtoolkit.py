@@ -2,6 +2,7 @@ import discord
 import asyncio
 import contextlib
 import aiohttp
+import re
 
 from redbot.core import commands, checks, Config
 

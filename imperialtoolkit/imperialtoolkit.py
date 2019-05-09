@@ -98,14 +98,15 @@ class ImperialToolkit(commands.Cog):
         return
 
     @commands.command()
-    async def getfucked(self, ctx, msg_id: int = None, channel: discord.TextChannel = None):
+    async def getfuckd(self, ctx, msg_id: int = None, channel: discord.TextChannel = None):
         """
-            react get fucked to a message
+            react 🅾🇴🇫 to a message
+
             `msg_id` must be the message ID for desited message within the channel
             `channel` must be the channel where the desired message is defaults to current channel
             if the bot has manage messages permission it will attempt to delete the command
         """
-        emojis = ["🅾", "f", "f"]
+        emojis = ["g", "e", "t", "f", "u", "c", "k", "d"]
         if channel is None:
             channel = ctx.message.channel
         if msg_id is None:

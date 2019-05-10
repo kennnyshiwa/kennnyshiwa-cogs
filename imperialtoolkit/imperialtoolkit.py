@@ -96,33 +96,3 @@ class ImperialToolkit(commands.Cog):
             await ctx.send("Can't DM you, un-block me first")
 
         return
-
-    @commands.command()
-    async def getfuckd(self, ctx, msg_id: int = None, channel: discord.TextChannel = None):
-        """
-            react 🅾🇴🇫 to a message
-
-            `msg_id` must be the message ID for desited message within the channel
-            `channel` must be the channel where the desired message is defaults to current channel
-            if the bot has manage messages permission it will attempt to delete the command
-        """
-        emojis = ["🇬", "​🇪", "🇹", "🇫", "🇺", "🇨",​ "🇰", "​🇩"]
-        if channel is None:
-            channel = ctx.message.channel
-        if msg_id is None:
-            async for message in channel.history(limit=2):
-                msg_id = message
-        else:
-            try:
-                msg_id = await channel.get_message(msg_id)
-            except:
-                await ctx.send("Message ID {} not found in {}".format(msg_id, channel.mention), delete_after=5)
-                return
-        if ctx.channel.permissions_for(ctx.me).manage_messages:
-            await ctx.message.delete()
-        if channel.permissions_for(ctx.me).add_reactions:
-            for emoji in emojis:
-                try:
-                    await msg_id.add_reaction(emoji)
-                except:
-                    pass

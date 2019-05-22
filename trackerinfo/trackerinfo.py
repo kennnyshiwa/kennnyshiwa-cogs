@@ -25,7 +25,6 @@ class Trackerinfo(commands.Cog):
         embed.add_field(name="Website", value="{}".format(website))
         embed.add_field(name="IRC", value="{}".format(irc))
         embed.add_field(name="IRC Torrent Announcer", value="{}".format(ircannounce))
-        embed.set_footer(text="0 means down and 1 means up")
         
         await ctx.send(embed=embed)
 
@@ -46,7 +45,6 @@ class Trackerinfo(commands.Cog):
         embed.add_field(name="Website", value="{}".format(website))
         embed.add_field(name="IRC", value="{}".format(irc))
         embed.add_field(name="IRC Torrent Announcer", value="{}".format(ircannounce))
-        embed.set_footer(text="0 means down and 1 means up")
         
         await ctx.send(embed=embed)
 
@@ -67,7 +65,6 @@ class Trackerinfo(commands.Cog):
         embed.add_field(name="Website", value="{}".format(website))
         embed.add_field(name="IRC", value="{}".format(irc))
         embed.add_field(name="IRC Torrent Announcer", value="{}".format(ircannounce))
-        embed.set_footer(text="0 means down and 1 means up")
         
         await ctx.send(embed=embed)
 
@@ -88,7 +85,6 @@ class Trackerinfo(commands.Cog):
         embed.add_field(name="Website", value="{}".format(website))
         embed.add_field(name="IRC", value="{}".format(irc))
         embed.add_field(name="IRC Torrent Announcer", value="{}".format(ircannounce))
-        embed.set_footer(text="0 means down and 1 means up")
         
         await ctx.send(embed=embed)
 
@@ -109,6 +105,5 @@ class Trackerinfo(commands.Cog):
         embed.add_field(name="Website", value="{}".format(website))
         embed.add_field(name="IRC", value="{}".format(irc))
         embed.add_field(name="IRC Torrent Announcer", value="{}".format(ircannounce))
-        embed.set_footer(text="0 means down and 1 means up")
         
         await ctx.send(embed=embed)

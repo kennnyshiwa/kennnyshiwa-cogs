@@ -10,7 +10,7 @@ class Trackerinfo(commands.Cog):
 
     @commands.command()
     async def ptp(self, ctx):
-        """gets info on ptp"""
+        """gets info on PTP"""
         async with self.session.get("https://ptp.trackerstatus.info/api/status/") as r:
             data = await r.json()
         color = await ctx.embed_color()
@@ -20,7 +20,7 @@ class Trackerinfo(commands.Cog):
         irc = (f'IRC is {"down" if irc == "0" else "up"}') 
         ircannounce = data["IRCTorrentAnnouncer"]
         ircannounce = (f'IRC Announce is {"down" if ircannounce == "0" else "up"}') 
-        embed = discord.Embed(description="Status of PTP tracker", color=color)
+        embed = discord.Embed(title="PTP Status", url="https://ptp.trackerstatus.info", color=color)
         embed.set_image(url="https://ptp.trackerstatus.info/images/logo.png")
         embed.add_field(name="Website", value="{}".format(website))
         embed.add_field(name="IRC", value="{}".format(irc))
@@ -30,7 +30,7 @@ class Trackerinfo(commands.Cog):
 
     @commands.command()
     async def ggn(self, ctx):
-        """gets info on ptp"""
+        """gets info on GGN"""
         async with self.session.get("https://ggn.trackerstatus.info/api/status/") as r:
             data = await r.json()
         color = await ctx.embed_color()
@@ -40,7 +40,7 @@ class Trackerinfo(commands.Cog):
         irc = (f'IRC is {"down" if irc == "0" else "up"}') 
         ircannounce = data["IRCTorrentAnnouncer"]
         ircannounce = (f'IRC Announce is {"down" if ircannounce == "0" else "up"}') 
-        embed = discord.Embed(description="Status of PTP tracker", color=color)
+        embed = discord.Embed(title="GGN Status", url="https://ggn.trackerstatus.info", color=color)
         embed.set_image(url="https://ggn.trackerstatus.info/images/logo.png")
         embed.add_field(name="Website", value="{}".format(website))
         embed.add_field(name="IRC", value="{}".format(irc))
@@ -50,7 +50,7 @@ class Trackerinfo(commands.Cog):
 
     @commands.command()
     async def red(self, ctx):
-        """gets info on ptp"""
+        """gets info on RED"""
         async with self.session.get("https://red.trackerstatus.info/api/status/") as r:
             data = await r.json()
         color = await ctx.embed_color()
@@ -60,7 +60,7 @@ class Trackerinfo(commands.Cog):
         irc = (f'IRC is {"down" if irc == "0" else "up"}') 
         ircannounce = data["IRCTorrentAnnouncer"]
         ircannounce = (f'IRC Announce is {"down" if ircannounce == "0" else "up"}') 
-        embed = discord.Embed(description="Status of PTP tracker", color=color)
+        embed = discord.Embed(title="RED Status", url="https://red.trackerstatus.info", color=color)
         embed.set_image(url="https://red.trackerstatus.info/images/logo.png")
         embed.add_field(name="Website", value="{}".format(website))
         embed.add_field(name="IRC", value="{}".format(irc))
@@ -70,7 +70,7 @@ class Trackerinfo(commands.Cog):
 
     @commands.command()
     async def btn(self, ctx):
-        """gets info on ptp"""
+        """gets info on BTN"""
         async with self.session.get("https://btn.trackerstatus.info/api/status/") as r:
             data = await r.json()
         color = await ctx.embed_color()
@@ -80,7 +80,7 @@ class Trackerinfo(commands.Cog):
         irc = (f'IRC is {"down" if irc == "0" else "up"}') 
         ircannounce = data["Barney"]
         ircannounce = (f'IRC Announce is {"down" if ircannounce == "0" else "up"}') 
-        embed = discord.Embed(description="Status of PTP tracker", color=color)
+        embed = discord.Embed(title="BTN Status", url="https://BTN.trackerstatus.info", color=color)
         embed.set_image(url="https://btn.trackerstatus.info/images/logo.png")
         embed.add_field(name="Website", value="{}".format(website))
         embed.add_field(name="IRC", value="{}".format(irc))
@@ -90,7 +90,7 @@ class Trackerinfo(commands.Cog):
 
     @commands.command()
     async def mtv(self, ctx):
-        """gets info on ptp"""
+        """gets info on MTV"""
         async with self.session.get("https://mtv.trackerstatus.info/api/status/") as r:
             data = await r.json()
         color = await ctx.embed_color()
@@ -100,10 +100,10 @@ class Trackerinfo(commands.Cog):
         irc = (f'IRC is {"down" if irc == "0" else "up"}') 
         ircannounce = data["IRCTorrentAnnouncer"]
         ircannounce = (f'IRC Announce is {"down" if ircannounce == "0" else "up"}') 
-        embed = discord.Embed(description="Status of PTP tracker", color=color)
+        embed = discord.Embed(title="MTV Status", url="https://mtv.trackerstatus.info", color=color)
         embed.set_image(url="https://mtv.trackerstatus.info/images/logo.png")
         embed.add_field(name="Website", value="{}".format(website))
         embed.add_field(name="IRC", value="{}".format(irc))
         embed.add_field(name="IRC Torrent Announcer", value="{}".format(ircannounce))
-        
+
         await ctx.send(embed=embed)

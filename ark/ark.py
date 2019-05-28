@@ -46,6 +46,9 @@ class ARKCog(commands.Cog):
                 - ThreadCount
                 - VTD
                 - AESTech
+                -MemoryTypes
+                -ECCMemory
+                -MaxMem
 
             Reference of fields can be found here: https://odata.intel.com/
         """
@@ -59,15 +62,16 @@ class ARKCog(commands.Cog):
             await ctx.send("I couldn't find anything matching `%s`" % query)
             return
         fields = ['ProductName', 'ClockSpeed', 'ClockSpeedMax',
-                  'CoreCount', 'ThreadCount', 'VTD', 'AESTech']
+                  'CoreCount', 'ThreadCount', 'VTD', 'AESTech',
+                  'MemoryTypes', 'ECCMemory', 'MaxMem']
 
         # Create embedded message
         embed = discord.Embed(
             title="ARK Search Result",
             description="Query was `%s`" % query,
-            color=0x0071c5
+            color=await ctx.embed_color()
         )
         for field in fields:
-            embed.add_field(name=field, value=cpu_data[field])
+            embed.add_field(name=field, value=cpu_data[field], inline=True)
         await ctx.send(embed=embed)
 

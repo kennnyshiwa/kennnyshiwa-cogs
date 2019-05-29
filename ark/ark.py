@@ -25,7 +25,6 @@ class ARKCog(commands.Cog):
         async with aiohttp.ClientSession() as session:
             async with session.get(base_url % query) as r:
                 data = await r.json()
-                print(r)
                 if not data.get("d"):
                     return None
                 return data.get("d")[0]

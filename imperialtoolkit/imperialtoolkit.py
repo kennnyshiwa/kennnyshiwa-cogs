@@ -56,6 +56,7 @@ class ImperialToolkit(commands.Cog):
         uptime = humanize_timedelta(timedelta=delta)
         return uptime
 
+    @commands.bot_has_permissions(embed_links=True)
     @commands.command()
     async def botstat(self, ctx: commands.Context):
         """Get stats about the bot including messages sent and recieved and other info"""
@@ -85,6 +86,7 @@ class ImperialToolkit(commands.Cog):
         else:
             osver = "Could not parse OS, report this on Github."
         user_who_ran = getpass.getuser()
+        
         cpu = cpuinfo.get_cpu_info()['brand']
         
         servers = len(self.bot.guilds)

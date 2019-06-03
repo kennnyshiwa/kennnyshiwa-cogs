@@ -8,6 +8,7 @@ class Trackerinfo(commands.Cog):
         self.bot = bot
         self.session = aiohttp.ClientSession()
 
+    @commands.bot_has_permissions(embed_links=True)
     @commands.command()
     async def ptp(self, ctx):
         """gets info on PTP"""
@@ -28,6 +29,7 @@ class Trackerinfo(commands.Cog):
         
         await ctx.send(embed=embed)
 
+    @commands.bot_has_permissions(embed_links=True)
     @commands.command()
     async def ggn(self, ctx):
         """gets info on GGN"""
@@ -48,6 +50,7 @@ class Trackerinfo(commands.Cog):
         
         await ctx.send(embed=embed)
 
+    @commands.bot_has_permissions(embed_links=True)
     @commands.command()
     async def red(self, ctx):
         """gets info on RED"""
@@ -68,6 +71,7 @@ class Trackerinfo(commands.Cog):
         
         await ctx.send(embed=embed)
 
+    @commands.bot_has_permissions(embed_links=True)
     @commands.command()
     async def btn(self, ctx):
         """gets info on BTN"""
@@ -88,6 +92,7 @@ class Trackerinfo(commands.Cog):
         
         await ctx.send(embed=embed)
 
+    @commands.bot_has_permissions(embed_links=True)
     @commands.command()
     async def mtv(self, ctx):
         """gets info on MTV"""

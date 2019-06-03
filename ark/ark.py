@@ -33,6 +33,7 @@ class ARKCog(commands.Cog):
         """Escape mentions from queries"""
         return query.replace('`', "'")
 
+    @commands.bot_has_permissions(embed_links=True)
     @commands.command()
     async def ark(self, ctx, *, query):
         """

@@ -6,8 +6,7 @@
     "hidden" : false,
     "install_msg": "Thanks for installing, have fun.",
 	"short": "Creates a custom invite embed to display the bot invite and support server.",
-	"tags": [
-		"bots"
-	],
+	"tags": ["bots"],
+	"requirments" : ["py-cpuinfo", "psutil"],
 	"type": "COG"
 }

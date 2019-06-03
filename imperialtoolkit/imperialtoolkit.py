@@ -10,7 +10,7 @@ import lavalink
 
 from datetime import datetime
 
-from redbot.core import commands, checks, Config
+from redbot.core import commands, Config
 
 from redbot.core.utils.chat_formatting import humanize_timedelta
 
@@ -57,7 +57,7 @@ class ImperialToolkit(commands.Cog):
         return uptime
 
     @commands.command()
-    async def botstats(self, ctx: commands.Context):
+    async def botstat(self, ctx: commands.Context):
         """Get stats about the bot including messages sent and recieved and other info"""
         cpustats = psutil.cpu_percent()
         ramusage = psutil.virtual_memory()
@@ -91,10 +91,12 @@ class ImperialToolkit(commands.Cog):
         shards = self.bot.shard_count
         totalusers = sum(len(s.members) for s in self.bot.guilds)
         channels = sum(len(s.channels) for s in self.bot.guilds)
+        numcogs = len(self.bot.commands)
         uptime = str(self.get_bot_uptime())
+        
         red = redbot.core.__version__
         dpy = discord.__version__
-        numcogs = len(self.bot.commands)
+        
 
         embed = discord.Embed(title= "Bot Stats for {}".format(ctx.bot.user.name),description="Below are various stats about the bot and the machine "
                 "that runs the bot", color=await ctx.embed_color())

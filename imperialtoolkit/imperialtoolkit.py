@@ -1,19 +1,34 @@
 import discord
-import asyncio
-import contextlib
-import aiohttp
-import re
+import datetime
+import sys
+import cpuinfo
+import os
+import platform
+import getpass
+import redbot.core
+import lavalink
+
+from datetime import datetime
 
 from redbot.core import commands, checks, Config
+
+from redbot.core.utils.chat_formatting import humanize_timedelta
+
+from redbot.cogs.audio.manager import JAR_BUILD as jarversion
+
+try:
+    import psutil
+
+    psutilAvailable = True
+except ImportError:
+    psutilAvailable = False
+
 
 class ImperialToolkit(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
-        self.session = aiohttp.ClientSession(loop=self.bot.loop)
-        default = {"colour": 0}
         self.config = Config.get_conf(self, 376564057517457408, force_registration=True)
-        self.config.register_global(**default)
-     
+  
     @commands.command()
     async def clink(self, ctx, id: int):
         """Get a message link from a message id."""
@@ -28,71 +43,98 @@ class ImperialToolkit(commands.Cog):
         except:
             await ctx.send('Message not found.')
 
-    @checks.is_owner() 
+    @staticmethod
+    def _size(num):
+        for unit in ["B", "KB", "MB", "GB", "TB", "PB", "EB", "ZB"]:
+            if abs(num) < 1024.0:
+                return "{0:.1f}{1}".format(num, unit)
+            num /= 1024.0
+        return "{0:.1f}{1}".format(num, "YB")
+
+    def get_bot_uptime(self):
+        delta = datetime.utcnow() - self.bot.uptime
+        uptime = humanize_timedelta(timedelta=delta)
+        return uptime
+
     @commands.command()
-    async def usage(self, ctx: commands.Context):
-        """Get the latest usage of the bot"""
-        core = self.bot.get_cog("Core")
-        description = (
-            f"**Commands processed:** {self.bot.counter['processed_commands']} commands\n"
-            f"**Command errors:** {self.bot.counter['cmd_error']} errors\n"
-            f"**Messages received:** {self.bot.counter['messages_read']} messages\n"
-            f"**Messages sent** (not including this one): {self.bot.counter['msg_sent']} messages\n"
-            f"**Guilds joined:** {self.bot.counter['guild_join']} guilds\n"
-            f"**Guilds left:** {self.bot.counter['guild_remove']} guilds"
+    async def botstats(self, ctx: commands.Context):
+        """Get stats about the bot including messages sent and recieved and other info"""
+        cpustats = psutil.cpu_percent()
+        ramusage = psutil.virtual_memory()
+        netusage = psutil.net_io_counters()
+        width = max([len(self._size(n)) for n in [netusage.bytes_sent, netusage.bytes_recv]])
+        net_ios = ( "\u200b""\n\t{0:<11}: {1:>{width}}".format("Bytes sent", self._size(netusage.bytes_sent), width=width) +
+                "\n\t{0:<11}: {1:>{width}}".format("Bytes recv", self._size(netusage.bytes_recv), width=width))
+
+        if sys.platform == "linux":
+            import distro
+
+        IS_WINDOWS = os.name == "nt"
+        IS_MAC = sys.platform == "darwin"
+        IS_LINUX = sys.platform == "linux"
+
+        if IS_WINDOWS:
+            os_info = platform.uname()
+            osver = "``{} {} (version {})``".format(os_info.system, os_info.release, os_info.version)
+        elif IS_MAC:
+            os_info = platform.mac_ver()
+            osver = "``Mac OSX {} {}``".format(os_info[0], os_info[2])
+        elif IS_LINUX:
+            os_info = distro.linux_distribution()
+            osver = "``{} {}``".format(os_info[0], os_info[1]).strip()
+        else:
+            osver = "Could not parse OS, report this on Github."
+        user_who_ran = getpass.getuser()
+        cpu = cpuinfo.get_cpu_info()['brand']
+        
+        servers = len(self.bot.guilds)
+        shards = self.bot.shard_count
+        totalusers = sum(len(s.members) for s in self.bot.guilds)
+        channels = sum(len(s.channels) for s in self.bot.guilds)
+        uptime = str(self.get_bot_uptime())
+        red = redbot.core.__version__
+        dpy = discord.__version__
+        numcogs = len(self.bot.commands)
+
+        embed = discord.Embed(title= "Bot Stats for {}".format(ctx.bot.user.name),description="Below are various stats about the bot and the machine "
+                "that runs the bot", color=await ctx.embed_color())
+        embed.add_field(name="\N{DESKTOP COMPUTER} Server Info",
+                        value="CPU usage `{}%`\n RAM usage `{}%`\n"
+                        "Network usage `{}`\n Boot Time `{}`\n OS {}\n CPU Info `{}`".format(
+                            str(cpustats),
+                            str(ramusage.percent),
+                            net_ios,
+                            datetime.fromtimestamp(psutil.boot_time()).strftime("%Y-%m-%d %H:%M:%S"),
+                            osver,
+                            cpu
+                        )
         )
-        embed = discord.Embed(title="Usage of {} since the last restart".format(ctx.bot.user.name),
-            color=await ctx.embed_color(), description=description)
-        embed.set_footer(text=f"Been up for {core.get_bot_uptime()} | Modeled after Neuro's Modok")
-        m = await ctx.send(embed=embed)
-        if self.bot.is_owner(ctx.author):
-            await m.add_reaction("\N{ANTICLOCKWISE DOWNWARDS AND UPWARDS OPEN CIRCLE ARROWS}")
-            await m.add_reaction("\N{BLACK SQUARE FOR STOP}")
-            await m.add_reaction("\N{BLACK RIGHT-POINTING TRIANGLE WITH DOUBLE VERTICAL BAR}")
-            await m.add_reaction("\N{NO ENTRY SIGN}")
-
-            def check(reaction, user):
-                return (str(reaction.emoji) in ["\N{ANTICLOCKWISE DOWNWARDS AND UPWARDS OPEN CIRCLE ARROWS}", "\N{BLACK SQUARE FOR STOP}",
-                     "\N{BLACK RIGHT-POINTING TRIANGLE WITH DOUBLE VERTICAL BAR}", "\N{NO ENTRY SIGN}"]) and (user.id == ctx.author.id) and (reaction.message.id == m.id)
-            while True:
-                try:
-                    reaction, user = await self.bot.wait_for("reaction_add", check=check, timeout=60.0)
-                except asyncio.TimeoutError:
-                    return
-                with contextlib.suppress(discord.HTTPException):
-                    await m.remove_reaction(str(reaction.emoji), user)
-                if str(reaction.emoji) == "\N{ANTICLOCKWISE DOWNWARDS AND UPWARDS OPEN CIRCLE ARROWS}":
-                    cmd = self.bot.get_command("restart")
-                    await ctx.invoke(cmd)
-                elif str(reaction.emoji) == "\N{BLACK SQUARE FOR STOP}":
-                    cmd = self.bot.get_command("shutdown")
-                    await ctx.invoke(cmd)
-                elif str(reaction.emoji) == "\N{BLACK RIGHT-POINTING TRIANGLE WITH DOUBLE VERTICAL BAR}":
-                    cog = self.bot.get_cog("Maintenance")
-                    if cog:
-                        on = await cog.conf.on()
-                        if on[0]:
-                            cmd = self.bot.get_command("maintenance off")
-                            d = "off"
-                        else:
-                            cmd = self.bot.get_command("maintenance on")
-                            d = "on"
-                        await ctx.invoke(cmd)
-                        await ctx.send(f"Maintenance {d}.")
-                    else:
-                        await m.add_reaction("\N{CROSS MARK}")
-                        await asyncio.sleep(1)
-                        await m.remove_reaction("\N{CROSS MARK}", ctx.guild.me)
-                elif str(reaction.emoji) == "\N{NO ENTRY SIGN}":
-                    await m.delete()
-
-    @commands.command()
-    async def donate(self, ctx):
-        """Show Donation link for BB-8"""
-        try:
-            await ctx.author.send("<https://patreon.com/kennnyshiwa>")
-            await ctx.tick()
-        except discord.Forbidden:
-            await ctx.send("Can't DM you, un-block me first")
-
-        return
+        embed.add_field(name="\N{ROBOT FACE} Bot Info",
+                        value="Servers: `{servs}`\n"
+                            "Users: `{users}`\n"
+                            "Shard{s}: `{shard}`\n"
+                            "Channels: `{channels}`\n"
+                            "Number of commands: `{numcogs}`\n"
+                            "Bot Uptime: `{uptime}`".format(
+                                servs=servers,
+                                users=totalusers,
+                                s="s" if shards >=2 else "",
+                                shard=shards,
+                                channels=channels,
+                                numcogs = numcogs,
+                                uptime = uptime,
+                                inline=True)
+                        )
+        embed.add_field(name="\N{BOOKS} Libraries,",
+                        value="Lavalink: `{lavalink}`\n"
+                        "Jar Version: `{jarbuild}`\n"
+                        "Red Version: `{redversion}`\n"
+                        "Discord.py Version: `{discordversion}`".format(
+                            lavalink=lavalink.__version__,
+                            jarbuild=jarversion,
+                            redversion=red,
+                            discordversion=dpy)
+                        )
+        embed.set_footer(text="{}".format(await ctx.bot.db.help.tagline()))
+        embed.set_thumbnail(url=ctx.bot.user.avatar_url_as(static_format="png"))
+        await ctx.send(embed=embed)

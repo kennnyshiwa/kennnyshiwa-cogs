@@ -8,9 +8,10 @@
 # Installation
 
 ```
-!repo add kennnyshiwa https://github.com/kennnyshiwa/kennnyshiwa-cogs
+[p]repo add kennnyshiwa https://github.com/kennnyshiwa/kennnyshiwa-cogs
 I agree
-!cog install kennnyshiwa ark
+[p]cog install kennnyshiwa <cogname>
+[p]load <installed_cog>
 ```
 
 ## Cogs

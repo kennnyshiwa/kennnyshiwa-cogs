@@ -10,7 +10,7 @@ class ARKCog(commands.Cog):
 
     special_queries = {
         '@everyone': "Hah. Nice try. Being very funny. Cheeky cunt.",
-        '@here': "You thought this would work too, very funny"
+        '@here': "You thought this would work too, very funny",
         ':(){ :|: & };: -': "This is a python bot, not a bash bot you nimwit."
     }
 

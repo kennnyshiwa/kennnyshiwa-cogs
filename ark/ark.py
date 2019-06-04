@@ -47,9 +47,9 @@ class ARKCog(commands.Cog):
                 - ThreadCount
                 - VTD
                 - AESTech
-                -MemoryTypes
-                -ECCMemory
-                -MaxMem
+                - MemoryTypes
+                - ECCMemory
+                - MaxMem
 
             Reference of fields can be found here: https://odata.intel.com/
         """

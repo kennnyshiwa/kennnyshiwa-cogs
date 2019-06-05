@@ -26,6 +26,7 @@ class ARKCog(commands.Cog):
         async with aiohttp.ClientSession() as session:
             async with session.get(base_url % query) as r:
                 data = await r.json()
+                print(r)
                 if not data.get("d"):
                     return None
                 return data.get("d")[0]
@@ -47,32 +48,36 @@ class ARKCog(commands.Cog):
                 - ThreadCount
                 - VTD
                 - AESTech
-                - MemoryTypes
-                - ECCMemory
-                - MaxMem
+                -MemoryTypes
+                -ECCMemory
+                -MaxMem
 
             Reference of fields can be found here: https://odata.intel.com/
         """
-        query = self.escape_query(''.join(query))
-        # Check special queries first
-        if query in self.special_queries:
-            await ctx.send(self.special_queries[query])
-            return
-        cpu_data = await self.do_lookup(query)
-        if not cpu_data:
-            await ctx.send("I couldn't find anything matching `%s`" % query)
-            return
-        fields = ['ProductName', 'ClockSpeed', 'ClockSpeedMax',
-                  'CoreCount', 'ThreadCount', 'VTD', 'AESTech',
-                  'MemoryTypes', 'ECCMemory', 'MaxMem']
+        async with ctx.typing():
+            query = self.escape_query(''.join(query))
+            # Check special queries first
+            if query in self.special_queries:
+                await ctx.send(self.special_queries[query])
+                return
+            cpu_data = await self.do_lookup(query)
+            if not cpu_data:
+                await ctx.send("I couldn't find anything matching `%s`" % query)
+                return
+            fields = ['ProductName', 'ClockSpeed', 'ClockSpeedMax',
+                    'CoreCount', 'ThreadCount', 'VTD', 'AESTech',
+                    'MemoryTypes', 'ECCMemory', 'MaxMem']
 
-        # Create embedded message
-        embed = discord.Embed(
-            title="ARK Search Result",
-            description="Query was `%s`" % query,
-            color=await ctx.embed_color()
-        )
-        for field in fields:
-            embed.add_field(name=field, value=cpu_data[field], inline=True)
-        await ctx.send(embed=embed)
+         # Create embedded message
+            embed = discord.Embed(
+                title="ARK Search Result",
+                description="Query was `%s`" % query,
+                color=await ctx.embed_color()
+            )
+            for field in fields:
+                if not cpu_data[field]:
+                    embed.add_field(name=field, value="Not Available", inline=True)
+                else:
+                    embed.add_field(name=field, value=cpu_data[field], inline=True)
+            await ctx.send(embed=embed)
 

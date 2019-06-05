@@ -1,4 +1,3 @@
-"""discord red-bot ark search"""
 import aiohttp
 import discord
 from redbot.core import commands

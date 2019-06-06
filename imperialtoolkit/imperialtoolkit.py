@@ -29,20 +29,6 @@ class ImperialToolkit(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         self.config = Config.get_conf(self, 376564057517457408, force_registration=True)
-  
-    @commands.command()
-    async def clink(self, ctx, id: int):
-        """Get a message link from a message id."""
-        for x in self.bot.get_all_channels():
-            try:
-                msg = await x.get_message(id)
-                break
-            except:
-                continue
-        try:
-            await ctx.send(msg.jump_url)
-        except:
-            await ctx.send('Message not found.')
 
     @staticmethod
     def _size(num):

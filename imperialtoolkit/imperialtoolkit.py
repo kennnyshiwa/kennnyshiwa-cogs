@@ -25,6 +25,7 @@ except ImportError:
 
 
 class ImperialToolkit(commands.Cog):
+    """Collection of useful commands and tools"""
     def __init__(self, bot):
         self.bot = bot
         self.config = Config.get_conf(self, 376564057517457408, force_registration=True)
@@ -86,7 +87,6 @@ class ImperialToolkit(commands.Cog):
                 osver = "``{} {}``".format(os_info[0], os_info[1]).strip()
             else:
                 osver = "Could not parse OS, report this on Github."
-            user_who_ran = getpass.getuser()
         
             cpu = cpuinfo.get_cpu_info()['brand']
             cpucount = psutil.cpu_count()

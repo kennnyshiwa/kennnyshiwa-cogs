@@ -53,11 +53,15 @@ class ARKCog(commands.Cog):
 
             Reference of fields can be found here: https://odata.intel.com/
         """
+        author = ctx.author.mention
         async with ctx.typing():
             query = self.escape_query(''.join(query))
             # Check special queries first
             if query in self.special_queries:
                 await ctx.send(self.special_queries[query])
+                return
+            if query == author:
+                await ctx.send("Go to google if you want to search yourself")
                 return
             cpu_data = await self.do_lookup(query)
             if not cpu_data:

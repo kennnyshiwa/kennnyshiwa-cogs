@@ -3,8 +3,8 @@
 		"kennnyshiwa"
 	],
 	"description": "Displays website and tracker information about various private tracker websites",
-    "hidden" : false,
-    "install_msg": "Thanks for installing, have fun.",
+	"hidden" : false,
+	"install_msg": "Thanks for installing, have fun.",
 	"short": "Tracker information",
 	"tags": ["bots"],
 	"type": "COG"

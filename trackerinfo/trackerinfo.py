@@ -7,7 +7,7 @@ class Trackerinfo(commands.Cog):
     """Look up information about a trackers status"""
     def __init__(self, bot):
         self.bot = bot
-        self.session = aiohttp.ClientSession()
+        self.session = aiohttp.ClientSession(loop=self.bot.loop)
 
     @commands.bot_has_permissions(embed_links=True)
     @commands.command()
@@ -118,3 +118,6 @@ class Trackerinfo(commands.Cog):
         embed.add_field(name="IRC Torrent Announcer", value="{}".format(ircannounce))
 
         await ctx.send(embed=embed)
+
+    def cog_unload(self):
+        self.bot.loop.create_task(self.session.close())

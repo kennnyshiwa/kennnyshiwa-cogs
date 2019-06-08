@@ -24,14 +24,6 @@ class Invite(commands.Cog):
         self.config = Config.get_conf(self, 376564057517457408, force_registration=True)
         self.config.register_global(**default)
 
-    def _unload(self):
-        global old_invite
-        if old_invite:
-            try:
-                self.bot.remove_command("invite")
-            except:
-                pass
-            self.bot.add_command(old_invite)
 
     @checks.is_owner()
     @commands.group()
@@ -135,11 +127,11 @@ class Invite(commands.Cog):
         )
         await ctx.send(embed=embed)
 
-
-def setup(bot):
-    invite = Invite(bot)
-    global old_invite
-    old_invite = bot.get_command("invite")
-    if old_invite:
-        bot.remove_command(old_invite.name)
-    bot.add_cog(invite)
+    def cog_unload(self):
+        global old_invite
+        if old_invite:
+            try:
+                self.bot.remove_command("invite")
+            except:
+                pass
+            self.bot.add_command(old_invite)

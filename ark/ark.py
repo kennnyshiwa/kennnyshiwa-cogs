@@ -15,6 +15,7 @@ class ARKCog(commands.Cog):
 
     def __init__(self, bot):
         self.bot = bot
+        self.session = aiohttp.ClientSession(loop=self.bot.loop)
 
     @staticmethod
     async def do_lookup(query: str) -> dict:
@@ -25,7 +26,6 @@ class ARKCog(commands.Cog):
         async with aiohttp.ClientSession() as session:
             async with session.get(base_url % query) as r:
                 data = await r.json()
-                print(r)
                 if not data.get("d"):
                     return None
                 return data.get("d")[0]
@@ -84,3 +84,5 @@ class ARKCog(commands.Cog):
                     embed.add_field(name=field, value=cpu_data[field], inline=True)
             await ctx.send(embed=embed)
 
+    def cog_unload(self):
+        self.bot.loop.create_task(self.session.close())

@@ -7,6 +7,6 @@
     "install_msg": "Thanks for installing, have fun. May require a `pipinstall py-cpuinfo` and `pipinstall psutil` if not installed already ",
 	"short": "Botstats command and other useful tools",
 	"tags": ["bots"],
-	"requirments" : ["py-cpuinfo", "psutil"],
+	"requirements" : ["py-cpuinfo", "psutil"],
 	"type": "COG"
 }

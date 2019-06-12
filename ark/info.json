@@ -1,25 +1,25 @@
 {
-    "author" : [
+    "author": [
         "Kennnyshiwa and beryju"
     ],
-    "bot_version" : [
+    "bot_version": [
         3,
         0,
         0
     ],
-    "description" : "Retrieves info from Intel's ARK database.",
-    "disabled" : false,
-    "hidden" : false,
-    "install_msg" : "How to use, `[p]ark <query> <field_to_display>` ",
-    "min_python_version" : [
+    "description": "Retrieves info from Intel's ARK database.",
+    "disabled": false,
+    "hidden": false,
+    "install_msg": "How to use, `[p]ark <query> <field_to_display>` ",
+    "min_python_version": [
         3,
         6,
         2
     ],
-    "name" : "ark",
-    "required_cogs" : [],
-    "requirements" : [],
-    "short" : "Retrieves info from Intel's ARK database.",
-    "tags" : [],
-    "type" : "COG"
+    "name": "ark",
+    "required_cogs": [],
+    "requirements": [],
+    "short": "Retrieves info from Intel's ARK database.",
+    "tags": [],
+    "type": "COG"
 }

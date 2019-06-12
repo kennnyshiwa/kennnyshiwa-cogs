@@ -19,11 +19,10 @@ class Invite(commands.Cog):
             "description": "Thanks for choosing to invite {name} to your server".format(
                 name=self.bot.user.name
             ),
-            "setpermissions": ""
+            "setpermissions": "",
         }
         self.config = Config.get_conf(self, 376564057517457408, force_registration=True)
         self.config.register_global(**default)
-
 
     @checks.is_owner()
     @commands.group()
@@ -105,10 +104,12 @@ class Invite(commands.Cog):
         if support_serv is None and support is True:
             return await ctx.send("Owner needs to set support server !")
         embed = discord.Embed(
-            description=await self.config.description(), color=await self.config.colour()
+            description=await self.config.description(),
+            color=await self.config.colour(),
         )
         embed.set_author(
-            name=ctx.bot.user.name, icon_url=ctx.bot.user.avatar_url_as(static_format="png")
+            name=ctx.bot.user.name,
+            icon_url=ctx.bot.user.avatar_url_as(static_format="png"),
         )
         embed.set_thumbnail(url=ctx.bot.user.avatar_url_as(static_format="png"))
         embed.add_field(

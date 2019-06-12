@@ -2,15 +2,16 @@ import aiohttp
 import discord
 from redbot.core import commands
 
-__author__="kennnyshiwa and Beryju"
+__author__ = "kennnyshiwa and Beryju"
+
 
 class ARKCog(commands.Cog):
     """ARK lookup Cog"""
 
     special_queries = {
-        '@everyone': "Hah. Nice try. Being very funny. Cheeky cunt.",
-        '@here': "You thought this would work too, very funny",
-        ':(){ :|: & };: -': "This is a python bot, not a bash bot you nimwit."
+        "@everyone": "Hah. Nice try. Being very funny. Cheeky cunt.",
+        "@here": "You thought this would work too, very funny",
+        ":(){ :|: & };: -": "This is a python bot, not a bash bot you nimwit.",
     }
 
     def __init__(self, bot):
@@ -20,8 +21,10 @@ class ARKCog(commands.Cog):
     @staticmethod
     async def do_lookup(query: str) -> dict:
         """Run the actual ARK lookup"""
-        base_url = ("https://odata.intel.com/API/v1_0/Products/Processors()?&$filter="
-                    "substringof(%%27%s%%27,ProductName)&$format=json")
+        base_url = (
+            "https://odata.intel.com/API/v1_0/Products/Processors()?&$filter="
+            "substringof(%%27%s%%27,ProductName)&$format=json"
+        )
 
         async with aiohttp.ClientSession() as session:
             async with session.get(base_url % query) as r:
@@ -32,7 +35,7 @@ class ARKCog(commands.Cog):
 
     def escape_query(self, query) -> str:
         """Escape mentions from queries"""
-        return query.replace('`', "'")
+        return query.replace("`", "'")
 
     @commands.bot_has_permissions(embed_links=True)
     @commands.command()
@@ -55,7 +58,7 @@ class ARKCog(commands.Cog):
         """
         author = ctx.author.mention
         async with ctx.typing():
-            query = self.escape_query(''.join(query))
+            query = self.escape_query("".join(query))
             # Check special queries first
             if query in self.special_queries:
                 await ctx.send(self.special_queries[query])
@@ -67,15 +70,24 @@ class ARKCog(commands.Cog):
             if not cpu_data:
                 await ctx.send("I couldn't find anything matching `%s`" % query)
                 return
-            fields = ['ProductName', 'ClockSpeed', 'ClockSpeedMax',
-                    'CoreCount', 'ThreadCount', 'VTD', 'AESTech',
-                    'MemoryTypes', 'ECCMemory', 'MaxMem']
+            fields = [
+                "ProductName",
+                "ClockSpeed",
+                "ClockSpeedMax",
+                "CoreCount",
+                "ThreadCount",
+                "VTD",
+                "AESTech",
+                "MemoryTypes",
+                "ECCMemory",
+                "MaxMem",
+            ]
 
-         # Create embedded message
+            # Create embedded message
             embed = discord.Embed(
                 title="ARK Search Result",
                 description="Query was `%s`" % query,
-                color=await ctx.embed_color()
+                color=await ctx.embed_color(),
             )
             for field in fields:
                 if not cpu_data[field]:

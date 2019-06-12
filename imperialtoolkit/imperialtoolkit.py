@@ -26,6 +26,7 @@ except ImportError:
 
 class ImperialToolkit(commands.Cog):
     """Collection of useful commands and tools"""
+
     def __init__(self, bot):
         self.bot = bot
         self.config = Config.get_conf(self, 376564057517457408, force_registration=True)
@@ -51,9 +52,14 @@ class ImperialToolkit(commands.Cog):
             cpustats = psutil.cpu_percent()
             ramusage = psutil.virtual_memory()
             netusage = psutil.net_io_counters()
-            width = max([len(self._size(n)) for n in [netusage.bytes_sent, netusage.bytes_recv]])
-            net_ios = ( "\u200b""\n\t{0:<11}: {1:>{width}}".format("Bytes sent", self._size(netusage.bytes_sent), width=width) +
-                    "\n\t{0:<11}: {1:>{width}}".format("Bytes recv", self._size(netusage.bytes_recv), width=width))
+            width = max(
+                [len(self._size(n)) for n in [netusage.bytes_sent, netusage.bytes_recv]]
+            )
+            net_ios = "\u200b" "\n\t{0:<11}: {1:>{width}}".format(
+                "Bytes sent", self._size(netusage.bytes_sent), width=width
+            ) + "\n\t{0:<11}: {1:>{width}}".format(
+                "Bytes recv", self._size(netusage.bytes_recv), width=width
+            )
 
             if sys.platform == "linux":
                 import distro
@@ -64,7 +70,9 @@ class ImperialToolkit(commands.Cog):
 
             if IS_WINDOWS:
                 os_info = platform.uname()
-                osver = "``{} {} (version {})``".format(os_info.system, os_info.release, os_info.version)
+                osver = "``{} {} (version {})``".format(
+                    os_info.system, os_info.release, os_info.version
+                )
             elif IS_MAC:
                 os_info = platform.mac_ver()
                 osver = "``Mac OSX {} {}``".format(os_info[0], os_info[2])
@@ -73,65 +81,77 @@ class ImperialToolkit(commands.Cog):
                 osver = "``{} {}``".format(os_info[0], os_info[1]).strip()
             else:
                 osver = "Could not parse OS, report this on Github."
-        
-            cpu = cpuinfo.get_cpu_info()['brand']
+
+            cpu = cpuinfo.get_cpu_info()["brand"]
             cpucount = psutil.cpu_count()
             ramamount = psutil.virtual_memory()
-            ram_ios = ( "{0:<11} {1:>{width}}".format("", self._size(ramamount.total), width=width))
-        
+            ram_ios = "{0:<11} {1:>{width}}".format(
+                "", self._size(ramamount.total), width=width
+            )
+
             servers = len(self.bot.guilds)
             shards = self.bot.shard_count
             totalusers = sum(len(s.members) for s in self.bot.guilds)
             channels = sum(len(s.channels) for s in self.bot.guilds)
             numcogs = len(self.bot.commands)
             uptime = str(self.get_bot_uptime())
-        
+
             red = redbot.core.__version__
             dpy = discord.__version__
-        
 
-            embed = discord.Embed(title= "Bot Stats for {}".format(ctx.bot.user.name),description="Below are various stats about the bot and the machine "
-                    "that runs the bot", color=await ctx.embed_color())
-            embed.add_field(name="\N{DESKTOP COMPUTER} Server Info",
-                            value="CPU usage `{}%`\n RAM usage `{}%`\n"
-                            "Network usage `{}`\n Boot Time `{}`\n OS {}\n CPU Info `{}`\n"
-                            "Core Count `{}`\n Total Ram `{}`".format(
-                                str(cpustats),
-                                str(ramusage.percent),
-                                net_ios,
-                                datetime.fromtimestamp(psutil.boot_time()).strftime("%Y-%m-%d %H:%M:%S"),
-                                osver,
-                                cpu,
-                                cpucount,
-                                ram_ios
-                            )
+            embed = discord.Embed(
+                title="Bot Stats for {}".format(ctx.bot.user.name),
+                description="Below are various stats about the bot and the machine "
+                "that runs the bot",
+                color=await ctx.embed_color(),
             )
-            embed.add_field(name="\N{ROBOT FACE} Bot Info",
-                            value="Servers: `{servs}`\n"
-                                "Users: `{users}`\n"
-                                "Shard{s}: `{shard}`\n"
-                                "Channels: `{channels}`\n"
-                                "Number of commands: `{numcogs}`\n"
-                                "Bot Uptime: `{uptime}`".format(
-                                    servs=servers,
-                                    users=totalusers,
-                                    s="s" if shards >=2 else "",
-                                    shard=shards,
-                                    channels=channels,
-                                    numcogs = numcogs,
-                                    uptime = uptime,
-                                    inline=True)
-                            )
-            embed.add_field(name="\N{BOOKS} Libraries,",
-                            value="Lavalink: `{lavalink}`\n"
-                            "Jar Version: `{jarbuild}`\n"
-                            "Red Version: `{redversion}`\n"
-                            "Discord.py Version: `{discordversion}`".format(
-                                lavalink=lavalink.__version__,
-                                jarbuild=jarversion,
-                                redversion=red,
-                                discordversion=dpy)
-                            )
+            embed.add_field(
+                name="\N{DESKTOP COMPUTER} Server Info",
+                value="CPU usage `{}%`\n RAM usage `{}%`\n"
+                "Network usage `{}`\n Boot Time `{}`\n OS {}\n CPU Info `{}`\n"
+                "Core Count `{}`\n Total Ram `{}`".format(
+                    str(cpustats),
+                    str(ramusage.percent),
+                    net_ios,
+                    datetime.fromtimestamp(psutil.boot_time()).strftime(
+                        "%Y-%m-%d %H:%M:%S"
+                    ),
+                    osver,
+                    cpu,
+                    cpucount,
+                    ram_ios,
+                ),
+            )
+            embed.add_field(
+                name="\N{ROBOT FACE} Bot Info",
+                value="Servers: `{servs}`\n"
+                "Users: `{users}`\n"
+                "Shard{s}: `{shard}`\n"
+                "Channels: `{channels}`\n"
+                "Number of commands: `{numcogs}`\n"
+                "Bot Uptime: `{uptime}`".format(
+                    servs=servers,
+                    users=totalusers,
+                    s="s" if shards >= 2 else "",
+                    shard=shards,
+                    channels=channels,
+                    numcogs=numcogs,
+                    uptime=uptime,
+                    inline=True,
+                ),
+            )
+            embed.add_field(
+                name="\N{BOOKS} Libraries,",
+                value="Lavalink: `{lavalink}`\n"
+                "Jar Version: `{jarbuild}`\n"
+                "Red Version: `{redversion}`\n"
+                "Discord.py Version: `{discordversion}`".format(
+                    lavalink=lavalink.__version__,
+                    jarbuild=jarversion,
+                    redversion=red,
+                    discordversion=dpy,
+                ),
+            )
             embed.set_footer(text="{}".format(await ctx.bot.db.help.tagline()))
             embed.set_thumbnail(url=ctx.bot.user.avatar_url_as(static_format="png"))
             await ctx.send(embed=embed)

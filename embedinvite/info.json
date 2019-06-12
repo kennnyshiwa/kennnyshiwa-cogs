@@ -3,7 +3,7 @@
 		"preda and kennnyshiwa"
 	],
 	"description": "Creates a custom invite embed to display the bot invite and support server.",
-    "install_msg": "Thanks for installing, have fun.",
+	"install_msg": "Thanks for installing, have fun.",
 	"short": "Creates a custom invite embed to display the bot invite and support server.",
 	"tags": [
 		"bots"

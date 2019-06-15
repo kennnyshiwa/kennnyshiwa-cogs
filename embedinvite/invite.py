@@ -26,11 +26,11 @@ class Invite(commands.Cog):
 
     @checks.is_owner()
     @commands.group()
-    async def inviteset(self, ctx):
+    async def invitesettings(self, ctx):
         """Settings for embedinvite cog."""
         pass
 
-    @inviteset.command()
+    @invitesettings.command()
     async def colour(self, ctx, colour: discord.Colour):
         """
         Set colour of the embed.
@@ -40,7 +40,7 @@ class Invite(commands.Cog):
         await self.config.colour.set(colour.value)
         await ctx.send("Embed colour set.")
 
-    @inviteset.command()
+    @invitesettings.command()
     async def description(self, ctx, *, text: str = ""):
         """
         Set the embed description.
@@ -56,7 +56,7 @@ class Invite(commands.Cog):
         await self.config.description.set(text)
         await ctx.send(f"Embed description set to :\n`{text}`")
 
-    @inviteset.command()
+    @invitesettings.command()
     async def support(self, ctx, toggle: bool = True):
         """
         Choose if you want support field.
@@ -69,7 +69,7 @@ class Invite(commands.Cog):
             await self.config.support.set(False)
             await ctx.send("Support field set to `False`.")
 
-    @inviteset.command()
+    @invitesettings.command()
     async def supportserv(self, ctx, supportserver):
         """
         Set a support server.
@@ -78,7 +78,7 @@ class Invite(commands.Cog):
         await self.config.support_serv.set(supportserver)
         await ctx.send("Support server set.")
 
-    @inviteset.command()
+    @invitesettings.command()
     async def setpermissions(self, ctx, *, text: int = ""):
         """Set the default permissions value for your bot.
         Get the permissions value from https://discordapi.com/permissions.html

@@ -65,9 +65,7 @@ class Keanu(commands.Cog):
             return await ctx.send("I couldn't download the template file.")
         if not await self.check_font_file():
             return await ctx.send("I couldn't download the font file.")
-        if len(t) != 1:
-            return await ctx.send("You must submit exactly one string")
-        if (not t[0] and not t[0].strip()) or (not t[1] and not t[1].strip()):
+        if (not t[0] and not t[0].strip())
             return await ctx.send("Cannot render empty text")
         fake_task = functools.partial(self.make_keanu, t=t, u_id=ctx.message.id)
         task = self.bot.loop.run_in_executor(None, fake_task)

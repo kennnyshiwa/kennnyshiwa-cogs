@@ -101,18 +101,18 @@ class Keanu(commands.Cog):
         text2 = (
             TextClip("____________________", fontsize=48, color="white", font=fp)
             .set_position(("center", 210))
-            .set_duration(15.4)
+            .set_duration(11)
         )
-        text = text.set_position(("center", 200)).set_duration(15.4)
+        text = text.set_position(("center", 200)).set_duration(11)
         text3 = (
             TextClip(t[1], fontsize=48, color="white", font=fp)
             .set_position(("center", 270))
-            .set_duration(15.4)
+            .set_duration(11)
         )
 
         video = CompositeVideoClip(
             [clip, text.crossfadein(1), text2.crossfadein(1), text3.crossfadein(1)]
-        ).set_duration(15.4)
+        ).set_duration(11)
         video = video.volumex(0.1)
         video.write_videofile(
             str(cog_data_path(self)) + f"/{u_id}keanu.mp4",

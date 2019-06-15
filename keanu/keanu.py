@@ -100,13 +100,13 @@ class Keanu(commands.Cog):
         text = TextClip(t[0], fontsize=48, color="white", font=fp)
         text2 = (
             TextClip("____________________", fontsize=48, color="white", font=fp)
-            .set_position(("center", 210))
+            .set_position((210))
             .set_duration(11)
         )
-        text = text.set_position(("center", 200)).set_duration(11)
+        text = text.set_position((200)).set_duration(11)
         text3 = (
             TextClip(t[1], fontsize=48, color="white", font=fp)
-            .set_position(("center", 270))
+            .set_position((270))
             .set_duration(11)
         )
 

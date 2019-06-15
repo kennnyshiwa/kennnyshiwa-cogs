@@ -60,6 +60,7 @@ class Keanu(commands.Cog):
         """Make keanu videos
             There must be exactly 1 `,` to split the message
         """
+        t = ctx.message.clean_content[(f"{ctx.prefix}{ctx.invoked_with}"):]
         if not await self.check_video_file():
             return await ctx.send("I couldn't download the template file.")
         if not await self.check_font_file():

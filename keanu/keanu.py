@@ -10,7 +10,7 @@ from redbot.core.data_manager import cog_data_path
 from moviepy.editor import VideoFileClip, TextClip, CompositeVideoClip
 
 
-CRAB_LINK = (
+KEANU_LINK = (
     "https://cdn.discordapp.com/attachments/341265291814240257/589217424868507650/20190614-185203-Wyvern-id3257503.mp4"
 )
 # Use a historical link incase something changes
@@ -31,7 +31,7 @@ class Keanu(commands.Cog):
         if not (cog_data_path(self) / "template.mp4").is_file():
             try:
                 async with aiohttp.ClientSession() as session:
-                    async with session.get(CRAB_LINK) as resp:
+                    async with session.get(KEANU_LINK) as resp:
                         data = await resp.read()
                 with open(cog_data_path(self) / "template.mp4", "wb") as save_file:
                     save_file.write(data)
@@ -56,7 +56,7 @@ class Keanu(commands.Cog):
     @commands.command(aliases=["keanu"])
     @commands.cooldown(1, 10, commands.BucketType.guild)
     @checks.bot_has_permissions(attach_files=True)
-    async def crab(self, ctx, *, text: str):
+    async def keanuvid(self, ctx, *, text: str):
         """Make keanu videos
             There must be exactly 1 `,` to split the message
         """
@@ -70,7 +70,7 @@ class Keanu(commands.Cog):
             return await ctx.send("You must submit exactly two strings split by comma")
         if (not t[0] and not t[0].strip()) or (not t[1] and not t[1].strip()):
             return await ctx.send("Cannot render empty text")
-        fake_task = functools.partial(self.make_crab, t=t, u_id=ctx.message.id)
+        fake_task = functools.partial(self.make_keanu, t=t, u_id=ctx.message.id)
         task = self.bot.loop.run_in_executor(None, fake_task)
         async with ctx.typing():
             try:
@@ -90,7 +90,7 @@ class Keanu(commands.Cog):
         except Exception:
             log.error("Error deleting keanu video", exc_info=True)
 
-    def make_crab(self, t, u_id):
+    def make_keanu(self, t, u_id):
         """Non blocking keanuvideo generation from DankMemer bot
         https://github.com/DankMemer/meme-server/blob/master/endpoints/crab.py
         """
@@ -98,18 +98,7 @@ class Keanu(commands.Cog):
         clip = VideoFileClip(str(cog_data_path(self)) + "/template.mp4")
         # clip.volume(0.5)
         text = TextClip(t[0], fontsize=48, color="white", font=fp)
-        text2 = (
-            TextClip("____________________", fontsize=48, color="white", font=fp)
-            .set_position((210))
-            .set_duration(11)
-        )
-        text = text.set_position((200)).set_duration(11)
-        text3 = (
-            TextClip(t[1], fontsize=48, color="white", font=fp)
-            .set_position((270))
-            .set_duration(11)
-        )
-
+        
         video = CompositeVideoClip(
             [clip, text.crossfadein(1), text2.crossfadein(1), text3.crossfadein(1)]
         ).set_duration(11)

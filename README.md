@@ -20,7 +20,7 @@ I agree
 | ---- | ----------- |
 | [Ark](https://github.com/kennnyshiwa/kennnyshiwa-cogs/tree/v3-cogs/ark) | Retrieves info from Intel's ARK database for CPU's |
 | [Embedinvite](https://github.com/kennnyshiwa/kennnyshiwa-cogs/tree/v3-cogs/embedinvite) | Removes the default invite command with a pretty embed that also includes options like support server for the bot and descriptions. |
-| [imperialtoolkit](https://github.com/kennnyshiwa/kennnyshiwa-cogs/tree/v3-cogs/imperialtoolkit) | A collection of useful commands such as bot stats, and generating message links via a message id (more to come1) |
+| [imperialtoolkit](https://github.com/kennnyshiwa/kennnyshiwa-cogs/tree/v3-cogs/imperialtoolkit) | A collection of useful commands such as bot stats, more to come in the future |
 | [trackerinfo](https://github.com/kennnyshiwa/kennnyshiwa-cogs/tree/v3-cogs/trackerinfo) | Collection of embeds that display information about various private tracker websites |
 
 # Support/Contact

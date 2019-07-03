@@ -26,7 +26,7 @@ I agree
 # Support/Contact
 You can reach me on Discord kennnyshiwa#1337
 
-You can also join my [Discord Server](https://discord.gg/aBTTycG) . Feel free to DM if you need any help or have questions
+You can also join my [Discord Server](https://discord.gg/TEeXcDY) . Feel free to DM if you need any help or have questions
 
 # Contributors:
 

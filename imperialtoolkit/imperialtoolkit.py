@@ -27,6 +27,8 @@ except ImportError:
 class ImperialToolkit(commands.Cog):
     """Collection of useful commands and tools"""
 
+    __author__ = "kennnyshiwa" 
+
     def __init__(self, bot):
         self.bot = bot
         self.config = Config.get_conf(self, 376564057517457408, force_registration=True)

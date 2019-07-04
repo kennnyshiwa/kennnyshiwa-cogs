@@ -8,6 +8,8 @@ __author__ = "kennnyshiwa and Beryju"
 class ARKCog(commands.Cog):
     """ARK lookup Cog"""
 
+    __author__ = "kennnyshiwa" 
+
     special_queries = {
         "@everyone": "Hah. Nice try. Being very funny. Cheeky cunt.",
         "@here": "You thought this would work too, very funny",

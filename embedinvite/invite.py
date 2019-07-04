@@ -10,6 +10,8 @@ old_invite = None
 class Invite(commands.Cog):
     """Personalize invite command with an embed and multiple options."""
 
+    __author__ = "kennnyshiwa" 
+
     def __init__(self, bot):
         self.bot = bot
         default = {

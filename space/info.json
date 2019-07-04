@@ -1,0 +1,13 @@
+{
+	"author": [
+		"kennnyshiwa"
+	],
+	"description": "Displays various pictures and other information about space",
+	"hidden": false,
+	"install_msg": "Thanks for installing, have fun.",
+	"short": "Space information and Pictures",
+	"tags": [
+		"bots"
+	],
+	"type": "COG"
+}

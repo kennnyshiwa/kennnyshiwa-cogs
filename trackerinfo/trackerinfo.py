@@ -7,7 +7,7 @@ import aiohttp
 class Trackerinfo(commands.Cog):
     """Look up information about a trackers status"""
 
-    __author__ = "kennnyshiwa" 
+    __author__ = "kennnyshiwa"
 
     def __init__(self, bot):
         self.bot = bot

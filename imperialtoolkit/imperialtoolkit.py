@@ -27,7 +27,7 @@ except ImportError:
 class ImperialToolkit(commands.Cog):
     """Collection of useful commands and tools"""
 
-    __author__ = "kennnyshiwa" 
+    __author__ = "kennnyshiwa"
 
     def __init__(self, bot):
         self.bot = bot
@@ -54,9 +54,7 @@ class ImperialToolkit(commands.Cog):
             cpustats = psutil.cpu_percent()
             ramusage = psutil.virtual_memory()
             netusage = psutil.net_io_counters()
-            width = max(
-                [len(self._size(n)) for n in [netusage.bytes_sent, netusage.bytes_recv]]
-            )
+            width = max([len(self._size(n)) for n in [netusage.bytes_sent, netusage.bytes_recv]])
             net_ios = "\u200b" "\n\t{0:<11}: {1:>{width}}".format(
                 "Bytes sent", self._size(netusage.bytes_sent), width=width
             ) + "\n\t{0:<11}: {1:>{width}}".format(
@@ -87,9 +85,7 @@ class ImperialToolkit(commands.Cog):
             cpu = cpuinfo.get_cpu_info()["brand"]
             cpucount = psutil.cpu_count()
             ramamount = psutil.virtual_memory()
-            ram_ios = "{0:<11} {1:>{width}}".format(
-                "", self._size(ramamount.total), width=width
-            )
+            ram_ios = "{0:<11} {1:>{width}}".format("", self._size(ramamount.total), width=width)
 
             servers = len(self.bot.guilds)
             shards = self.bot.shard_count
@@ -115,9 +111,7 @@ class ImperialToolkit(commands.Cog):
                     str(cpustats),
                     str(ramusage.percent),
                     net_ios,
-                    datetime.fromtimestamp(psutil.boot_time()).strftime(
-                        "%Y-%m-%d %H:%M:%S"
-                    ),
+                    datetime.fromtimestamp(psutil.boot_time()).strftime("%Y-%m-%d %H:%M:%S"),
                     osver,
                     cpu,
                     cpucount,

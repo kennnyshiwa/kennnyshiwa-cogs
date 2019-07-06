@@ -10,7 +10,7 @@ old_invite = None
 class Invite(commands.Cog):
     """Personalize invite command with an embed and multiple options."""
 
-    __author__ = "kennnyshiwa" 
+    __author__ = "kennnyshiwa"
 
     def __init__(self, bot):
         self.bot = bot
@@ -106,12 +106,10 @@ class Invite(commands.Cog):
         if support_serv is None and support is True:
             return await ctx.send("Owner needs to set support server !")
         embed = discord.Embed(
-            description=await self.config.description(),
-            color=await self.config.colour(),
+            description=await self.config.description(), color=await self.config.colour()
         )
         embed.set_author(
-            name=ctx.bot.user.name,
-            icon_url=ctx.bot.user.avatar_url_as(static_format="png"),
+            name=ctx.bot.user.name, icon_url=ctx.bot.user.avatar_url_as(static_format="png")
         )
         embed.set_thumbnail(url=ctx.bot.user.avatar_url_as(static_format="png"))
         embed.add_field(

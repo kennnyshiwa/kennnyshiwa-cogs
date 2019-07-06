@@ -1,3 +1,5 @@
+import contextlib
+
 from redbot.core import commands
 from redbot.core.utils.menus import menu, DEFAULT_CONTROLS
 import discord
@@ -49,15 +51,15 @@ class Space(commands.Cog):
         async with aiohttp.ClientSession() as session:
             async with session.get(base_url % query) as r:
                 data = await r.json()
-            if data.get("collection")["items"]:
-                x = 0
-                for x in range(99):
-                    x = random.randint(1, 99)
-                    space_data.append(data.get("collection")["items"][x]["links"][0]["href"])
-
-        if len(space_data) > 10:
+            if data.get("collection")["items"]:  # Only run the code with this key exists
+                for x in range(99):  # Fet all 99 items
+                    with contextlib.suppress(KeyError):
+                        # Ignore Key errors if this index
+                        # doesn't exist
+                        space_data.append(data.get("collection")["items"][x]["links"][0]["href"])
+        if len(space_data) > 10:  # If more than 10 pages get random 10 pages
             return random.sample(space_data, 10)
-        return space_data
+        return space_data  # this means we have between 0 and 10 pages return all
 
     def escape_query(self, query) -> str:
         """Escape mentions from queries"""
@@ -76,8 +78,8 @@ class Space(commands.Cog):
             if not space_data:
                 await ctx.send("I couldn't find anything matching `%s`" % query)
                 return
-            total_pages = len(space_data)
-            for c, i in enumerate(space_data, 1):
+            total_pages = len(space_data)  # Get total page count
+            for c, i in enumerate(space_data, 1):  # Done this so I could get page count `c`
                 space_data_clean = i.replace(" ", "%20")
                 print(space_data_clean)
                 embed = discord.Embed(
@@ -87,8 +89,11 @@ class Space(commands.Cog):
                 )
                 embed.set_image(url=space_data_clean)
                 embed.set_footer(text=f"Page {c}/{total_pages}")
+                # Set a footer to let the user
+                # know what page they are in
                 pages.append(embed)
-        if pages:
+                # Added this embed to embed list that the menu will use
+        if pages:  # Only show menu if there pages in list otherwise send the Error message
             return await menu(ctx, pages, DEFAULT_CONTROLS)
         await ctx.send("Error when finding message")
 

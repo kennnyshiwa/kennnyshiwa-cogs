@@ -81,7 +81,6 @@ class Space(commands.Cog):
             total_pages = len(space_data)  # Get total page count
             for c, i in enumerate(space_data, 1):  # Done this so I could get page count `c`
                 space_data_clean = i.replace(" ", "%20")
-                print(space_data_clean)
                 embed = discord.Embed(
                     title="Results from space",
                     description="Query was `%s`" % query,

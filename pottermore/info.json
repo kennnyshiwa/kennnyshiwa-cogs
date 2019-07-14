@@ -1,0 +1,13 @@
+{
+	"author": [
+		"kennnyshiwa"
+	],
+	"description": "Find your hogwarts house and lookup information about Harry Potter characters",
+	"hidden": false,
+	"install_msg": "Thanks for installing, have fun.",
+	"short": "Harry Potter information",
+	"tags": [
+		"bots"
+	],
+	"type": "COG"
+}

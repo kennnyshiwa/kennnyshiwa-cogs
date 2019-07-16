@@ -130,11 +130,11 @@ class ImperialToolkit(commands.Cog):
             embed.add_field(
                 name="\N{ROBOT FACE} Bot Info",
                 value=(
-                    "Servers: `{servs}`\n"
-                    "Users: `{users}`\n"
-                    "Shard{s}: `{shard}`\n"
-                    "Channels: `{channels}`\n"
-                    "Number of commands: `{numcommands}`\n"
+                    "Servers: `{servs:,}`\n"
+                    "Users: `{users:,}`\n"
+                    "Shard{s}: `{shard:,}`\n"
+                    "Channels: `{channels:,}`\n"
+                    "Number of commands: `{numcommands:,}`\n"
                     "Bot Uptime: `{uptime}`"
                 ).format(
                     servs=servers,

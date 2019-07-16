@@ -1,16 +1,13 @@
 import discord
-import datetime
+import os
 import sys
 import cpuinfo
-import os
 import platform
-import getpass
-import redbot.core
 import lavalink
 
 from datetime import datetime
 
-from redbot.core import commands, Config
+from redbot.core import version_info as red_version_info, commands
 
 from redbot.core.utils.chat_formatting import humanize_timedelta
 
@@ -23,15 +20,17 @@ try:
 except ImportError:
     psutilAvailable = False
 
+if sys.platform == "linux":
+    import distro
+
 
 class ImperialToolkit(commands.Cog):
-    """Collection of useful commands and tools"""
+    """Collection of useful commands and tools."""
 
     __author__ = "kennnyshiwa"
 
     def __init__(self, bot):
         self.bot = bot
-        self.config = Config.get_conf(self, 376564057517457408, force_registration=True)
 
     @staticmethod
     def _size(num):
@@ -48,21 +47,23 @@ class ImperialToolkit(commands.Cog):
 
     @commands.bot_has_permissions(embed_links=True)
     @commands.command()
-    async def botstat(self, ctx: commands.Context):
-        """Get stats about the bot including messages sent and recieved and other info"""
+    async def botstat(self, ctx):
+        """Get stats about the bot including messages sent and recieved and other info."""
         async with ctx.typing():
             cpustats = psutil.cpu_percent()
             ramusage = psutil.virtual_memory()
             netusage = psutil.net_io_counters()
             width = max([len(self._size(n)) for n in [netusage.bytes_sent, netusage.bytes_recv]])
-            net_ios = "\u200b" "\n\t{0:<11}: {1:>{width}}".format(
-                "Bytes sent", self._size(netusage.bytes_sent), width=width
-            ) + "\n\t{0:<11}: {1:>{width}}".format(
-                "Bytes recv", self._size(netusage.bytes_recv), width=width
+            net_ios = (
+                "{sent_text:<11}: {sent:>{width}}\n"
+                "{recv_text:<11}: {recv:>{width}}"
+            ).format(
+                sent_text="Bytes sent",
+                sent=self._size(netusage.bytes_sent),
+                width=width,
+                recv_text="Bytes recv",
+                recv=self._size(netusage.bytes_recv),
             )
-
-            if sys.platform == "linux":
-                import distro
 
             IS_WINDOWS = os.name == "nt"
             IS_MAC = sys.platform == "darwin"
@@ -91,63 +92,76 @@ class ImperialToolkit(commands.Cog):
             shards = self.bot.shard_count
             totalusers = sum(len(s.members) for s in self.bot.guilds)
             channels = sum(len(s.channels) for s in self.bot.guilds)
-            numcogs = len(self.bot.commands)
+            numcommands = len(self.bot.commands)
             uptime = str(self.get_bot_uptime())
 
-            red = redbot.core.__version__
+            red = red_version_info
             dpy = discord.__version__
 
             embed = discord.Embed(
                 title="Bot Stats for {}".format(ctx.bot.user.name),
-                description="Below are various stats about the bot and the machine "
-                "that runs the bot",
+                description="Below are various stats about the bot and the machine that runs the bot",
                 color=await ctx.embed_color(),
             )
             embed.add_field(
                 name="\N{DESKTOP COMPUTER} Server Info",
-                value="CPU usage `{}%`\n RAM usage `{}%`\n"
-                "Network usage `{}`\n Boot Time `{}`\n OS {}\n CPU Info `{}`\n"
-                "Core Count `{}`\n Total Ram `{}`".format(
-                    str(cpustats),
-                    str(ramusage.percent),
-                    net_ios,
-                    datetime.fromtimestamp(psutil.boot_time()).strftime("%Y-%m-%d %H:%M:%S"),
-                    osver,
-                    cpu,
-                    cpucount,
-                    ram_ios,
+                value=(
+                    "CPU usage: `{cpu_usage}%`\n"
+                    "RAM usage: `{ram_usage}%`\n"
+                    "Network usage: `{network_usage}`\n"
+                    "Boot Time: `{boot_time}`\n"
+                    "OS: {os}\n"
+                    "CPU Info: `{cpu}`\n"
+                    "Core Count: `{cores}`\n"
+                    "Total Ram: `{ram}`"
+                ).format(
+                    cpu_usage=str(cpustats),
+                    ram_usage=str(ramusage.percent),
+                    network_usage=net_ios,
+                    boot_time=datetime.fromtimestamp(psutil.boot_time()).strftime(
+                        "%Y-%m-%d %H:%M:%S"
+                    ),
+                    os=osver,
+                    cpu=cpu,
+                    cores=cpucount,
+                    ram=ram_ios,
                 ),
             )
             embed.add_field(
                 name="\N{ROBOT FACE} Bot Info",
-                value="Servers: `{servs}`\n"
-                "Users: `{users}`\n"
-                "Shard{s}: `{shard}`\n"
-                "Channels: `{channels}`\n"
-                "Number of commands: `{numcogs}`\n"
-                "Bot Uptime: `{uptime}`".format(
+                value=(
+                    "Servers: `{servs:,}`\n"
+                    "Users: `{users:,}`\n"
+                    "Shard{s}: `{shard:,}`\n"
+                    "Channels: `{channels:,}`\n"
+                    "Number of commands: `{numcommands:,}`\n"
+                    "Bot Uptime: `{uptime}`"
+                ).format(
                     servs=servers,
                     users=totalusers,
                     s="s" if shards >= 2 else "",
                     shard=shards,
                     channels=channels,
-                    numcogs=numcogs,
+                    numcommands=numcommands,
                     uptime=uptime,
                     inline=True,
                 ),
             )
             embed.add_field(
                 name="\N{BOOKS} Libraries,",
-                value="Lavalink: `{lavalink}`\n"
-                "Jar Version: `{jarbuild}`\n"
-                "Red Version: `{redversion}`\n"
-                "Discord.py Version: `{discordversion}`".format(
+                value=(
+                    "Lavalink: `{lavalink}`\n"
+                    "Jar Version: `{jarbuild}`\n"
+                    "Red Version: `{redversion}`\n"
+                    "Discord.py Version: `{discordversion}`"
+                ).format(
                     lavalink=lavalink.__version__,
                     jarbuild=jarversion,
                     redversion=red,
                     discordversion=dpy,
                 ),
             )
-            embed.set_footer(text="{}".format(await ctx.bot.db.help.tagline()))
             embed.set_thumbnail(url=ctx.bot.user.avatar_url_as(static_format="png"))
-            await ctx.send(embed=embed)
+            embed.set_footer(text=await ctx.bot.db.help.tagline())
+
+        return await ctx.send(embed=embed)

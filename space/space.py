@@ -31,8 +31,8 @@ class Space(commands.Cog):
             url = data["url"]
             title = data["title"]
 
-            if (len(details)) > 1024:
-                await ctx.send("**Astronomy Picute of the Day**\n```{}```".format(details))
+            if len(details) > 1024:
+                await ctx.send("**Astronomy Picture of the Day**\n```{}```".format(details))
                 await ctx.send(url)
             else:
                 embed = discord.Embed(

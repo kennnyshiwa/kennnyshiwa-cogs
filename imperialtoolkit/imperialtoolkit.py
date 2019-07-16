@@ -54,10 +54,15 @@ class ImperialToolkit(commands.Cog):
             ramusage = psutil.virtual_memory()
             netusage = psutil.net_io_counters()
             width = max([len(self._size(n)) for n in [netusage.bytes_sent, netusage.bytes_recv]])
-            net_ios = "\u200b" "\n\t{0:<11}: {1:>{width}}".format(
-                "Bytes sent", self._size(netusage.bytes_sent), width=width
-            ) + "\n\t{0:<11}: {1:>{width}}".format(
-                "Bytes recv", self._size(netusage.bytes_recv), width=width
+            net_ios = (
+                "{sent_text:<11}: {sent:>{width}}\n"
+                "{recv_text:<11}: {recv:>{width}}"
+            ).format(
+                sent_text="Bytes sent",
+                sent=self._size(netusage.bytes_sent),
+                width=width,
+                recv_text="Bytes recv",
+                recv=self._size(netusage.bytes_recv),
             )
 
             IS_WINDOWS = os.name == "nt"

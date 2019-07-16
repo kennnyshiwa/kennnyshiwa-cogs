@@ -55,6 +55,7 @@ class ImperialToolkit(commands.Cog):
             netusage = psutil.net_io_counters()
             width = max([len(self._size(n)) for n in [netusage.bytes_sent, netusage.bytes_recv]])
             net_ios = (
+                "\u200b" "\n"
                 "{sent_text:<11}: {sent:>{width}}\n"
                 "{recv_text:<11}: {recv:>{width}}"
             ).format(

@@ -31,6 +31,20 @@ class ImperialToolkit(commands.Cog):
 
     def __init__(self, bot):
         self.bot = bot
+        lavalink.register_event_listener(self.event_handler)
+    
+    def cog_unload(self):
+        lavalink.unregister_event_listener(self.event_handler)
+    
+    async def event_handler(self, player, event_type, extra):  # To delete at next audio update.
+        # Thanks Draper#6666
+        if event_type == lavalink.LavalinkEvents.TRACK_START:
+            self.bot.counter["tracks_played"] += 1
+
+    # Planned for next audio update.
+    # @commands.Cog.listener()
+    # async def on_track_start(self, guild: discord.Guild, track, reuester):
+    #     self.bot.counter["tracks_played"] += 1
 
     @staticmethod
     def _size(num):
@@ -95,6 +109,15 @@ class ImperialToolkit(commands.Cog):
             channels = sum(len(s.channels) for s in self.bot.guilds)
             numcommands = len(self.bot.commands)
             uptime = str(self.get_bot_uptime())
+            tracks_played = "`{:,}`".format(self.bot.counter["tracks_played"])
+            try:
+                total_num = "`{:,}`".format(
+                    len(lavalink.active_players())
+                )
+            except AttributeError:
+                total_num = "`{:,}`".format(
+                    len([p for p in lavalink.players if p.current is not None])
+                )
 
             red = red_version_info
             dpy = discord.__version__
@@ -134,6 +157,8 @@ class ImperialToolkit(commands.Cog):
                     "Servers: `{servs:,}`\n"
                     "Users: `{users:,}`\n"
                     "Shard{s}: `{shard:,}`\n"
+                    "Playing Music on: `{totalnum:}` servers\n"
+                    "Tracks Played: `{tracksplayed:}`\n"
                     "Channels: `{channels:,}`\n"
                     "Number of commands: `{numcommands:,}`\n"
                     "Bot Uptime: `{uptime}`"
@@ -142,11 +167,13 @@ class ImperialToolkit(commands.Cog):
                     users=totalusers,
                     s="s" if shards >= 2 else "",
                     shard=shards,
+                    totalnum=total_num,
+                    tracksplayed=tracks_played,
                     channels=channels,
                     numcommands=numcommands,
                     uptime=uptime,
-                    inline=True,
                 ),
+                inline=True,
             )
             embed.add_field(
                 name="\N{BOOKS} Libraries,",

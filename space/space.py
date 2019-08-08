@@ -115,5 +115,25 @@ class Space(commands.Cog):
             embed.set_thumbnail(url="https://photos.kstj.us/GrumpyMeanThrasher.jpg")
             await ctx.send(embed=embed)
 
+    @commands.command()
+    async def astronauts(self, ctx):
+        """Show who is currently in space"""
+        async with ctx.typing():
+            async with self.session.get("http://api.open-notify.org/astros.json") as r:
+                data = await r.json()
+            color = await ctx.embed_color()
+            person1 = data["people"][0]["name"]
+            person2 = data["people"][1]["name"]
+            person3 = data["people"][2]["name"]
+            person4 = data["people"][3]["name"]
+            person5 = data["people"][4]["name"]
+            person6 = data["people"][5]["name"]
+            embed = discord.Embed(
+                title="Who's in space?",
+                color=color
+            )
+            embed.add_field(name="Current Astronauts in space", value="{}\n{}\n{}\n{}\n{}\n{}".format(person1, person2, person3, person4, person5, person6), inline=True)
+            await ctx.send(embed=embed)
+    
     def cog_unload(self):
         self.bot.loop.create_task(self.session.close())

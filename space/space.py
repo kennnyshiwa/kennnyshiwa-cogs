@@ -4,6 +4,7 @@ from redbot.core import commands
 from redbot.core.utils.menus import menu, DEFAULT_CONTROLS
 import discord
 import random
+from random import choice
 
 import aiohttp
 
@@ -12,6 +13,29 @@ class Space(commands.Cog):
     """Show pics of space"""
 
     __author__ = "kennnyshiwa"
+
+    special_queries = {
+        "star wars",
+        "Star Wars",
+        "Star wars",
+        "star Wars"
+    }
+    starwars = [
+        "https://media2.giphy.com/media/bR4poFy22rgUE/source.gif",
+        "https://media.giphy.com/media/pvDp7Ewpzt0o8/giphy.gif",
+        "https://media2.giphy.com/media/M4iOAkEAPwAnK/giphy.gif",
+        "https://media.giphy.com/media/4GXQSVCsrbAQV1gqoS/giphy.gif",
+        "https://media2.giphy.com/media/3o84sq21TxDH6PyYms/giphy.gif",
+        "https://media.giphy.com/media/l3fZPV4s1oKmZiXJK/giphy.gif",
+        "https://i.imgur.com/jA2Jmvl.gif",
+        "https://media2.giphy.com/media/3o7abrH8o4HMgEAV9e/giphy.gif",
+        "https://media3.giphy.com/media/3h2lUwrZKilQKbAK6f/source.gif",
+        "https://media2.giphy.com/media/10LNU0do0k7blS/source.gif",
+        "https://media3.giphy.com/media/TCmUPOuvhNzX2/source.gif",
+        "https://media3.giphy.com/media/rsIuy6pUXTvSU/source.gif",
+
+
+    ]
 
     def __init__(self, bot):
         self.bot = bot
@@ -74,6 +98,9 @@ class Space(commands.Cog):
         pages = []
         async with ctx.typing():
             query = self.escape_query("".join(query))
+            if query in self.special_queries: 
+                await ctx.send(choice(self.starwars))
+                return
             space_data = await self.do_lookup(query)
             if not space_data:
                 await ctx.send("I couldn't find anything matching `%s`" % query)

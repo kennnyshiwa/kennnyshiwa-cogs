@@ -42,6 +42,7 @@ class Space(commands.Cog):
         self.session = aiohttp.ClientSession(loop=self.bot.loop)
 
     @commands.command()
+    @commands.bot_has_permissions(embed_links=True)
     async def apod(self, ctx):
         """Astronomy Picture of the Day"""
         async with ctx.typing():
@@ -77,7 +78,7 @@ class Space(commands.Cog):
                 data = await r.json()
             if data.get("collection")["items"]:  # Only run the code with this key exists
                 for x in range(99):  # Fet all 99 items
-                    with contextlib.suppress(KeyError):
+                    with contextlib.suppress(KeyError, IndexError):
                         # Ignore Key errors if this index
                         # doesn't exist
                         space_data.append(data.get("collection")["items"][x]["links"][0]["href"])
@@ -90,6 +91,7 @@ class Space(commands.Cog):
         return query.replace("`", "'")
 
     @commands.command()
+    @commands.bot_has_permissions(embed_links=True)
     async def spacepic(self, ctx, *, query):
         """
         Lookup pictures from space!
@@ -124,6 +126,7 @@ class Space(commands.Cog):
         await ctx.send("Error when finding message")
 
     @commands.command()
+    @commands.bot_has_permissions(embed_links=True)
     async def isslocation(self, ctx):
         """Show the Current location of the ISS"""
         async with ctx.typing():
@@ -143,24 +146,24 @@ class Space(commands.Cog):
             await ctx.send(embed=embed)
 
     @commands.command()
+    @commands.bot_has_permissions(embed_links=True)
     async def astronauts(self, ctx):
         """Show who is currently in space"""
         async with ctx.typing():
-            async with self.session.get("http://api.open-notify.org/astros.json") as r:
-                data = await r.json()
+            async with self.session.get("http://api.open-notify.org/astros.json") as resp:
+                data = await resp.json(content_type="application/json")
             color = await ctx.embed_color()
-            person1 = data["people"][0]["name"]
-            person2 = data["people"][1]["name"]
-            person3 = data["people"][2]["name"]
-            person4 = data["people"][3]["name"]
-            person5 = data["people"][4]["name"]
-            person6 = data["people"][5]["name"]
+            astrosnauts = []
+            for astros in data["people"]:
+              astrosnauts.append(astros["name"])
+
             embed = discord.Embed(
                 title="Who's in space?",
                 color=color
             )
-            embed.add_field(name="Current Astronauts in space", value="{}\n{}\n{}\n{}\n{}\n{}".format(person1, person2, person3, person4, person5, person6), inline=True)
+            embed.add_field(name="Current Astronauts in space", value="\n".join(astrosnauts), inline=True)
             await ctx.send(embed=embed)
+
     
     def cog_unload(self):
         self.bot.loop.create_task(self.session.close())

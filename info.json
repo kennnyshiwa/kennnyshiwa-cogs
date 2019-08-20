@@ -1,6 +1,13 @@
 {
-    "NAME": "Kennnyshiwa's Cogs",
-    "AUTHOR": "Kennnyshiwa, Beryju, preda",
-    "SHORT": "General purpose cogs",
-    "DESCRIPTION": ""
+    "author": ["Kennnyshiwa, Beryju, preda"],
+    "name": "Kennnyshiwa's Cogs",
+    "install_msg": "Thanks for installing my repo!\n Check `[p]cog list kennnyshiwa` to see all my cogs!",
+    "short": "General purpose cogs",
+    "description": "A bunch of general purpose cogs for stuff like intel cpu data lookup, space pictures and more.",
+    "tags": [
+        "information",
+        "space",
+        "statistics",
+        "images"
+    ]
 }

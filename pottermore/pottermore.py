@@ -51,7 +51,6 @@ class Pottermore(commands.Cog):
             await self.config.user(ctx.author).house.set(str(house))
         color = await ctx.embed_color()
         house_user = await self.config.user(ctx.author).house()
-        print(house_user)
         if house_user == "Slytherin":
             image = slytherin
             embed = discord.Embed(
@@ -93,10 +92,9 @@ class Pottermore(commands.Cog):
         async with aiohttp.ClientSession() as session:
             async with session.get(base_url % query) as r:
                 data = await r.json()
-                print(base_url % query)
                 if not data:
-                    return None
-                print(data[0])
+                    with contextlib.suppress(KeyError):
+                        return None
                 return data[0]
 
     def escape_query(self, query) -> str:

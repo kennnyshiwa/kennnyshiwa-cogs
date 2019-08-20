@@ -7,7 +7,7 @@ from redbot.core import commands, checks, Config
 old_invite = None
 
 
-class Invite(commands.Cog):
+class EmbedInvite(commands.Cog):
     """Personalize invite command with an embed and multiple options."""
 
     __author__ = "kennnyshiwa"
@@ -15,9 +15,8 @@ class Invite(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         default = {
-            "support": True,
+            "support": False,
             "support_serv": None,
-            "colour": 0,
             "description": "Thanks for choosing to invite {name} to your server".format(
                 name=self.bot.user.name
             ),
@@ -26,6 +25,16 @@ class Invite(commands.Cog):
         self.config = Config.get_conf(self, 376564057517457408, force_registration=True)
         self.config.register_global(**default)
 
+    def cog_unload(self):
+        global old_invite
+        if old_invite:
+            try:
+                self.bot.remove_command("invite")
+            except:
+                pass
+            self.bot.add_command(old_invite)
+
+
     @checks.is_owner()
     @commands.group()
     async def invitesettings(self, ctx):
@@ -33,21 +42,12 @@ class Invite(commands.Cog):
         pass
 
     @invitesettings.command()
-    async def colour(self, ctx, colour: discord.Colour):
-        """
-        Set colour of the embed.
-        Accepts either a hex value or color name.
-        Default: Black
-        """
-        await self.config.colour.set(colour.value)
-        await ctx.send("Embed colour set.")
-
-    @invitesettings.command()
     async def description(self, ctx, *, text: str = ""):
         """
         Set the embed description.
-        Set to None if you don't want description.
-        Default: "Thanks for choosing to invite {botname} to your server"
+        Leave blank for default description
+        Default: "Thanks for choosing to invite ______ to your server"
+        Enter ``None`` to disable the description
         """
         if text == "":
             await self.config.description.clear()
@@ -59,10 +59,10 @@ class Invite(commands.Cog):
         await ctx.send(f"Embed description set to :\n`{text}`")
 
     @invitesettings.command()
-    async def support(self, ctx, toggle: bool = True):
+    async def support(self, ctx, toggle: bool = None):
         """
         Choose if you want support field.
-        Default: True
+        Default: False
         """
         if toggle:
             await self.config.support.set(True)
@@ -84,6 +84,8 @@ class Invite(commands.Cog):
     async def setpermissions(self, ctx, *, text: int = ""):
         """Set the default permissions value for your bot.
         Get the permissions value from https://discordapi.com/permissions.html
+        If left blank, resets permissions value to none
+        Enter ``None`` to disable the permissions value
         """
         if text == "":
             await self.config.setpermissions.clear()
@@ -104,9 +106,9 @@ class Invite(commands.Cog):
         support_serv = await self.config.support_serv()
         support = await self.config.support()
         if support_serv is None and support is True:
-            return await ctx.send("Owner needs to set support server !")
+            return await ctx.send("Bot Owner needs to set a support server!")
         embed = discord.Embed(
-            description=await self.config.description(), color=await self.config.colour()
+            description=await self.config.description(), color=await ctx.embed_color()
         )
         embed.set_author(
             name=ctx.bot.user.name, icon_url=ctx.bot.user.avatar_url_as(static_format="png")
@@ -128,11 +130,10 @@ class Invite(commands.Cog):
         )
         await ctx.send(embed=embed)
 
-    def cog_unload(self):
-        global old_invite
-        if old_invite:
-            try:
-                self.bot.remove_command("invite")
-            except:
-                pass
-            self.bot.add_command(old_invite)
+def setup(bot):
+    invite = EmbedInvite(bot)
+    global old_invite
+    old_invite = bot.get_command("invite")
+    if old_invite:
+        bot.remove_command(old_invite.name)
+    bot.add_cog(invite)

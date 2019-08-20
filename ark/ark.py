@@ -1,15 +1,13 @@
 import aiohttp
+from aiohttp.client_exceptions import ContentTypeError
 import discord
 from redbot.core import commands
 
-__author__ = "kennnyshiwa and Beryju"
-
-
-class ARKCog(commands.Cog):
+class Ark(commands.Cog):
     """ARK lookup Cog"""
 
-    __author__ = "kennnyshiwa"
-
+    __author__ = ["kennnyshiwa", "Beryju"]
+    
     special_queries = {
         "@everyone": "Hah. Nice try. Being very funny. Cheeky cunt.",
         "@here": "You thought this would work too, very funny",
@@ -56,11 +54,9 @@ class ARKCog(commands.Cog):
                 -ECCMemory
                 -MaxMem
 
-            Reference of fields can be found here: https://odata.intel.com/
         """
         author = ctx.author.mention
         async with ctx.typing():
-            query = self.escape_query("".join(query))
             # Check special queries first
             if query in self.special_queries:
                 await ctx.send(self.special_queries[query])
@@ -68,7 +64,11 @@ class ARKCog(commands.Cog):
             if query == author:
                 await ctx.send("Go to google if you want to search yourself")
                 return
-            cpu_data = await self.do_lookup(query)
+            try:
+                cpu_data = await self.do_lookup(query)
+            except ContentTypeError:
+                await ctx.send("That doesn't appear to be a vaild request")
+                return
             if not cpu_data:
                 await ctx.send("I couldn't find anything matching `%s`" % query)
                 return

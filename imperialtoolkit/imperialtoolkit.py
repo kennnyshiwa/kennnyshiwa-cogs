@@ -98,7 +98,10 @@ class ImperialToolkit(commands.Cog):
             else:
                 osver = "Could not parse OS, report this on Github."
 
-            cpu = cpuinfo.get_cpu_info()["brand"]
+            try:
+                cpu = cpuinfo.get_cpu_info()["brand"]
+            except:
+                cpu = "unknown"
             cpucount = psutil.cpu_count()
             ramamount = psutil.virtual_memory()
             ram_ios = "{0:<11} {1:>{width}}".format("", self._size(ramamount.total), width=width)

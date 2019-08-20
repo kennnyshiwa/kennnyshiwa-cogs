@@ -13,12 +13,7 @@ from redbot.core.utils.chat_formatting import humanize_timedelta
 
 from redbot.cogs.audio.manager import JAR_BUILD as jarversion
 
-try:
-    import psutil
-
-    psutilAvailable = True
-except ImportError:
-    psutilAvailable = False
+import psutil
 
 if sys.platform == "linux":
     import distro

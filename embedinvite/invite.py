@@ -59,12 +59,12 @@ class EmbedInvite(commands.Cog):
         await ctx.send(f"Embed description set to :\n`{text}`")
 
     @invitesettings.command()
-    async def support(self, ctx, toggle: bool = None):
+    async def support(self, ctx, value: bool = None):
         """
         Choose if you want support field.
         Default: False
         """
-        if toggle:
+        if value:
             await self.config.support.set(True)
             await ctx.send("Support field set to `True`.")
         else:

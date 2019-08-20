@@ -57,6 +57,7 @@ class Ark(commands.Cog):
         """
         author = ctx.author.mention
         async with ctx.typing():
+            query = self.escape_query("".join(query))
             # Check special queries first
             if query in self.special_queries:
                 await ctx.send(self.special_queries[query])

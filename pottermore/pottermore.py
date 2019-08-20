@@ -92,9 +92,12 @@ class Pottermore(commands.Cog):
         async with aiohttp.ClientSession() as session:
             async with session.get(base_url % query) as r:
                 data = await r.json()
-                if not data:
-                    with contextlib.suppress(KeyError):
-                        return None
+                try:
+                    if not data:
+                        with contextlib.suppress(KeyError):
+                            return None
+                except:
+                    return None
                 return data[0]
 
     def escape_query(self, query) -> str:

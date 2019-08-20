@@ -76,12 +76,15 @@ class Space(commands.Cog):
         async with aiohttp.ClientSession() as session:
             async with session.get(base_url % query) as r:
                 data = await r.json()
-            if data.get("collection")["items"]:  # Only run the code with this key exists
-                for x in range(99):  # Fet all 99 items
-                    with contextlib.suppress(KeyError, IndexError):
-                        # Ignore Key errors if this index
-                        # doesn't exist
-                        space_data.append(data.get("collection")["items"][x]["links"][0]["href"])
+            try:
+                if data.get("collection")["items"]:  # Only run the code with this key exists
+                    for x in range(99):  # Fet all 99 items
+                        with contextlib.suppress(KeyError, IndexError):
+                            # Ignore Key errors if this index
+                            # doesn't exist
+                            space_data.append(data.get("collection")["items"][x]["links"][0]["href"])
+            except:
+                return None
         if len(space_data) > 10:  # If more than 10 pages get random 10 pages
             return random.sample(space_data, 10)
         return space_data  # this means we have between 0 and 10 pages return all
@@ -105,7 +108,7 @@ class Space(commands.Cog):
                 return
             space_data = await self.do_lookup(query)
             if not space_data:
-                await ctx.send("I couldn't find anything matching `%s`" % query)
+                await ctx.send("Looks like you got lost in space looking for `%s`" % query)
                 return
             total_pages = len(space_data)  # Get total page count
             for c, i in enumerate(space_data, 1):  # Done this so I could get page count `c`

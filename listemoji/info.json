@@ -1,0 +1,14 @@
+{
+	"author": [
+		"kennnyshiwa"
+	],
+	"description": "List all of your servers emojis",
+	"hidden": false,
+	"install_msg": "Thanks for installing, have fun.",
+	"short": "List all of your servers emojis",
+	"tags": [
+		"bots",
+		"emojis"
+	],
+	"type": "COG"
+}

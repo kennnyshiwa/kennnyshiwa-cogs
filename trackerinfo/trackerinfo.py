@@ -26,6 +26,14 @@ class Trackerinfo(commands.Cog):
         irc = f'IRC is {"down" if irc == "0" else "up"}'
         ircannounce = data["IRCTorrentAnnouncer"]
         ircannounce = f'IRC Announce is {"down" if ircannounce == "0" else "up"}'
+        tracker = data["TrackerHTTPS"]
+        if tracker == "0":
+            trackerstatus = "down"
+        elif tracker == "1":
+            trackerstatus = "up"
+        elif tracker == "2":
+            trackerstatus = "unstable"
+        tracker = f'HTTPS Tracker is {trackerstatus}'
 
         embed = discord.Embed(
             title="PTP Status", url="https://ptp.trackerstatus.info", color=color
@@ -34,6 +42,7 @@ class Trackerinfo(commands.Cog):
         embed.add_field(name="Website", value="{}".format(website))
         embed.add_field(name="IRC", value="{}".format(irc))
         embed.add_field(name="IRC Torrent Announcer", value="{}".format(ircannounce))
+        embed.add_field(name="TrackerHTTP", value="{}".format(tracker))
 
         await ctx.send(embed=embed)
 
@@ -50,6 +59,14 @@ class Trackerinfo(commands.Cog):
         irc = f'IRC is {"down" if irc == "0" else "up"}'
         ircannounce = data["IRCTorrentAnnouncer"]
         ircannounce = f'IRC Announce is {"down" if ircannounce == "0" else "up"}'
+        tracker = data["TrackerHTTPS"]
+        if tracker == "0":
+            trackerstatus = "down"
+        elif tracker == "1":
+            trackerstatus = "up"
+        elif tracker == "2":
+            trackerstatus = "unstable"
+        tracker = f'HTTPS Tracker is {trackerstatus}'
 
         embed = discord.Embed(
             title="GGN Status", url="https://ggn.trackerstatus.info", color=color
@@ -58,6 +75,7 @@ class Trackerinfo(commands.Cog):
         embed.add_field(name="Website", value="{}".format(website))
         embed.add_field(name="IRC", value="{}".format(irc))
         embed.add_field(name="IRC Torrent Announcer", value="{}".format(ircannounce))
+        embed.add_field(name="TrackerHTTP", value="{}".format(tracker))
 
         await ctx.send(embed=embed)
 
@@ -74,6 +92,14 @@ class Trackerinfo(commands.Cog):
         irc = f'IRC is {"down" if irc == "0" else "up"}'
         ircannounce = data["IRCTorrentAnnouncer"]
         ircannounce = f'IRC Announce is {"down" if ircannounce == "0" else "up"}'
+        tracker = data["TrackerHTTPS"]
+        if tracker == "0":
+            trackerstatus = "down"
+        elif tracker == "1":
+            trackerstatus = "up"
+        elif tracker == "2":
+            trackerstatus = "unstable"
+        tracker = f'HTTPS Tracker is {trackerstatus}'
 
         embed = discord.Embed(
             title="RED Status", url="https://red.trackerstatus.info", color=color
@@ -82,6 +108,7 @@ class Trackerinfo(commands.Cog):
         embed.add_field(name="Website", value="{}".format(website))
         embed.add_field(name="IRC", value="{}".format(irc))
         embed.add_field(name="IRC Torrent Announcer", value="{}".format(ircannounce))
+        embed.add_field(name="TrackerHTTP", value="{}".format(tracker))
 
         await ctx.send(embed=embed)
 
@@ -98,6 +125,14 @@ class Trackerinfo(commands.Cog):
         irc = f'IRC is {"down" if irc == "0" else "up"}'
         ircannounce = data["Barney"]
         ircannounce = f'IRC Announce is {"down" if ircannounce == "0" else "up"}'
+        tracker = data["TrackerHTTPS"]
+        if tracker == "0":
+            trackerstatus = "down"
+        elif tracker == "1":
+            trackerstatus = "up"
+        elif tracker == "2":
+            trackerstatus = "unstable"
+        tracker = f'HTTPS Tracker is {trackerstatus}'
 
         embed = discord.Embed(
             title="BTN Status", url="https://BTN.trackerstatus.info", color=color
@@ -106,6 +141,7 @@ class Trackerinfo(commands.Cog):
         embed.add_field(name="Website", value="{}".format(website))
         embed.add_field(name="IRC", value="{}".format(irc))
         embed.add_field(name="IRC Torrent Announcer", value="{}".format(ircannounce))
+        embed.add_field(name="TrackerHTTP", value="{}".format(tracker))
 
         await ctx.send(embed=embed)
 
@@ -122,6 +158,14 @@ class Trackerinfo(commands.Cog):
         irc = f'IRC is {"down" if irc == "0" else "up"}'
         ircannounce = data["IRCTorrentAnnouncer"]
         ircannounce = f'IRC Announce is {"down" if ircannounce == "0" else "up"}'
+        tracker = data["TrackerHTTPS"]
+        if tracker == "0":
+            trackerstatus = "down"
+        elif tracker == "1":
+            trackerstatus = "up"
+        elif tracker == "2":
+            trackerstatus = "unstable"
+        tracker = f'HTTPS Tracker is {trackerstatus}'
 
         embed = discord.Embed(
             title="MTV Status", url="https://mtv.trackerstatus.info", color=color
@@ -130,6 +174,7 @@ class Trackerinfo(commands.Cog):
         embed.add_field(name="Website", value="{}".format(website))
         embed.add_field(name="IRC", value="{}".format(irc))
         embed.add_field(name="IRC Torrent Announcer", value="{}".format(ircannounce))
+        embed.add_field(name="TrackerHTTP", value="{}".format(tracker))
 
         await ctx.send(embed=embed)
 

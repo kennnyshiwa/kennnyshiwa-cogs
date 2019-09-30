@@ -1,97 +1,73 @@
+import discord
+
+from redbot.core import commands, checks, Config
+from redbot.core.utils.menus import menu, DEFAULT_CONTROLS
+
+import random
+import aiohttp
+import asyncio
 import contextlib
 
-from redbot.core import commands
-from redbot.core.utils.menus import menu, DEFAULT_CONTROLS
-import discord
-import random
 from random import choice
 
-import aiohttp
+from .core import Core
 
 
-class Space(commands.Cog):
-    """Show pics of space"""
+class Space(Core, commands.Cog):
+    """Show pics of space."""
 
     __author__ = "kennnyshiwa"
 
-    special_queries = {
-        "star wars",
-        "Star Wars",
-        "Star wars",
-        "star Wars"
-    }
-    starwars = [
-        "https://media2.giphy.com/media/bR4poFy22rgUE/source.gif",
-        "https://media.giphy.com/media/pvDp7Ewpzt0o8/giphy.gif",
-        "https://media2.giphy.com/media/M4iOAkEAPwAnK/giphy.gif",
-        "https://media.giphy.com/media/4GXQSVCsrbAQV1gqoS/giphy.gif",
-        "https://media2.giphy.com/media/3o84sq21TxDH6PyYms/giphy.gif",
-        "https://media.giphy.com/media/l3fZPV4s1oKmZiXJK/giphy.gif",
-        "https://i.imgur.com/jA2Jmvl.gif",
-        "https://media2.giphy.com/media/3o7abrH8o4HMgEAV9e/giphy.gif",
-        "https://media3.giphy.com/media/3h2lUwrZKilQKbAK6f/source.gif",
-        "https://media2.giphy.com/media/10LNU0do0k7blS/source.gif",
-        "https://media3.giphy.com/media/TCmUPOuvhNzX2/source.gif",
-        "https://media3.giphy.com/media/rsIuy6pUXTvSU/source.gif",
-
-
-    ]
-
     def __init__(self, bot):
         self.bot = bot
-        self.session = aiohttp.ClientSession(loop=self.bot.loop)
+        self.cache = {"date": None, "new_channels": []}
+
+        default_channel = dict(auto_apod=False)
+        self.config = Config.get_conf(self, 3765640575174574082, force_registration=True)
+        self.config.register_channel(**default_channel)
+
+        self.session = aiohttp.ClientSession()
+        self.auto_apod_loop = bot.loop.create_task(self.auto_apod(bot))
+        self.new_channels_loop = bot.loop.create_task(self.check_new_channels(bot))
+
+    @commands.group()
+    @checks.mod_or_permissions(manage_channels=True)
+    async def spaceset(self, ctx):
+        """Group commands for Space cog settings."""
+        pass
+
+    @spaceset.command()
+    async def autoapod(self, ctx, channel: discord.TextChannel=None):
+        """
+        Choose if you want to automatically receive \"Astronomy Picture of the Day\" every day.
+
+        Set to actual channel by default. You can also use `[p]spaceset autoapod <channel_name>` if you want to receive APOD in others channels.
+        Use the same command to disable it.
+        """
+        channel = ctx.channel if not channel else channel
+        auto_apod = await self.config.channel(channel).auto_apod()
+        await self.config.channel(channel).auto_apod.set(not auto_apod)
+        if not auto_apod:
+            self.cache["new_channels"].append(channel.id)
+        msg = (
+            "I will now automatically send Astronomy Picture of the Day every day in this channel."
+            if not auto_apod
+            else "No longer sending Astronomy Picture of the Day every day in this channel."
+        )
+        await channel.send(msg)
+        await ctx.tick()
 
     @commands.command()
     @commands.bot_has_permissions(embed_links=True)
     async def apod(self, ctx):
-        """Astronomy Picture of the Day"""
+        """Astronomy Picture of the Day."""
         async with ctx.typing():
-            async with self.session.get(
-                "https://api.nasa.gov/planetary/apod?api_key=pM1xDdu2D9jATa3kc2HE0xnLsPHdoG9cNGg850WR"
-            ) as r:
-                data = await r.json()
-            color = await ctx.embed_color()
-            date = data["date"]
-            details = data["explanation"]
-            url = data["url"]
-            title = data["title"]
-
-            if len(details) > 1024:
-                await ctx.send("**Astronomy Picture of the Day**\n```{}```".format(details))
-                await ctx.send(url)
-            else:
-                embed = discord.Embed(
-                    title="Astronomy Picture of the Day", url="{}".format(url), color=color
+            msg = await self.apod_text(
+                await self.get_data(
+                    "https://api.nasa.gov/planetary/apod?api_key=pM1xDdu2D9jATa3kc2HE0xnLsPHdoG9cNGg850WR"
                 )
-                embed.set_image(url=url)
-                embed.add_field(name=title, value=details)
-                embed.set_footer(text="Today is {}".format(date))
-                await ctx.send(embed=embed)
-
-    @staticmethod
-    async def do_lookup(query: str) -> list:
-        """Run space pic lookup"""
-        base_url = "https://images-api.nasa.gov/search?q=%s"
-        space_data = []
-        async with aiohttp.ClientSession() as session:
-            async with session.get(base_url % query) as r:
-                data = await r.json()
-            try:
-                if data.get("collection")["items"]:  # Only run the code with this key exists
-                    for x in range(99):  # Fet all 99 items
-                        with contextlib.suppress(KeyError, IndexError):
-                            # Ignore Key errors if this index
-                            # doesn't exist
-                            space_data.append(data.get("collection")["items"][x]["links"][0]["href"])
-            except:
-                return None
-        if len(space_data) > 10:  # If more than 10 pages get random 10 pages
-            return random.sample(space_data, 10)
-        return space_data  # this means we have between 0 and 10 pages return all
-
-    def escape_query(self, query) -> str:
-        """Escape mentions from queries"""
-        return query.replace("`", "'")
+            )
+            await self.maybe_send_embed(ctx, msg)
 
     @commands.command()
     @commands.bot_has_permissions(embed_links=True)
@@ -100,22 +76,25 @@ class Space(commands.Cog):
         Lookup pictures from space!
         Note - Some pictures are from presentations and other educational talks
         """
-        pages = []
         async with ctx.typing():
             query = self.escape_query("".join(query))
-            if query in self.special_queries: 
-                await ctx.send(choice(self.starwars))
+            space_data = await self.get_space_pic_data(ctx, query)
+            if space_data is None:
+                await ctx.send(f"Looks like you got lost in space looking for `{query}`")
                 return
-            space_data = await self.do_lookup(query)
-            if not space_data:
-                await ctx.send("Looks like you got lost in space looking for `%s`" % query)
+            if space_data is False:
                 return
+            if query.lower() == "star wars":
+                await ctx.send(self.star_wars_gifs())
+                return
+
+            pages = []
             total_pages = len(space_data)  # Get total page count
             for c, i in enumerate(space_data, 1):  # Done this so I could get page count `c`
                 space_data_clean = i.replace(" ", "%20")
                 embed = discord.Embed(
                     title="Results from space",
-                    description="Query was `%s`" % query,
+                    description=f"Query was `{query}`",
                     color=await ctx.embed_color(),
                 )
                 embed.set_image(url=space_data_clean)
@@ -124,49 +103,42 @@ class Space(commands.Cog):
                 # know what page they are in
                 pages.append(embed)
                 # Added this embed to embed list that the menu will use
-        if pages:  # Only show menu if there pages in list otherwise send the Error message
-            return await menu(ctx, pages, DEFAULT_CONTROLS)
-        await ctx.send("Error when finding message")
+        return await menu(ctx, pages, DEFAULT_CONTROLS)
 
     @commands.command()
     @commands.bot_has_permissions(embed_links=True)
     async def isslocation(self, ctx):
-        """Show the Current location of the ISS"""
+        """Show the Current location of the ISS."""
         async with ctx.typing():
-            async with self.session.get("http://api.open-notify.org/iss-now.json") as r:
-                data = await r.json()
-            color = await ctx.embed_color()
-            isslat = data["iss_position"]["latitude"]
-            isslong = data["iss_position"]["longitude"]
+            data = await self.get_data("http://api.open-notify.org/iss-now.json")
+            if not data:
+                await ctx.send("I can't get the data from the API. Try again later.")
+                return
+
             embed = discord.Embed(
                 title="Current location of the ISS",
                 description="Latitude and longitude of the ISS",
-                color=color,
+                color=await ctx.embed_color(),
             )
-            embed.add_field(name="Latitude", value=isslat, inline=True)
-            embed.add_field(name="Longitude", value=isslong, inline=True)
+            embed.add_field(name="Latitude", value=data["iss_position"]["latitude"], inline=True)
+            embed.add_field(name="Longitude", value=data["iss_position"]["longitude"], inline=True)
             embed.set_thumbnail(url="https://photos.kstj.us/GrumpyMeanThrasher.jpg")
-            await ctx.send(embed=embed)
+        return await ctx.send(embed=embed)
 
     @commands.command()
     @commands.bot_has_permissions(embed_links=True)
     async def astronauts(self, ctx):
-        """Show who is currently in space"""
+        """Show who is currently in space."""
         async with ctx.typing():
-            async with self.session.get("http://api.open-notify.org/astros.json") as resp:
-                data = await resp.json(content_type="application/json")
-            color = await ctx.embed_color()
+            data = await self.get_data("http://api.open-notify.org/astros.json")
+            if not data:
+                await ctx.send("I can't get the data from the API. Try again later.")
+                return
+
             astrosnauts = []
             for astros in data["people"]:
-              astrosnauts.append(astros["name"])
+                astrosnauts.append(astros["name"])
 
-            embed = discord.Embed(
-                title="Who's in space?",
-                color=color
-            )
-            embed.add_field(name="Current Astronauts in space", value="\n".join(astrosnauts), inline=True)
-            await ctx.send(embed=embed)
-
-    
-    def cog_unload(self):
-        self.bot.loop.create_task(self.session.close())
+            embed = discord.Embed(title="Who's in space?", color=await ctx.embed_color())
+            embed.add_field(name="Current Astronauts in space", value="\n".join(astrosnauts))
+        return await ctx.send(embed=embed)

@@ -1,0 +1,14 @@
+{
+	"author": [
+		"kennnyshiwa"
+	],
+	"description": "Information/Stats for Politics and War and the game",
+	"hidden": false,
+	"install_msg": "Thanks for installing, have fun and may your nation be safe from attack.",
+	"short": "Nation informaiton for PnW",
+	"tags": [
+		"bots"
+	],
+	"requirements": [],
+	"type": "COG"
+}

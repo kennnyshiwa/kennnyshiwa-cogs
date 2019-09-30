@@ -32,6 +32,7 @@ class PnW(commands.Cog):
         return query.replace("`", "'")
 
     @checks.is_owner()
+    @commands.bot_has_permissions(embed_links=True)
     @commands.command()
     async def pnwkey(self, ctx):
         """
@@ -203,6 +204,7 @@ class PnW(commands.Cog):
                     return
                 return data
         
+    @commands.bot_has_permissions(embed_links=True)
     @commands.command()
     async def nation(self, ctx, *, name):
         """look up a nation."""
@@ -248,6 +250,7 @@ class PnW(commands.Cog):
             embed.add_field(name="Alliance", value=alliance, inline=True)
             await ctx.send(embed=embed)
 
+    @commands.bot_has_permissions(embed_links=True)
     @commands.command()
     async def alliance(self, ctx, *, name):
         """Lookup an Alliance with an ID."""
@@ -299,6 +302,7 @@ class PnW(commands.Cog):
             embed.set_footer(text="Info Provided By http://politicsandwar.com/api/")
             await ctx.send(embed=embed)
 
+    @commands.bot_has_permissions(embed_links=True)
     @commands.command()
     async def cityinfo(self, ctx, *, id):
         """Provides information about the alliance linked to the ID you have given."""
@@ -430,6 +434,7 @@ Drydocks               {data['imp_drydock']}""",
         embed.set_footer(text="Info Provided By http://politicsandwar.com/api/")
         await ctx.send(embed=embed)
 
+    @commands.bot_has_permissions(embed_links=True)
     @commands.command()
     async def tradeprice(self, ctx, *, query):
         """
@@ -479,6 +484,7 @@ Drydocks               {data['imp_drydock']}""",
                         )
             await ctx.send(embed=embed)
 
+    @commands.bot_has_permissions(embed_links=True)
     @commands.command()
     async def bankinfo(self, ctx, *, name):
         """

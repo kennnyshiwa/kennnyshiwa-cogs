@@ -37,36 +37,22 @@ class Space(Core, commands.Cog):
         pass
 
     @spaceset.command()
-    async def autoapod(self, ctx):
+    async def autoapod(self, ctx, channel: discord.TextChannel=None):
         """
         Choose if you want to automatically receive \"Astronomy Picture of the Day\" every day.
 
-        Set to actual channel by default. You can also use `[p]spaceset autoapodchannel` if you want to have APOD in others channels.
+        Set to actual channel by default. You can also use `[p]spaceset autoapod <channel_name>` if you want to receive APOD in others channels.
+        Use the same command to disable it.
         """
-        auto_apod = await self.config.channel(ctx.channel).auto_apod()
-        await self.config.channel(ctx.channel).auto_apod.set(not auto_apod)
-        if not auto_apod:
-            self.cache["new_channels"].append(ctx.channel.id)
-        msg = (
-            "I will now automatically send Astronomy Picture of the Day every day in this channel."
-            if not auto_apod
-            else "No longer sending Astronomy Picture of the Day every day in this channel."
-        )
-        await ctx.send(msg)
-
-    @spaceset.command()
-    async def autoapodchannel(self, ctx, channel: discord.TextChannel):
-        """Set where \"Astronomy Picture of the Day\" will be sent every day."""
-        if not ctx.guild.me.permissions_in(channel).send_messages:
-            return await ctx.send("I don't have the permissions to speak in that channel.")
+        channel = ctx.channel if not channel else channel
         auto_apod = await self.config.channel(channel).auto_apod()
         await self.config.channel(channel).auto_apod.set(not auto_apod)
         if not auto_apod:
             self.cache["new_channels"].append(channel.id)
         msg = (
-            "This channel will be used for Astronomy Picture of the Day."
+            "I will now automatically send Astronomy Picture of the Day every day in this channel."
             if not auto_apod
-            else "This channel will no longer be used for Astronomy Picture of the Day."
+            else "No longer sending Astronomy Picture of the Day every day in this channel."
         )
         await channel.send(msg)
         await ctx.tick()

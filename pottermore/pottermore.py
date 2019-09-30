@@ -95,6 +95,7 @@ class Pottermore(commands.Cog):
                 if not data or isinstance(data, dict):
                         return None
                 return data[0]
+                
 
     def escape_query(self, query) -> str:
         """Escape mentions from queries"""
@@ -192,3 +193,5 @@ class Pottermore(commands.Cog):
             )
         await ctx.send(embed=embed)
 
+    def cog_unload(self):
+        self.bot.loop.create_task(self.session.close())

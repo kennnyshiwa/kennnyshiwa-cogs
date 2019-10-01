@@ -73,8 +73,10 @@ class Core:
                 all_channels = await self.config.all_channels()
                 for channels in all_channels.items():
                     if channels[1]["auto_apod"]:
-                        channel = bot.get_channel(id=channels[0])
-                        await self.maybe_send_embed(channel, await self.apod_text(data))
+                        if channels[1]["last_apod_sent"] != data["date"]:
+                            channel = bot.get_channel(id=channels[0])
+                            await self.maybe_send_embed(channel, await self.apod_text(data))
+                            await self.config.channel(channel).last_apod_sent.set(data["date"])
                 self.cache["date"] = data["date"]
             else:
                 await asyncio.sleep(900)

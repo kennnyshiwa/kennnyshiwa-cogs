@@ -3,7 +3,7 @@ import aiohttp
 import asyncio
 from aiohttp.client_exceptions import ContentTypeError
 from redbot.core import commands, checks, Config
-from redbot.core.utils.chat_formatting import humanize_number, box
+from redbot.core.utils.chat_formatting import box
 
 
 class PnW(commands.Cog):
@@ -288,16 +288,16 @@ class PnW(commands.Cog):
             )
             embed.add_field(name="Chat", value=chat, inline=False)
             embed.add_field(name="Forum Link:", value=forum, inline=False)
-            embed.add_field(name="Score:", value=humanize_number(alliance_data["score"]))
-            embed.add_field(name="Members:", value=humanize_number(alliance_data["members"]))
-            embed.add_field(name="Cities:", value=humanize_number(alliance_data["cities"]))
-            embed.add_field(name="Soldiers:", value=humanize_number(alliance_data["soldiers"]))
-            embed.add_field(name="Tanks:", value=humanize_number(alliance_data["tanks"]))
-            embed.add_field(name="Aircraft:", value=humanize_number(alliance_data["aircraft"]))
-            embed.add_field(name="Ships:", value=humanize_number(alliance_data["ships"]))
-            embed.add_field(name="Missiles:", value=humanize_number(alliance_data["missiles"]))
-            embed.add_field(name="Nukes:", value=humanize_number(alliance_data["nukes"]))
-            embed.add_field(name="Treasures", value=humanize_number(alliance_data["treasures"]))
+            embed.add_field(name="Score:", value=alliance_data["score"])
+            embed.add_field(name="Members:", value=alliance_data["members"])
+            embed.add_field(name="Cities:", value=alliance_data["cities"])
+            embed.add_field(name="Soldiers:", value=alliance_data["soldiers"])
+            embed.add_field(name="Tanks:", value=alliance_data["tanks"])
+            embed.add_field(name="Aircraft:", value=alliance_data["aircraft"])
+            embed.add_field(name="Ships:", value=alliance_data["ships"])
+            embed.add_field(name="Missiles:", value=alliance_data["missiles"])
+            embed.add_field(name="Nukes:", value=alliance_data["nukes"])
+            embed.add_field(name="Treasures", value=alliance_data["treasures"])
             embed.set_image(url=alliance_data["flagurl"])
             embed.set_footer(text="Info Provided By http://politicsandwar.com/api/")
             await ctx.send(embed=embed)
@@ -449,16 +449,16 @@ Drydocks               {data['imp_drydock']}""",
                 await ctx.send("I can't get the data from the API. Try again later.")
                 return
             resource = trade_data["resource"]
-            avgprice = humanize_number(trade_data["avgprice"])
+            avgprice = trade_data["avgprice"]
             marketindex = trade_data["marketindex"]
-            highestbuyamount = humanize_number(trade_data["highestbuy"]["amount"])
-            highestbuyprice = humanize_number(trade_data["highestbuy"]["price"])
-            highestbuytotal = humanize_number(trade_data["highestbuy"]["totalvalue"])
+            highestbuyamount = trade_data["highestbuy"]["amount"]
+            highestbuyprice = trade_data["highestbuy"]["price"]
+            highestbuytotal = trade_data["highestbuy"]["totalvalue"]
             highestbuynation = trade_data["highestbuy"]["nationid"]
             highestbuydate = trade_data["highestbuy"]["date"]
-            lowestbuyamount = humanize_number(trade_data["lowestbuy"]["amount"])
-            lowestbuyprice = humanize_number(trade_data["lowestbuy"]["price"])
-            lowestbuytotal = humanize_number(trade_data["lowestbuy"]["totalvalue"])
+            lowestbuyamount = trade_data["lowestbuy"]["amount"]
+            lowestbuyprice = trade_data["lowestbuy"]["price"]
+            lowestbuytotal = trade_data["lowestbuy"]["totalvalue"]
             lowestbuynation = trade_data["lowestbuy"]["nationid"]
             lowestbuydate = trade_data["lowestbuy"]["date"]
 
@@ -517,18 +517,18 @@ Drydocks               {data['imp_drydock']}""",
                 pass
             name = bank_data["alliance_bank_contents"][0]["name"]
             alid = bank_data["alliance_bank_contents"][0]["alliance_id"]
-            money = humanize_number(bank_data["alliance_bank_contents"][0]["money"])
-            food = humanize_number(bank_data["alliance_bank_contents"][0]["food"])
-            coal = humanize_number(bank_data["alliance_bank_contents"][0]["coal"])
-            oil = humanize_number(bank_data["alliance_bank_contents"][0]["oil"])
-            uranium = humanize_number(bank_data["alliance_bank_contents"][0]["uranium"])
-            iron = humanize_number(bank_data["alliance_bank_contents"][0]["iron"])
-            bauxite = humanize_number(bank_data["alliance_bank_contents"][0]["bauxite"])
-            lead = humanize_number(bank_data["alliance_bank_contents"][0]["lead"])
-            gasoline = humanize_number(bank_data["alliance_bank_contents"][0]["gasoline"])
-            munitions = humanize_number(bank_data["alliance_bank_contents"][0]["munitions"])
-            steel = humanize_number(bank_data["alliance_bank_contents"][0]["steel"])
-            aluminum = humanize_number(bank_data["alliance_bank_contents"][0]["aluminum"])
+            money = bank_data["alliance_bank_contents"][0]["money"]
+            food = bank_data["alliance_bank_contents"][0]["food"]
+            coal = bank_data["alliance_bank_contents"][0]["coal"]
+            oil = bank_data["alliance_bank_contents"][0]["oil"]
+            uranium = bank_data["alliance_bank_contents"][0]["uranium"]
+            iron = bank_data["alliance_bank_contents"][0]["iron"]
+            bauxite = bank_data["alliance_bank_contents"][0]["bauxite"]
+            lead = bank_data["alliance_bank_contents"][0]["lead"]
+            gasoline = bank_data["alliance_bank_contents"][0]["gasoline"]
+            munitions = bank_data["alliance_bank_contents"][0]["munitions"]
+            steel = bank_data["alliance_bank_contents"][0]["steel"]
+            aluminum = bank_data["alliance_bank_contents"][0]["aluminum"]
             embed = discord.Embed(
                 title=f"Bank Information for {name}",
                 description=f"Total Money = {money}",

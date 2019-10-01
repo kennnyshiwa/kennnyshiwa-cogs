@@ -22,7 +22,7 @@ class Space(Core, commands.Cog):
         self.bot = bot
         self.cache = {"date": None, "new_channels": []}
 
-        default_channel = dict(auto_apod=False)
+        default_channel = dict(auto_apod=False, last_apod_sent=None)
         self.config = Config.get_conf(self, 3765640575174574082, force_registration=True)
         self.config.register_channel(**default_channel)
 

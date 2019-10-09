@@ -270,6 +270,12 @@ class PnW(commands.Cog):
             if not alliance_data:
                 await ctx.send("I can't get the data from the API. Try again later.")
                 return
+            if alliance_data is None:
+                return
+            error = alliance_data["error"]
+            if error == "Alliance doesn't exist.":
+                await ctx.send("Can't find that alliance")
+                return
             name = alliance_data["name"]
             allianceid = alliance_data["allianceid"]
             if alliance_data["irc"] == "":

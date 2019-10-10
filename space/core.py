@@ -40,7 +40,7 @@ class Core:
             log.error(str(error))
             return None
 
-    async def apod_text(self, data):
+    async def apod_text(self, data, context):
         if not data:
             return "Astronomy Picture of the Day: `Impossible to get Nasa API.`"
 
@@ -52,7 +52,11 @@ class Core:
             return f"**Astronomy Picture of the Day**\n\n__{title}__```{details}```Today is **{date}**\n{url}"
         else:
             em = discord.Embed(
-                color=self.bot.color, title="Astronomy Picture of the Day", url="{}".format(url)
+                color=await self.bot.get_embed_color(context)
+                if hasattr(self.bot, "get_embed_color")
+                else self.bot.color,
+                title="Astronomy Picture of the Day",
+                url="{}".format(url),
             )
             em.set_image(url=url)
             em.add_field(name=title, value=details)
@@ -75,7 +79,9 @@ class Core:
                     if channels[1]["auto_apod"]:
                         if channels[1]["last_apod_sent"] != data["date"]:
                             channel = bot.get_channel(id=channels[0])
-                            await self.maybe_send_embed(channel, await self.apod_text(data))
+                            await self.maybe_send_embed(
+                                channel, await self.apod_text(data, channel)
+                            )
                             await self.config.channel(channel).last_apod_sent.set(data["date"])
                 self.cache["date"] = data["date"]
             else:

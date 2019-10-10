@@ -3,7 +3,7 @@ import aiohttp
 import asyncio
 from aiohttp.client_exceptions import ContentTypeError
 from redbot.core import commands, checks, Config
-from redbot.core.utils.chat_formatting import box
+from redbot.core.utils.chat_formatting import box, humanize_number
 
 
 class PnW(commands.Cog):
@@ -16,7 +16,9 @@ class PnW(commands.Cog):
         self.session = aiohttp.ClientSession(loop=self.bot.loop)
 
     async def initialize(self) -> None:
-        """Move the API keys from cog stored config to core bot config if they exist."""
+        """
+        Move the API keys from cog stored config to core bot config if they exist.
+        """
         pnw_key = await self.config.pnw_key()
         if hasattr(self.bot, 'get_shared_api_tokens'):
             if pnw_key is not None and "pnw" not in await self.bot.get_shared_api_tokens():
@@ -53,7 +55,9 @@ class PnW(commands.Cog):
 
     @staticmethod
     async def do_lookup(ctx, nid) -> list:
-        """Run Nation lookup."""
+        """
+        Run Nation lookup.
+        """
         if hasattr(ctx.bot, 'get_shared_api_tokens'): #3.2
             api = await ctx.bot.get_shared_api_tokens("pnw")
             pnw_key = api.get('api_key')
@@ -75,7 +79,9 @@ class PnW(commands.Cog):
     
     @staticmethod
     async def nations_lookup(ctx):
-        """lookup all nations."""
+        """
+        Lookup all nations.
+        """
         if hasattr(ctx.bot, 'get_shared_api_tokens'): #3.2
             api = await ctx.bot.get_shared_api_tokens("pnw")
             pnw_key = api.get('api_key')
@@ -98,7 +104,9 @@ class PnW(commands.Cog):
     
     @staticmethod
     async def alliances_lookup(ctx):
-        """Run Alliance Lookup."""
+        """
+        Run Alliance Lookup.
+        """
         if hasattr(ctx.bot, 'get_shared_api_tokens'): #3.2
             api = await ctx.bot.get_shared_api_tokens("pnw")
             pnw_key = api.get('api_key')
@@ -120,7 +128,9 @@ class PnW(commands.Cog):
     
     @staticmethod
     async def alliance_lookup(ctx, alid: str) -> list:
-        """Run Alliance Lookup."""
+        """
+        Run Alliance Lookup.
+        """
         if hasattr(ctx.bot, 'get_shared_api_tokens'): #3.2
             api = await ctx.bot.get_shared_api_tokens("pnw")
             pnw_key = api.get('api_key')
@@ -141,7 +151,9 @@ class PnW(commands.Cog):
                 return data 
     @staticmethod
     async def city_api(ctx, alid: str) -> list:
-        """Run City Lookup."""
+        """
+        Run City Lookup.
+        """
         if hasattr(ctx.bot, 'get_shared_api_tokens'): #3.2
             api = await ctx.bot.get_shared_api_tokens("pnw")
             pnw_key = api.get('api_key')
@@ -162,7 +174,9 @@ class PnW(commands.Cog):
                 return data
     @staticmethod
     async def tradeprice_lookup(ctx, query):
-        """Lookup resources trading info."""
+        """
+        Lookup resources trading info.
+        """
         if hasattr(ctx.bot, 'get_shared_api_tokens'): #3.2
             api = await ctx.bot.get_shared_api_tokens("pnw")
             pnw_key = api.get('api_key')
@@ -184,7 +198,9 @@ class PnW(commands.Cog):
     
     @staticmethod
     async def bank_lookup(ctx, alid: str) -> list:
-        """Run Bank Lookup."""
+        """
+        Run Bank Lookup.
+        """
         if hasattr(ctx.bot, 'get_shared_api_tokens'): #3.2
             api = await ctx.bot.get_shared_api_tokens("pnw")
             pnw_key = api.get('api_key')
@@ -207,7 +223,9 @@ class PnW(commands.Cog):
     @commands.bot_has_permissions(embed_links=True)
     @commands.command()
     async def nation(self, ctx, *, name):
-        """look up a nation."""
+        """
+        Look up a nation.
+        """
         await ctx.send("This may take a while.....")
         async with ctx.typing():
             name = self.escape_query("".join(name))
@@ -253,7 +271,9 @@ class PnW(commands.Cog):
     @commands.bot_has_permissions(embed_links=True)
     @commands.command()
     async def alliance(self, ctx, *, name):
-        """Lookup an Alliance with an ID."""
+        """
+        Lookup an Alliance with an ID.
+        """
         async with ctx.typing():
             name = self.escape_query("".join(name))
             key = False
@@ -311,7 +331,9 @@ class PnW(commands.Cog):
     @commands.bot_has_permissions(embed_links=True)
     @commands.command()
     async def cityinfo(self, ctx, *, id):
-        """Provides information about the alliance linked to the ID you have given."""
+        """
+        Provides information about the alliance linked to the ID you have given.
+        """
         data = await self.city_api(ctx, id)
         if not data:
             await ctx.send("I can't get the data from the API. Try again later.")
@@ -553,6 +575,136 @@ Drydocks               {data['imp_drydock']}""",
             embed.add_field(name="Steel", value=steel)
             embed.add_field(name="Aluminum", value=aluminum)
             await ctx.send(embed=embed)
+
+    @commands.bot_has_permissions(embed_links=True)
+    @commands.command()
+    async def top50(self, ctx):
+        """
+        Show Top 50 Alliances
+        """
+        top50 = await self.alliances_lookup(ctx)
+        output = ""
+        for alliance in (top50["alliances"])[0:50]:
+            arank = alliance["rank"]
+            aname = alliance["name"]
+            aid = alliance["id"]
+            if len(aname) > 20:
+                aname = aname[0:20] + "..."
+            output = f'{output}\n{f"{arank}":<{5}}{f"{aname}":<{25}}{f"{aid}":>{5}}'
+        await ctx.send(
+            embed=discord.Embed(
+                title="Top 50 Alliances\n",
+                description="```Rank Name                      ID" + output + "```",
+                color=await ctx.embed_color(),
+            ).set_footer(text="Info Provided By http://politicsandwar.com/api/")
+        )
+
+    @commands.command()
+    async def infra(self, ctx, input: float, tobuy: float, urban=None, cce=None):
+        """
+        Provides the cost of infra accurate to +/- $100,000. Provide urban and/or cce as a command variable to trigger urbanization and cce infra discounts.
+        """
+        if input < 10000:
+            if tobuy < 10000:
+                if tobuy > 100:
+                    count = 0
+                    factor = 0
+                    cost = 0
+                    r = tobuy / 100 + 1.0
+                    for _ in range(int(r)):
+                        factor = input + count
+                        count = count + 100
+                        if tobuy >= 100:
+                            buying = 100
+                            tobuy = tobuy - 100
+                        else:
+                            buying = tobuy
+                        x = (((factor - 10) ** 2.2) / 710) + 300
+                        cost = cost + x * buying
+                else:
+                    x = (((input - 10) ** 2.2) / 710) + 300
+                    cost = x * tobuy
+                vars = ["urban", "cce"]
+                if urban:
+                    urban = urban.lower()
+                    if urban in vars:
+                        cost = cost - cost * .05
+                if cce:
+                    cce = cce.lower()
+                    if cce in vars:
+                        cost = cost - cost * .05
+                embed = discord.Embed(
+                    title="Infra Cost Calculator",
+                    description="To accomidate for discrepincies in this calculator, please ensure you are capable of paying +/- $100,000 what is given here!",
+                    color=await ctx.embed_color(),
+                )
+                embed.add_field(name="Total:", value=f"${cost:,.2f}")
+                embed.set_footer(
+                    text="Results generated based on equations provided by http://politicsandwar.wikia.com/wiki/"
+                )
+                await ctx.send(embed=embed)
+        else:
+            await ctx.send("You are currently at the max amount of infrastructure")
+
+    @commands.command()
+    async def land(self, ctx, input: float, tobuy: float):
+        """
+        Provides the cost of land accurate to +/- $100,000.
+        """
+        if input < 10000:
+            if tobuy < 10000:
+                if tobuy > 500:
+                    count = 0
+                    factor = 0
+                    cost = 0
+                    r = tobuy // 500 + 1.0
+                    for _ in range(int(r)):
+                        factor = input + count
+                        count = count + 500
+                        if tobuy >= 500:
+                            buying = 500
+                            tobuy = tobuy - 500
+                        else:
+                            buying = tobuy
+                        x = 0.002 * (factor - 20) ** 2 + 50
+                        cost = cost + x * buying
+                else:
+                    x = 0.002 * (input - 20) ** 2 + 50
+                    cost = x * tobuy
+                embed = discord.Embed(
+                    title="Land Cost Calculator",
+                    description="To accomidate for discrepincies in this calculator, please ensure you are capable of paying +/- $100,000 what is given here!",
+                    color=await ctx.embed_color(),
+                )
+                embed.add_field(name="Total:", value=f"${cost:,.2f}")
+                embed.set_footer(
+                    text="Results generated based on equations provided by http://politicsandwar.wikia.com/wiki/"
+                )
+                await ctx.send(embed=embed)
+        else:
+            await ctx.send("You are at the max amount of land")
+
+    @commands.command()
+    async def citycost(self, ctx, city: int):
+        """
+        Provides the cost of the next city accurate to +/- $100,000.
+        """
+        if city < 100:
+            cost = 50000 * (city - 1) ** 3 + 150000 * city + 75000
+            embed = discord.Embed(
+                title="City Cost Calculator",
+                description="To accomidate for discrepincies in this calculator, please ensure you are capable of paying +/- $100,000 what is given here!",
+                color=await ctx.embed_color(),
+            )
+            embed.add_field(name="Total:", value=f"${cost:,.2f}")
+            embed.set_footer(
+                text="Results generated based on equations provided by http://politicsandwar.wikia.com/wiki/"
+            )
+            await ctx.send(embed=embed)
+        else:
+            await ctx.send("You are at the max amount of cities")
+
+
 
     def cog_unload(self):   
         self.bot.loop.create_task(self.session.close())

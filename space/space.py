@@ -37,7 +37,7 @@ class Space(Core, commands.Cog):
         pass
 
     @spaceset.command()
-    async def autoapod(self, ctx, channel: discord.TextChannel=None):
+    async def autoapod(self, ctx, channel: discord.TextChannel = None):
         """
         Choose if you want to automatically receive \"Astronomy Picture of the Day\" every day.
 
@@ -65,7 +65,8 @@ class Space(Core, commands.Cog):
             msg = await self.apod_text(
                 await self.get_data(
                     "https://api.nasa.gov/planetary/apod?api_key=pM1xDdu2D9jATa3kc2HE0xnLsPHdoG9cNGg850WR"
-                )
+                ),
+                ctx,
             )
             await self.maybe_send_embed(ctx, msg)
 

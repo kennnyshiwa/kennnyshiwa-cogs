@@ -3,7 +3,7 @@ import aiohttp
 import asyncio
 from aiohttp.client_exceptions import ContentTypeError
 from redbot.core import commands, checks, Config
-from redbot.core.utils.chat_formatting import box, humanize_number
+from redbot.core.utils.chat_formatting import box
 
 
 class PnW(commands.Cog):

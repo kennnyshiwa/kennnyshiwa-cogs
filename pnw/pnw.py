@@ -147,7 +147,7 @@ class PnW(commands.Cog):
             async with session.get(base_url % alid) as r:
                 data = await r.json()
                 if not data:
-                    return
+                    return None
                 return data 
     @staticmethod
     async def city_api(ctx, alid: str) -> list:
@@ -291,9 +291,6 @@ class PnW(commands.Cog):
                 await ctx.send("I can't get the data from the API. Try again later.")
                 return
             if alliance_data is None:
-                return
-            error = alliance_data["error"]
-            if error == "Alliance doesn't exist.":
                 await ctx.send("Can't find that alliance")
                 return
             name = alliance_data["name"]

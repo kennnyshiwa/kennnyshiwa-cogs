@@ -249,12 +249,21 @@ class PnW(commands.Cog):
                 return
             name = nation_data["name"]
             nationid = nation_data["nationid"]
+            continent = nation_data["continent"]
+            social_policy = nation_data["socialpolicy"]
             color = nation_data["color"]
             leadername = nation_data["leadername"]
             nationrank = nation_data["nationrank"]
             score = nation_data["score"]
             alliance = nation_data["alliance"] 
-
+            last_active = nation_data["minutessinceactive"]
+            government = nation_data["government"]
+            domestic_policy = nation_data["domestic_policy"]
+            war_policy = nation_data["war_policy"]
+            founded = nation_data["founded"]
+            age = nation_data["daysold"]
+            flag = nation_data["flagurl"]
+            
             embed = discord.Embed(
                 title="Nation Info for {}".format(name),
                 url ="https://politicsandwar.com/nation/id={}".format(nationid),
@@ -262,10 +271,19 @@ class PnW(commands.Cog):
             )
 
             embed.add_field(name="Leader Name", value=leadername, inline=True)
-            embed.add_field(name="city color", value=color, inline=True)
+            embed.add_field(name="Color", value=color, inline=True)
             embed.add_field(name="Rank", value=nationrank, inline=True)
             embed.add_field(name="Score", value=score, inline=True)
             embed.add_field(name="Alliance", value=alliance, inline=True)
+            embed.add_field(name="Continent", value=continent, inline=True)
+            embed.add_field(name="Social Policy", value=social_policy, inline=True)
+            embed.add_field(name="Government", value=government, inline=True)
+            embed.add_field(name="Domestic Policy", value=domestic_policy, inline=True)
+            embed.add_field(name="War Policy", value=war_policy, inline=True)
+            embed.add_field(name="Founded", value=founded, inline=True)
+            embed.add_field(name="Age of nation", value=age, inline=True)
+            embed.set_image(url=flag)
+            embed.set_footer(text="Last active: {} minutes ago".format(last_active))
             await ctx.send(embed=embed)
 
     @commands.bot_has_permissions(embed_links=True)
@@ -293,6 +311,12 @@ class PnW(commands.Cog):
             if alliance_data is None:
                 await ctx.send("Can't find that alliance")
                 return
+            try:
+                if alliance_data["error"]:
+                    await ctx.send("Can't find that alliance")
+                    return
+            except:
+                pass
             name = alliance_data["name"]
             allianceid = alliance_data["allianceid"]
             if alliance_data["irc"] == "":

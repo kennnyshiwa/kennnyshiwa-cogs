@@ -281,7 +281,7 @@ class PnW(commands.Cog):
             embed.add_field(name="Domestic Policy", value=domestic_policy, inline=True)
             embed.add_field(name="War Policy", value=war_policy, inline=True)
             embed.add_field(name="Founded", value=founded, inline=True)
-            embed.add_field(name="Age of nation", value=age, inline=True)
+            embed.add_field(name="Age of nation", value=f"{age} Days Old", inline=True)
             embed.set_image(url=flag)
             embed.set_footer(text="Last active: {} minutes ago".format(last_active))
             await ctx.send(embed=embed)
@@ -764,11 +764,28 @@ Drydocks               {data['imp_drydock']}""",
             ships = nation_data["ships"]
             missiles = nation_data["missiles"]
             nukes = nation_data["nukes"]
+            if nation_data["allianceposition"] == "5":
+                alliancepos = "Leader"
+            elif nation_data["allianceposition"] == "4":
+                alliancepos = "Vice Leader"
+            elif nation_data["allianceposition"] == "3":
+                alliancepos = "Officer"
+            elif nation_data["allianceposition"] == "2":
+                alliancepos = "Member"
+            elif nation_data["allianceposition"] == "1":
+                alliancepos = "Applicant"
+            elif nation_data["allianceposition"] == "0":
+                alliancepos = "None"
+            
+            if nation_data["allianceid"] == "0":
+                allianceid = "None"
+            else:
+                allianceid = nation_data["allianceid"]
 
             embed = discord.Embed(
                 title="Military Info for {}".format(name),
                 description="Alliance Name: {}\nAlliance ID: {}\nAlliance Position: {}".format
-                (nation_data["alliance"], nation_data["allianceid"], nation_data["allianceposition"]),
+                (nation_data["alliance"], allianceid, alliancepos),
                 url ="https://politicsandwar.com/nation/id={}".format(nationid),
                 color = await ctx.embed_color(),
             )

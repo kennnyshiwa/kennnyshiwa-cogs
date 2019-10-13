@@ -620,6 +620,7 @@ Drydocks               {data['imp_drydock']}""",
             ).set_footer(text="Info Provided By http://politicsandwar.com/api/")
         )
 
+    @commands.bot_has_permissions(embed_links=True)
     @commands.command()
     async def infra(self, ctx, input: float, tobuy: float, urban=None, cce=None):
         """
@@ -667,6 +668,7 @@ Drydocks               {data['imp_drydock']}""",
         else:
             await ctx.send("You are currently at the max amount of infrastructure")
 
+    @commands.bot_has_permissions(embed_links=True)
     @commands.command()
     async def land(self, ctx, input: float, tobuy: float):
         """
@@ -705,6 +707,7 @@ Drydocks               {data['imp_drydock']}""",
         else:
             await ctx.send("You are at the max amount of land")
 
+    @commands.bot_has_permissions(embed_links=True)
     @commands.command()
     async def citycost(self, ctx, city: int):
         """
@@ -725,8 +728,80 @@ Drydocks               {data['imp_drydock']}""",
         else:
             await ctx.send("You are at the max amount of cities")
 
+    @commands.bot_has_permissions(embed_links=True)
+    @commands.command()
+    async def military(self, ctx, *, name):
+        """
+        Military Lookup
+        """
+        await ctx.send("This may take a while.....")
+        async with ctx.typing():
+            name = self.escape_query("".join(name))
+            key = False
+            nations_data = await self.nations_lookup(ctx)
+            for I in nations_data["nations"]:
+                if name.lower() == I["nation"].lower():
+                    key = True
+                    nid = I["nationid"]
+            if key == True:
+                pass
+            else:
+                nid = name
+            nation_data = await self.do_lookup(ctx, nid)
+            if not nation_data:
+                await ctx.send("I can't get the data from the API. Try again later.")
+                return
+            success = nation_data["success"]
+            if success == False:
+                await ctx.send("No such nation exists! Please enter a vaild nation ID")
+                return
+            name = nation_data["name"]
+            nationid = nation_data["nationid"]
+            score = nation_data["score"]
+            soldiers = nation_data["soldiers"]
+            tank = nation_data["tanks"]
+            aircraft = nation_data["aircraft"]
+            ships = nation_data["ships"]
+            missiles = nation_data["missiles"]
+            nukes = nation_data["nukes"]
 
+            embed = discord.Embed(
+                title="Military Info for {}".format(name),
+                description="Alliance Name: {}\nAlliance ID: {}\nAlliance Position: {}".format
+                (nation_data["alliance"], nation_data["allianceid"], nation_data["allianceposition"]),
+                url ="https://politicsandwar.com/nation/id={}".format(nationid),
+                color = await ctx.embed_color(),
+            )
 
+            embed.add_field(
+                name="Military Stats",
+                value=(f"""
+                    Score: {score}
+                    Soldiers: {soldiers}
+                    Tanks: {tank}
+                    Aircraft: {aircraft}
+                    Ships: {ships}
+                    Missiles: {missiles}
+                    Nukes: {nukes}"""
+                    ),
+            )
+            
+        await ctx.send(embed=embed)
+
+    @commands.bot_has_permissions(embed_links=True)
+    @commands.command()
+    async def pnwcredits(self, ctx):
+        """
+        Credits for the PNW cog
+        """
+        embed = discord.Embed(
+            title="Credits go to Reqiuem bot/Kyle Tyo for various aspects of this PNW cog",
+            description="Reqiuem can be found here, https://gitlab.com/AnakiKaiver297/Requiem-Project, "
+                        "specific thanks for the various calculations and name searching for alliances/nations",
+            color = await ctx.embed_color(),
+        )
+        await ctx.send(embed=embed)
+                    
     def cog_unload(self):   
         self.bot.loop.create_task(self.session.close())
 

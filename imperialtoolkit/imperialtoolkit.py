@@ -259,7 +259,7 @@ class ImperialToolkit(Listeners, commands.Cog):
                 ),
             )
             embed.set_thumbnail(url=ctx.bot.user.avatar_url_as(static_format="png"))
-            embed.set_footer(text=await ctx.bot._config.help.tagline())
+            embed.set_footer(text=await ctx.bot.db.help.tagline())
 
         return await ctx.send(embed=embed)
 

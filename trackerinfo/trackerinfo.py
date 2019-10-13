@@ -33,7 +33,7 @@ class Trackerinfo(commands.Cog):
             trackerstatus = "up"
         elif tracker == "2":
             trackerstatus = "unstable"
-        tracker = f'HTTPS Tracker is {trackerstatus}'
+        tracker = f"HTTPS Tracker is {trackerstatus}"
 
         embed = discord.Embed(
             title="PTP Status", url="https://ptp.trackerstatus.info", color=color
@@ -66,7 +66,7 @@ class Trackerinfo(commands.Cog):
             trackerstatus = "up"
         elif tracker == "2":
             trackerstatus = "unstable"
-        tracker = f'HTTPS Tracker is {trackerstatus}'
+        tracker = f"HTTPS Tracker is {trackerstatus}"
 
         embed = discord.Embed(
             title="GGN Status", url="https://ggn.trackerstatus.info", color=color
@@ -99,7 +99,7 @@ class Trackerinfo(commands.Cog):
             trackerstatus = "up"
         elif tracker == "2":
             trackerstatus = "unstable"
-        tracker = f'HTTPS Tracker is {trackerstatus}'
+        tracker = f"HTTPS Tracker is {trackerstatus}"
 
         embed = discord.Embed(
             title="RED Status", url="https://red.trackerstatus.info", color=color
@@ -132,7 +132,7 @@ class Trackerinfo(commands.Cog):
             trackerstatus = "up"
         elif tracker == "2":
             trackerstatus = "unstable"
-        tracker = f'HTTPS Tracker is {trackerstatus}'
+        tracker = f"HTTPS Tracker is {trackerstatus}"
 
         embed = discord.Embed(
             title="BTN Status", url="https://BTN.trackerstatus.info", color=color
@@ -165,7 +165,7 @@ class Trackerinfo(commands.Cog):
             trackerstatus = "up"
         elif tracker == "2":
             trackerstatus = "unstable"
-        tracker = f'HTTPS Tracker is {trackerstatus}'
+        tracker = f"HTTPS Tracker is {trackerstatus}"
 
         embed = discord.Embed(
             title="MTV Status", url="https://mtv.trackerstatus.info", color=color

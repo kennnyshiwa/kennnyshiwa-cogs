@@ -20,7 +20,7 @@ class PnW(commands.Cog):
         Move the API keys from cog stored config to core bot config if they exist.
         """
         pnw_key = await self.config.pnw_key()
-        if hasattr(self.bot, 'get_shared_api_tokens'):
+        if hasattr(self.bot, "get_shared_api_tokens"):
             if pnw_key is not None and "pnw" not in await self.bot.get_shared_api_tokens():
                 await self.bot.set.shared_api_tokens("pnw", value={"api_key": pnw_key})
                 await self.config.pnw_key.clear()
@@ -58,15 +58,17 @@ class PnW(commands.Cog):
         """
         Run Nation lookup.
         """
-        if hasattr(ctx.bot, 'get_shared_api_tokens'): #3.2
+        if hasattr(ctx.bot, "get_shared_api_tokens"):  # 3.2
             api = await ctx.bot.get_shared_api_tokens("pnw")
-            pnw_key = api.get('api_key')
+            pnw_key = api.get("api_key")
         else:
             api = await ctx.bot.db.api_tokens.get_raw("pnw")
-            pnw_key = api['api_key']
+            pnw_key = api["api_key"]
         if not pnw_key:
             return await ctx.send(
-				'You need to set an API key! Check ``{}pwnkey`` for instructions\n'.format(ctx.prefix)
+                "You need to set an API key! Check ``{}pwnkey`` for instructions\n".format(
+                    ctx.prefix
+                )
             )
         base_url = "http://politicsandwar.com/api/nation/id=%s&key={}&$format=json".format(pnw_key)
 
@@ -76,24 +78,25 @@ class PnW(commands.Cog):
                 if not data:
                     return
                 return data
-    
+
     @staticmethod
     async def nations_lookup(ctx):
         """
         Lookup all nations.
         """
-        if hasattr(ctx.bot, 'get_shared_api_tokens'): #3.2
+        if hasattr(ctx.bot, "get_shared_api_tokens"):  # 3.2
             api = await ctx.bot.get_shared_api_tokens("pnw")
-            pnw_key = api.get('api_key')
+            pnw_key = api.get("api_key")
         else:
             api = await ctx.bot.db.api_tokens.get_raw("pnw")
-            pnw_key = api['api_key']
+            pnw_key = api["api_key"]
         if not pnw_key:
             return await ctx.send(
-				'You need to set an API key! Check ``{}pwnkey`` for instructions\n'.format(ctx.prefix)
+                "You need to set an API key! Check ``{}pwnkey`` for instructions\n".format(
+                    ctx.prefix
+                )
             )
         base_url = "https://politicsandwar.com/api/nations/?vm=true&key={}".format(pnw_key)
-
 
         async with aiohttp.ClientSession() as session:
             async with session.get(base_url) as r:
@@ -101,21 +104,23 @@ class PnW(commands.Cog):
                 if not data:
                     return
                 return data
-    
+
     @staticmethod
     async def alliances_lookup(ctx):
         """
         Run Alliance Lookup.
         """
-        if hasattr(ctx.bot, 'get_shared_api_tokens'): #3.2
+        if hasattr(ctx.bot, "get_shared_api_tokens"):  # 3.2
             api = await ctx.bot.get_shared_api_tokens("pnw")
-            pnw_key = api.get('api_key')
+            pnw_key = api.get("api_key")
         else:
             api = await ctx.bot.db.api_tokens.get_raw("pnw")
-            pnw_key = api['api_key']
+            pnw_key = api["api_key"]
         if not pnw_key:
             return await ctx.send(
-				'You need to set an API key! Check ``{}pwnkey`` for instructions\n'.format(ctx.prefix)
+                "You need to set an API key! Check ``{}pwnkey`` for instructions\n".format(
+                    ctx.prefix
+                )
             )
         base_url = "http://politicsandwar.com/api/alliances/?key={}&$format=json".format(pnw_key)
 
@@ -125,44 +130,51 @@ class PnW(commands.Cog):
                 if not data:
                     return
                 return data
-    
+
     @staticmethod
     async def alliance_lookup(ctx, alid: str) -> list:
         """
         Run Alliance Lookup.
         """
-        if hasattr(ctx.bot, 'get_shared_api_tokens'): #3.2
+        if hasattr(ctx.bot, "get_shared_api_tokens"):  # 3.2
             api = await ctx.bot.get_shared_api_tokens("pnw")
-            pnw_key = api.get('api_key')
+            pnw_key = api.get("api_key")
         else:
             api = await ctx.bot.db.api_tokens.get_raw("pnw")
-            pnw_key = api['api_key']
+            pnw_key = api["api_key"]
         if not pnw_key:
             return await ctx.send(
-				'You need to set an API key! Check ``{}pwnkey`` for instructions\n'.format(ctx.prefix)
+                "You need to set an API key! Check ``{}pwnkey`` for instructions\n".format(
+                    ctx.prefix
+                )
             )
-        base_url = "http://politicsandwar.com/api/alliance/id=%s&key={}&$format=json".format(pnw_key)
+        base_url = "http://politicsandwar.com/api/alliance/id=%s&key={}&$format=json".format(
+            pnw_key
+        )
 
         async with aiohttp.ClientSession() as session:
             async with session.get(base_url % alid) as r:
                 data = await r.json()
                 if not data:
                     return None
-                return data 
+                return data
+
     @staticmethod
     async def city_api(ctx, alid: str) -> list:
         """
         Run City Lookup.
         """
-        if hasattr(ctx.bot, 'get_shared_api_tokens'): #3.2
+        if hasattr(ctx.bot, "get_shared_api_tokens"):  # 3.2
             api = await ctx.bot.get_shared_api_tokens("pnw")
-            pnw_key = api.get('api_key')
+            pnw_key = api.get("api_key")
         else:
             api = await ctx.bot.db.api_tokens.get_raw("pnw")
-            pnw_key = api['api_key']
+            pnw_key = api["api_key"]
         if not pnw_key:
             return await ctx.send(
-				'You need to set an API key! Check ``{}pwnkey`` for instructions\n'.format(ctx.prefix)
+                "You need to set an API key! Check ``{}pwnkey`` for instructions\n".format(
+                    ctx.prefix
+                )
             )
         base_url = "http://politicsandwar.com/api/city/id=%s&key={}&$format=json".format(pnw_key)
 
@@ -172,22 +184,27 @@ class PnW(commands.Cog):
                 if not data:
                     return
                 return data
+
     @staticmethod
     async def tradeprice_lookup(ctx, query):
         """
         Lookup resources trading info.
         """
-        if hasattr(ctx.bot, 'get_shared_api_tokens'): #3.2
+        if hasattr(ctx.bot, "get_shared_api_tokens"):  # 3.2
             api = await ctx.bot.get_shared_api_tokens("pnw")
-            pnw_key = api.get('api_key')
+            pnw_key = api.get("api_key")
         else:
             api = await ctx.bot.db.api_tokens.get_raw("pnw")
-            pnw_key = api['api_key']
+            pnw_key = api["api_key"]
         if not pnw_key:
             return await ctx.send(
-				'You need to set an API key! Check ``{}pwnkey`` for instructions\n'.format(ctx.prefix)
+                "You need to set an API key! Check ``{}pwnkey`` for instructions\n".format(
+                    ctx.prefix
+                )
             )
-        base_url = "http://politicsandwar.com/api/tradeprice/resource=%s&key={}&$format=json".format(pnw_key)
+        base_url = "http://politicsandwar.com/api/tradeprice/resource=%s&key={}&$format=json".format(
+            pnw_key
+        )
 
         async with aiohttp.ClientSession() as session:
             async with session.get(base_url % query) as r:
@@ -195,23 +212,27 @@ class PnW(commands.Cog):
                 if not data:
                     return
                 return data
-    
+
     @staticmethod
     async def bank_lookup(ctx, alid: str) -> list:
         """
         Run Bank Lookup.
         """
-        if hasattr(ctx.bot, 'get_shared_api_tokens'): #3.2
+        if hasattr(ctx.bot, "get_shared_api_tokens"):  # 3.2
             api = await ctx.bot.get_shared_api_tokens("pnw")
-            pnw_key = api.get('api_key')
+            pnw_key = api.get("api_key")
         else:
             api = await ctx.bot.db.api_tokens.get_raw("pnw")
-            pnw_key = api['api_key']
+            pnw_key = api["api_key"]
         if not pnw_key:
             return await ctx.send(
-				'You need to set an API key! Check ``{}pwnkey`` for instructions\n'.format(ctx.prefix)
+                "You need to set an API key! Check ``{}pwnkey`` for instructions\n".format(
+                    ctx.prefix
+                )
             )
-        base_url = "http://politicsandwar.com/api/alliance-bank/?allianceid=%s&key={}&$format=json".format(pnw_key)
+        base_url = "http://politicsandwar.com/api/alliance-bank/?allianceid=%s&key={}&$format=json".format(
+            pnw_key
+        )
 
         async with aiohttp.ClientSession() as session:
             async with session.get(base_url % alid) as r:
@@ -219,7 +240,7 @@ class PnW(commands.Cog):
                 if not data:
                     return
                 return data
-        
+
     @commands.bot_has_permissions(embed_links=True)
     @commands.command()
     async def nation(self, ctx, *, name):
@@ -255,7 +276,7 @@ class PnW(commands.Cog):
             leadername = nation_data["leadername"]
             nationrank = nation_data["nationrank"]
             score = nation_data["score"]
-            alliance = nation_data["alliance"] 
+            alliance = nation_data["alliance"]
             last_active = nation_data["minutessinceactive"]
             government = nation_data["government"]
             domestic_policy = nation_data["domestic_policy"]
@@ -263,11 +284,11 @@ class PnW(commands.Cog):
             founded = nation_data["founded"]
             age = nation_data["daysold"]
             flag = nation_data["flagurl"]
-            
+
             embed = discord.Embed(
                 title="Nation Info for {}".format(name),
-                url ="https://politicsandwar.com/nation/id={}".format(nationid),
-                color = await ctx.embed_color(),
+                url="https://politicsandwar.com/nation/id={}".format(nationid),
+                color=await ctx.embed_color(),
             )
 
             embed.add_field(name="Leader Name", value=leadername, inline=True)
@@ -327,11 +348,11 @@ class PnW(commands.Cog):
                 forum = "No forum link listed"
             else:
                 forum = alliance_data["forumurl"]
-            
+
             embed = discord.Embed(
                 title="Alliance Info for {} - {}".format(name, allianceid),
                 url="https://politicsandwar.com/alliance/id={}".format(alid),
-                color = await ctx.embed_color(),
+                color=await ctx.embed_color(),
             )
             embed.add_field(name="Chat", value=chat, inline=False)
             embed.add_field(name="Forum Link:", value=forum, inline=False)
@@ -380,9 +401,9 @@ Land                   {data['land']}
 Crime                  {data['crime']}
 Disease                {data['disease']}
 Pollution              {data['pollution']}
-Commerce               {data['commerce']}""",
+Commerce               {data['commerce']}"""
+            ),
         )
-    )
         embed.add_field(
             name="Improvements - Power",
             value=box(
@@ -390,9 +411,9 @@ Commerce               {data['commerce']}""",
 Coal Power Plants      {data['imp_coalpower']}
 Oil Power Plants       {data['imp_oilpower']}
 Nuclear Power Plants   {data['imp_nuclearpower']}
-Wind Power Plants      {data['imp_windpower']}""",
+Wind Power Plants      {data['imp_windpower']}"""
+            ),
         )
-    )
         if nation["continent"] == "Europe":
             resources = box(
                 f"""
@@ -410,14 +431,16 @@ Uranium Mines          {data['imp_uramine']}
 Farms                  {data['imp_farm']}"""
             )
         elif nation["continent"] == "Africa":
-            resources = box(f"""
+            resources = box(
+                f"""
 Oil Wells              {data['imp_oilwell']}
 Bauxite Mines          {data['imp_bauxitemine']}
 Uranium Mines          {data['imp_uramine']}
 Farms                  {data['imp_farm']}"""
             )
         elif nation["continent"] == "South America":
-            resources = box(f"""
+            resources = box(
+                f"""
 Oil Wells              {data['imp_oilwell']}
 Bauxite Mines          {data['imp_bauxitemine']}
 Lead Mines             {data['imp_leadmine']}
@@ -447,8 +470,8 @@ Farms                  {data['imp_farm']}"""
 Gas Refinerys          {data['imp_gasrefinery']}
 Steel Mills            {data['imp_steelmill']}
 Aluminum Refinerys     {data['imp_aluminumrefinery']}
-Munitions Factorys     {data['imp_munitionsfactory']}""",
-            )
+Munitions Factorys     {data['imp_munitionsfactory']}"""
+            ),
         )
         embed.add_field(
             name="Improvements - Civil",
@@ -457,8 +480,8 @@ Munitions Factorys     {data['imp_munitionsfactory']}""",
 Police Stations        {data['imp_policestation']}
 Hospitals              {data['imp_hospital']}
 Recycling Centers      {data['imp_recyclingcenter']}
-Subways                {data['imp_subway']}""",
-            )
+Subways                {data['imp_subway']}"""
+            ),
         )
         embed.add_field(
             name="Improvements - Commerce",
@@ -467,8 +490,8 @@ Subways                {data['imp_subway']}""",
 Supermarkets           {data['imp_supermarket']}
 Banks                  {data['imp_bank']}
 Malls                  {data['imp_mall']}
-Stadiums               {data['imp_stadium']}""",
-            )
+Stadiums               {data['imp_stadium']}"""
+            ),
         )
         embed.add_field(
             name="Improvements - Military",
@@ -477,8 +500,8 @@ Stadiums               {data['imp_stadium']}""",
 Barracks               {data['imp_barracks']}
 Factories              {data['imp_factory']}
 Hangars                {data['imp_hangar']}
-Drydocks               {data['imp_drydock']}""",
-            )
+Drydocks               {data['imp_drydock']}"""
+            ),
         )
         embed.set_footer(text="Info Provided By http://politicsandwar.com/api/")
         await ctx.send(embed=embed)
@@ -514,23 +537,25 @@ Drydocks               {data['imp_drydock']}""",
             embed = discord.Embed(
                 title=f"Trade info for {resource}",
                 description=f"Current Avg Price: ``{avgprice}``\n"
-                            f"Market Index: ``{marketindex}``",
-                color = await ctx.embed_color(),
+                f"Market Index: ``{marketindex}``",
+                color=await ctx.embed_color(),
             )
-            embed.add_field(name=f"Highest Buy amount: ``{highestbuyamount}``",
-                            value=f"Price: {highestbuyprice}\n"
-                            f"Total value: {highestbuytotal}\n"
-                            f"By nation: {highestbuynation}\n"
-                            f"At {highestbuydate}",
-                            inline=True
-                        )
-            embed.add_field(name=f"Lowest Buy amount: ``{lowestbuyamount}``",
-                            value=f"Price: {lowestbuyprice}\n"
-                            f"Total value: {lowestbuytotal}\n"
-                            f"By nation: {lowestbuynation}\n"
-                            f"At {lowestbuydate}",
-                            inline=True
-                        )
+            embed.add_field(
+                name=f"Highest Buy amount: ``{highestbuyamount}``",
+                value=f"Price: {highestbuyprice}\n"
+                f"Total value: {highestbuytotal}\n"
+                f"By nation: {highestbuynation}\n"
+                f"At {highestbuydate}",
+                inline=True,
+            )
+            embed.add_field(
+                name=f"Lowest Buy amount: ``{lowestbuyamount}``",
+                value=f"Price: {lowestbuyprice}\n"
+                f"Total value: {lowestbuytotal}\n"
+                f"By nation: {lowestbuynation}\n"
+                f"At {lowestbuydate}",
+                inline=True,
+            )
             await ctx.send(embed=embed)
 
     @commands.bot_has_permissions(embed_links=True)
@@ -581,7 +606,7 @@ Drydocks               {data['imp_drydock']}""",
             embed = discord.Embed(
                 title=f"Bank Information for {name}",
                 description=f"Total Money = {money}",
-                color = await ctx.embed_color(),
+                color=await ctx.embed_color(),
             )
             embed.add_field(name="Alliance ID", value=alid)
             embed.add_field(name="Food", value=food)
@@ -650,11 +675,11 @@ Drydocks               {data['imp_drydock']}""",
                 if urban:
                     urban = urban.lower()
                     if urban in vars:
-                        cost = cost - cost * .05
+                        cost = cost - cost * 0.05
                 if cce:
                     cce = cce.lower()
                     if cce in vars:
-                        cost = cost - cost * .05
+                        cost = cost - cost * 0.05
                 embed = discord.Embed(
                     title="Infra Cost Calculator",
                     description="To accomidate for discrepincies in this calculator, please ensure you are capable of paying +/- $100,000 what is given here!",
@@ -776,7 +801,7 @@ Drydocks               {data['imp_drydock']}""",
                 alliancepos = "Applicant"
             elif nation_data["allianceposition"] == "0":
                 alliancepos = "None"
-            
+
             if nation_data["allianceid"] == "0":
                 allianceid = "None"
             else:
@@ -784,15 +809,17 @@ Drydocks               {data['imp_drydock']}""",
 
             embed = discord.Embed(
                 title="Military Info for {}".format(name),
-                description="Alliance Name: {}\nAlliance ID: {}\nAlliance Position: {}".format
-                (nation_data["alliance"], allianceid, alliancepos),
-                url ="https://politicsandwar.com/nation/id={}".format(nationid),
-                color = await ctx.embed_color(),
+                description="Alliance Name: {}\nAlliance ID: {}\nAlliance Position: {}".format(
+                    nation_data["alliance"], allianceid, alliancepos
+                ),
+                url="https://politicsandwar.com/nation/id={}".format(nationid),
+                color=await ctx.embed_color(),
             )
 
             embed.add_field(
                 name="Military Stats",
-                value=(f"""
+                value=(
+                    f"""
                     Score: {score}
                     Soldiers: {soldiers}
                     Tanks: {tank}
@@ -800,9 +827,9 @@ Drydocks               {data['imp_drydock']}""",
                     Ships: {ships}
                     Missiles: {missiles}
                     Nukes: {nukes}"""
-                    ),
+                ),
             )
-            
+
         await ctx.send(embed=embed)
 
     @commands.bot_has_permissions(embed_links=True)
@@ -814,14 +841,10 @@ Drydocks               {data['imp_drydock']}""",
         embed = discord.Embed(
             title="Credits go to Reqiuem bot/Kyle Tyo for various aspects of this PNW cog",
             description="Reqiuem can be found here, https://gitlab.com/AnakiKaiver297/Requiem-Project, "
-                        "specific thanks for the various calculations and name searching for alliances/nations",
-            color = await ctx.embed_color(),
+            "specific thanks for the various calculations and name searching for alliances/nations",
+            color=await ctx.embed_color(),
         )
         await ctx.send(embed=embed)
-                    
-    def cog_unload(self):   
+
+    def cog_unload(self):
         self.bot.loop.create_task(self.session.close())
-
-
-            
-

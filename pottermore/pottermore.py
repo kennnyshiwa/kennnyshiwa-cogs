@@ -13,11 +13,11 @@ ravenclaw = "https://cdn10.bigcommerce.com/s-9p3fydit/products/372/images/1332/r
 hufflepuff = "https://cdn.shopify.com/s/files/1/0221/1146/products/Hufflepuff_Embroidered_Patch_Scaled_large.png?v=1553528874"
 harry = "https://www.freepngimg.com/thumb/harry_potter/5-2-harry-potter-png-file.png"
 hermione = "https://66.media.tumblr.com/3ce8453be755f31f93381918985b4918/tumblr_nn2lopIypj1rxkqbso1_1280.png"
-voldemort = "https://vignette.wikia.nocookie.net/harrypotter/images/6/6e/VoldemortHeadshot_DHP1.png"
-snape = "https://vignette.wikia.nocookie.net/harrypotter/images/a/a3/Severus_Snape.jpg"
-draco = (
-    "https://vignette.wikia.nocookie.net/harrypotter/images/7/7e/Draco_Malfoy_TDH.png"
+voldemort = (
+    "https://vignette.wikia.nocookie.net/harrypotter/images/6/6e/VoldemortHeadshot_DHP1.png"
 )
+snape = "https://vignette.wikia.nocookie.net/harrypotter/images/a/a3/Severus_Snape.jpg"
+draco = "https://vignette.wikia.nocookie.net/harrypotter/images/7/7e/Draco_Malfoy_TDH.png"
 dumbledore = "https://images.ctfassets.net/bxd3o8b291gf/5ocauY6zAsqGiIgeECw06e/8accc1c586d2be7d9de6a3d9aec37b90/AlbusDumbledore_WB_F1_DumbledoreSmiling_Still_080615_Port.jpg"
 ron = "https://upload.wikimedia.org/wikipedia/en/thumb/5/5e/Ron_Weasley_poster.jpg/220px-Ron_Weasley_poster.jpg"
 hagrid = "https://vignette.wikia.nocookie.net/harrypotter/images/e/ee/Rubeushagrid.PNG/revision/latest?cb=20161123044204"
@@ -54,33 +54,25 @@ class Pottermore(commands.Cog):
         if house_user == "Slytherin":
             image = slytherin
             embed = discord.Embed(
-                title="Find your Harry Potter House",
-                description=house_user,
-                color=color,
+                title="Find your Harry Potter House", description=house_user, color=color
             )
             embed.set_thumbnail(url=image)
         if house_user == "Gryffindor":
             image = gryffindor
             embed = discord.Embed(
-                title="Find your Harry Potter House",
-                description=house_user,
-                color=color,
+                title="Find your Harry Potter House", description=house_user, color=color
             )
             embed.set_thumbnail(url=image)
         if house_user == "Ravenclaw":
             image = ravenclaw
             embed = discord.Embed(
-                title="Find your Harry Potter House",
-                description=house_user,
-                color=color,
+                title="Find your Harry Potter House", description=house_user, color=color
             )
             embed.set_thumbnail(url=image)
         if house_user == "Hufflepuff":
             image = hufflepuff
             embed = discord.Embed(
-                title="Find your Harry Potter House",
-                description=house_user,
-                color=color,
+                title="Find your Harry Potter House", description=house_user, color=color
             )
             embed.set_thumbnail(url=image)
         await ctx.send(embed=embed)
@@ -93,9 +85,8 @@ class Pottermore(commands.Cog):
             async with session.get(base_url % query) as r:
                 data = await r.json()
                 if not data or isinstance(data, dict):
-                        return None
+                    return None
                 return data[0]
-                
 
     def escape_query(self, query) -> str:
         """Escape mentions from queries"""
@@ -120,9 +111,7 @@ class Pottermore(commands.Cog):
         else:
             alias = ""
         embed = discord.Embed(
-            title=pottermore_data["name"],
-            description=alias,
-            color=await ctx.embed_color(),
+            title=pottermore_data["name"], description=alias, color=await ctx.embed_color()
         )
         name = pottermore_data["name"]
         if name == "Harry Potter":
@@ -150,29 +139,21 @@ class Pottermore(commands.Cog):
         if "house" in pottermore_data:
             embed.add_field(name="House", value=pottermore_data["house"], inline=True)
         if "school" in pottermore_data:
-            embed.add_field(
-                name="School Name", value=pottermore_data["school"], inline=True
-            )
+            embed.add_field(name="School Name", value=pottermore_data["school"], inline=True)
         if "role" in pottermore_data:
             embed.add_field(name="Role", value=pottermore_data["role"], inline=True)
         if "wand" in pottermore_data:
             embed.add_field(name="Wand", value=pottermore_data["wand"], inline=True)
         if "boggart" in pottermore_data:
-            embed.add_field(
-                name="Boggart", value=pottermore_data["boggart"], inline=True
-            )
+            embed.add_field(name="Boggart", value=pottermore_data["boggart"], inline=True)
         if "patronus" in pottermore_data:
-            embed.add_field(
-                name="Patronus", value=pottermore_data["patronus"], inline=True
-            )
+            embed.add_field(name="Patronus", value=pottermore_data["patronus"], inline=True)
         if pottermore_data["ministryOfMagic"] == False:
             embed.add_field(name="Ministry of Magic", value="Not a member", inline=True)
         else:
             embed.add_field(name="Ministry of Magic", value="Member", inline=True)
         if pottermore_data["orderOfThePhoenix"] == False:
-            embed.add_field(
-                name="Order Of The Phoenix", value="Not a member", inline=True
-            )
+            embed.add_field(name="Order Of The Phoenix", value="Not a member", inline=True)
         else:
             embed.add_field(name="Order Of The Phoenix", value="Member", inline=True)
         if pottermore_data["dumbledoresArmy"] == False:
@@ -183,14 +164,10 @@ class Pottermore(commands.Cog):
             embed.add_field(name="DeathEater", value="No", inline=True)
         else:
             embed.add_field(name="DeathEater", value="Yes", inline=True)
-        embed.add_field(
-            name="Blood Status", value=pottermore_data["bloodStatus"], inline=True
-        )
+        embed.add_field(name="Blood Status", value=pottermore_data["bloodStatus"], inline=True)
         embed.add_field(name="Species", value=pottermore_data["species"], inline=True)
         if "animagus" in pottermore_data:
-            embed.add_field(
-                name="Animagus", value=pottermore_data["animagus"], inline=True
-            )
+            embed.add_field(name="Animagus", value=pottermore_data["animagus"], inline=True)
         await ctx.send(embed=embed)
 
     def cog_unload(self):

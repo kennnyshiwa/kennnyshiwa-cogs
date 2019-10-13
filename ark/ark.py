@@ -3,11 +3,12 @@ from aiohttp.client_exceptions import ContentTypeError
 import discord
 from redbot.core import commands
 
+
 class Ark(commands.Cog):
     """ARK lookup Cog"""
 
     __author__ = ["kennnyshiwa", "Beryju"]
-    
+
     special_queries = {
         "@everyone": "Hah. Nice try. Being very funny. Cheeky cunt.",
         "@here": "You thought this would work too, very funny",

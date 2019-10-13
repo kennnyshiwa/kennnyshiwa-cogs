@@ -65,12 +65,12 @@ class ImperialToolkit(Listeners, commands.Cog):
         )
         self.config.register_global(**global_defauls)
         self._task = self.bot.loop.create_task(self._save_counters_to_config())
-        lavalink.register_event_listener(self.event_handler) # To delete at next audio update.
-    
+        lavalink.register_event_listener(self.event_handler)  # To delete at next audio update.
+
     def cog_unload(self):
         lavalink.unregister_event_listener(self.event_handler)
         self.bot.loop.create_task(self._clean_up())
-    
+
     async def event_handler(self, player, event_type, extra):  # To delete at next audio update.
         # Thanks Draper#6666
         if event_type == lavalink.LavalinkEvents.TRACK_START:
@@ -125,7 +125,7 @@ class ImperialToolkit(Listeners, commands.Cog):
                 return "{0:.1f}{1}".format(num, unit)
             num /= 1024.0
         return "{0:.1f}{1}".format(num, "YB")
-    
+
     @commands.bot_has_permissions(embed_links=True)
     @commands.command()
     async def botstat(self, ctx):
@@ -136,7 +136,8 @@ class ImperialToolkit(Listeners, commands.Cog):
             netusage = psutil.net_io_counters()
             width = max([len(self._size(n)) for n in [netusage.bytes_sent, netusage.bytes_recv]])
             net_ios = (
-                "\u200b" "\n"
+                "\u200b"
+                "\n"
                 "{sent_text:<11}: {sent:>{width}}\n"
                 "{recv_text:<11}: {recv:>{width}}"
             ).format(
@@ -181,9 +182,7 @@ class ImperialToolkit(Listeners, commands.Cog):
             uptime = str(self.get_bot_uptime())
             tracks_played = "`{:,}`".format(self.counter["tracks_played"])
             try:
-                total_num = "`{:,}`".format(
-                    len(lavalink.active_players())
-                )
+                total_num = "`{:,}`".format(len(lavalink.active_players()))
             except AttributeError:
                 total_num = "`{:,}`".format(
                     len([p for p in lavalink.players if p.current is not None])
@@ -264,7 +263,6 @@ class ImperialToolkit(Listeners, commands.Cog):
 
         return await ctx.send(embed=embed)
 
-
     @commands.bot_has_permissions(embed_links=True)
     @commands.command()
     async def advbotstats(self, ctx):
@@ -294,18 +292,18 @@ class ImperialToolkit(Listeners, commands.Cog):
         emoji_up = "{:,}".format(self.counter["emojis_updated"])
         vc_joins = "{:,}".format(self.counter["users_joined_bot_music_room"])
         tracks_played = "{:,}".format(self.counter["tracks_played"])
-        #streams_played = "{:,}".format(self.counter["streams_played"])
-        #yt_streams = "{:,}".format(self.counter["yt_streams_played"])
-        #mixer_streams = "{:,}".format(self.counter["mixer_streams_played"])
-        #ttv_streams = "{:,}".format(self.counter["ttv_streams_played"])
-        #other_streams = "{:,}".format(self.counter["other_streams_played"])
-        #youtube_tracks = "{:,}".format(self.counter["youtube_tracks"])
-        #soundcloud_tracks = "{:,}".format(self.counter["soundcloud_tracks"])
-        #bandcamp_tracks = "{:,}".format(self.counter["bandcamp_tracks"])
-        #vimeo_tracks = "{:,}".format(self.counter["vimeo_tracks"])
-        #mixer_tracks = "{:,}".format(self.counter["mixer_tracks"])
-        #twitch_tracks = "{:,}".format(self.counter["twitch_tracks"])
-        #other_tracks = "{:,}".format(self.counter["other_tracks"])
+        # streams_played = "{:,}".format(self.counter["streams_played"])
+        # yt_streams = "{:,}".format(self.counter["yt_streams_played"])
+        # mixer_streams = "{:,}".format(self.counter["mixer_streams_played"])
+        # ttv_streams = "{:,}".format(self.counter["ttv_streams_played"])
+        # other_streams = "{:,}".format(self.counter["other_streams_played"])
+        # youtube_tracks = "{:,}".format(self.counter["youtube_tracks"])
+        # soundcloud_tracks = "{:,}".format(self.counter["soundcloud_tracks"])
+        # bandcamp_tracks = "{:,}".format(self.counter["bandcamp_tracks"])
+        # vimeo_tracks = "{:,}".format(self.counter["vimeo_tracks"])
+        # mixer_tracks = "{:,}".format(self.counter["mixer_tracks"])
+        # twitch_tracks = "{:,}".format(self.counter["twitch_tracks"])
+        # other_tracks = "{:,}".format(self.counter["other_tracks"])
         try:
             total_num = "{:,}/{:,}".format(
                 len(lavalink.active_players()), len(lavalink.all_players())
@@ -318,7 +316,7 @@ class ImperialToolkit(Listeners, commands.Cog):
 
         em = discord.Embed(
             title="Usage count of {} since last restart:".format(ctx.bot.user.name),
-            color=await ctx.embed_colour()
+            color=await ctx.embed_colour(),
         )
         em.add_field(
             name="Message Stats",
@@ -328,9 +326,10 @@ Messages Read:       {messages_read}
 Messages Sent:       {messages_sent}
 Messages Deleted:    {msg_deleted}
 Messages Edited      {msg_edited}
-DMs Recieved:        {dms_received}""",lang="prolog"
+DMs Recieved:        {dms_received}""",
+                lang="prolog",
             ),
-            inline=False
+            inline=False,
         )
         em.add_field(
             name="Commands Stats",
@@ -338,18 +337,20 @@ DMs Recieved:        {dms_received}""",lang="prolog"
                 f"""
 Commands Processed:  {commands_count}
 Errors Occured:      {errors_count}
-Sessions Resumed:    {resumed_sessions}""",lang="prolog"
+Sessions Resumed:    {resumed_sessions}""",
+                lang="prolog",
             ),
-            inline=False
+            inline=False,
         )
         em.add_field(
             name="Guild Stats",
             value=box(
                 f"""
 Guilds Joined:       {guild_join}
-Guilds Left:         {guild_leave}""",lang="prolog"
+Guilds Left:         {guild_leave}""",
+                lang="prolog",
             ),
-            inline=False
+            inline=False,
         )
         em.add_field(
             name="User Stats",
@@ -358,9 +359,10 @@ Guilds Left:         {guild_leave}""",lang="prolog"
 New Users:           {new_mem}
 Left Users:          {left_mem}
 Banned Users:        {mem_ban}
-Unbanned Users:      {mem_unban}""",lang="prolog"
+Unbanned Users:      {mem_unban}""",
+                lang="prolog",
             ),
-            inline=False
+            inline=False,
         )
         em.add_field(
             name="Role Stats",
@@ -368,9 +370,10 @@ Unbanned Users:      {mem_unban}""",lang="prolog"
                 f"""
 Roles Added:         {roles_add}
 Roles Removed:       {roles_rem}
-Roles Updated:       {roles_up}""",lang="prolog"
+Roles Updated:       {roles_up}""",
+                lang="prolog",
             ),
-            inline=False
+            inline=False,
         )
         em.add_field(
             name="Emoji Stats",
@@ -380,9 +383,10 @@ Reacts Added:        {react_added}
 Reacts Removed:      {react_removed}
 Emoji Added:         {emoji_add}
 Emoji Removed:       {emoji_rem}
-Emoji Updated:       {emoji_up}""",lang="prolog"
+Emoji Updated:       {emoji_up}""",
+                lang="prolog",
             ),
-            inline=False
+            inline=False,
         )
         em.add_field(
             name="Audio Stats",
@@ -390,9 +394,10 @@ Emoji Updated:       {emoji_up}""",lang="prolog"
                 f"""
 Users Who Joined VC: {vc_joins}
 Tracks Played:       {tracks_played}
-Number Of Players:   {total_num}""",lang="prolog"
+Number Of Players:   {total_num}""",
+                lang="prolog",
             ),
-            inline=False
+            inline=False,
         )
         em.set_thumbnail(url=avatar)
         em.set_footer(text=("Since {}").format(uptime))
@@ -427,18 +432,18 @@ Number Of Players:   {total_num}""",lang="prolog"
         emoji_up = "{:,}".format(await self.config.emojis_updated())
         vc_joins = "{:,}".format(await self.config.users_joined_bot_music_room())
         tracks_played = "{:,}".format(self.counter["tracks_played"])
-        #streams_played = "{:,}".format(await self.config.streams_played())
-        #yt_streams = "{:,}".format(await self.config.yt_streams_played())
-        #mixer_streams = "{:,}".format(await self.config.mixer_streams_played())
-        #ttv_streams = "{:,}".format(await self.config.ttv_streams_played())
-        #other_streams = "{:,}".format(await self.config.other_streams_played())
-        #youtube_tracks = "{:,}".format(await self.config.youtube_tracks())
-        #soundcloud_tracks = "{:,}".format(await self.config.soundcloud_tracks())
-        #bandcamp_tracks = "{:,}".format(await self.config.bandcamp_tracks())
-        #vimeo_tracks = "{:,}".format(await self.config.vimeo_tracks())
-        #mixer_tracks = "{:,}".format(await self.config.mixer_tracks())
-        #twitch_tracks = "{:,}".format(await self.config.twitch_tracks())
-        #other_tracks = "{:,}".format(await self.config.other_tracks())
+        # streams_played = "{:,}".format(await self.config.streams_played())
+        # yt_streams = "{:,}".format(await self.config.yt_streams_played())
+        # mixer_streams = "{:,}".format(await self.config.mixer_streams_played())
+        # ttv_streams = "{:,}".format(await self.config.ttv_streams_played())
+        # other_streams = "{:,}".format(await self.config.other_streams_played())
+        # youtube_tracks = "{:,}".format(await self.config.youtube_tracks())
+        # soundcloud_tracks = "{:,}".format(await self.config.soundcloud_tracks())
+        # bandcamp_tracks = "{:,}".format(await self.config.bandcamp_tracks())
+        # vimeo_tracks = "{:,}".format(await self.config.vimeo_tracks())
+        # mixer_tracks = "{:,}".format(await self.config.mixer_tracks())
+        # twitch_tracks = "{:,}".format(await self.config.twitch_tracks())
+        # other_tracks = "{:,}".format(await self.config.other_tracks())
         try:
             total_num = "{:,}/{:,}".format(
                 len(lavalink.active_players()), len(lavalink.all_players())
@@ -451,7 +456,7 @@ Number Of Players:   {total_num}""",lang="prolog"
 
         em = discord.Embed(
             title="Persistent usage count of {}:".format(ctx.bot.user.name),
-            color=await ctx.embed_colour()
+            color=await ctx.embed_colour(),
         )
         em.add_field(
             name="Message Stats",
@@ -461,9 +466,10 @@ Messages Read:       {messages_read}
 Messages Sent:       {messages_sent}
 Messages Deleted:    {msg_deleted}
 Messages Edited      {msg_edited}
-DMs Recieved:        {dms_received}""",lang="prolog"
+DMs Recieved:        {dms_received}""",
+                lang="prolog",
             ),
-            inline=False
+            inline=False,
         )
         em.add_field(
             name="Commands Stats",
@@ -471,18 +477,20 @@ DMs Recieved:        {dms_received}""",lang="prolog"
                 f"""
 Commands Processed:  {commands_count}
 Errors Occured:      {errors_count}
-Sessions Resumed:    {resumed_sessions}""",lang="prolog"
+Sessions Resumed:    {resumed_sessions}""",
+                lang="prolog",
             ),
-            inline=False
+            inline=False,
         )
         em.add_field(
             name="Guild Stats",
             value=box(
                 f"""
 Guilds Joined:       {guild_join}
-Guilds Left:         {guild_leave}""",lang="prolog"
+Guilds Left:         {guild_leave}""",
+                lang="prolog",
             ),
-            inline=False
+            inline=False,
         )
         em.add_field(
             name="User Stats",
@@ -491,9 +499,10 @@ Guilds Left:         {guild_leave}""",lang="prolog"
 New Users:           {new_mem}
 Left Users:          {left_mem}
 Banned Users:        {mem_ban}
-Unbanned Users:      {mem_unban}""",lang="prolog"
+Unbanned Users:      {mem_unban}""",
+                lang="prolog",
             ),
-            inline=False
+            inline=False,
         )
         em.add_field(
             name="Role Stats",
@@ -501,9 +510,10 @@ Unbanned Users:      {mem_unban}""",lang="prolog"
                 f"""
 Roles Added:         {roles_add}
 Roles Removed:       {roles_rem}
-Roles Updated:       {roles_up}""",lang="prolog"
+Roles Updated:       {roles_up}""",
+                lang="prolog",
             ),
-            inline=False
+            inline=False,
         )
         em.add_field(
             name="Emoji Stats",
@@ -513,9 +523,10 @@ Reacts Added:        {react_added}
 Reacts Removed:      {react_removed}
 Emoji Added:         {emoji_add}
 Emoji Removed:       {emoji_rem}
-Emoji Updated:       {emoji_up}""",lang="prolog"
+Emoji Updated:       {emoji_up}""",
+                lang="prolog",
             ),
-            inline=False
+            inline=False,
         )
         em.add_field(
             name="Audio Stats",
@@ -523,18 +534,11 @@ Emoji Updated:       {emoji_up}""",lang="prolog"
                 f"""
 Users Who Joined VC: {vc_joins}
 Tracks Played:       {tracks_played}
-Number Of Players:   {total_num}""",lang="prolog"
+Number Of Players:   {total_num}""",
+                lang="prolog",
             ),
-            inline=False
+            inline=False,
         )
         em.set_thumbnail(url=avatar)
         em.set_footer(text=("Since {}").format(uptime))
         await ctx.send(embed=em)
-
-
-
-
-
-
-
-            

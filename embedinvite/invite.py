@@ -34,7 +34,6 @@ class EmbedInvite(commands.Cog):
                 pass
             self.bot.add_command(old_invite)
 
-
     @checks.is_owner()
     @commands.group()
     async def invitesettings(self, ctx):
@@ -129,6 +128,7 @@ class EmbedInvite(commands.Cog):
             icon_url="https://cdn.discordapp.com/icons/133049272517001216/83b39ff510bb7c3f5aeb51270af09ad3.webp",
         )
         await ctx.send(embed=embed)
+
 
 def setup(bot):
     invite = EmbedInvite(bot)

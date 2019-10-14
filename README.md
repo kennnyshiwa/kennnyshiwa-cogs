@@ -34,6 +34,8 @@ You can also join my [Discord Server](https://discord.gg/TEeXcDY) . Feel free to
 
 [Beryju](https://git.beryju.org/jens) - Ark cog (orginally for Red v2 adapted for Red v3)
 
-[Preda](https://github.com/PredaaA)  - Embedinvite (helped with logic and user settable variables)
+[Preda](https://github.com/PredaaA) - Embedinvite (helped with logic and user settable variables)
 
 [Red Discord server community](https://discord.gg/red) for all the help in coding.
+
+[Sinbad](https://github.com/mikeshardmind/) - RequestBox ()

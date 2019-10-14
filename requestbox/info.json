@@ -3,7 +3,7 @@
         "kennnyshiwa, mikeshardmind(Sinbad), Sharky The King"
     ],
     "install_msg": "Thanks for installing, have fun.",
-    "name": "RequestBox
+    "name": "RequestBox",
     "disabled": false,
     "short": "configureable Request boxes",
     "description": "configureable Request boxes",

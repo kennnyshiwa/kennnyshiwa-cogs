@@ -129,7 +129,9 @@ class ImperialToolkit(Listeners, commands.Cog):
     @commands.bot_has_permissions(embed_links=True)
     @commands.command()
     async def botstat(self, ctx):
-        """Get stats about the bot including messages sent and recieved and other info."""
+        """
+        Get stats about the bot including messages sent and recieved and other info.
+        """
         async with ctx.typing():
             cpustats = psutil.cpu_percent()
             ramusage = psutil.virtual_memory()
@@ -266,6 +268,9 @@ class ImperialToolkit(Listeners, commands.Cog):
     @commands.bot_has_permissions(embed_links=True)
     @commands.command()
     async def advbotstats(self, ctx):
+        """
+        Collection of stats for the bot
+        """
         avatar = self.bot.user.avatar_url_as(static_format="png")
         uptime = str(self.get_bot_uptime())
         errors_count = "{:,}".format(self.counter["command_error"])
@@ -406,6 +411,9 @@ Number Of Players:   {total_num}""",
     @commands.bot_has_permissions(embed_links=True)
     @commands.command()
     async def alltimestats(self, ctx):
+        """
+        Persistent stats about the bot
+        """
         avatar = self.bot.user.avatar_url_as(static_format="png")
         uptime = str(self.get_bot_uptime())
         errors_count = "{:,}".format(await self.config.command_error())

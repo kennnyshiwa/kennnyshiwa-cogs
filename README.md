@@ -38,4 +38,6 @@ You can also join my [Discord Server](https://discord.gg/TEeXcDY) . Feel free to
 
 [Red Discord server community](https://discord.gg/red) for all the help in coding.
 
-[Sinbad](https://github.com/mikeshardmind/) - RequestBox ()
+[Sinbad](https://github.com/mikeshardmind/) - RequestBox (orginial logic from his suggesstionbox)
+
+[SharkyTheKing](https://github.com/SharkyTheKing/) - RequestBox (Helped with the reaction add logic for claiming requests)

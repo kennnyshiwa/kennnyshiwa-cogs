@@ -30,14 +30,11 @@ class RequestBox(commands.Cog):
             boxes=None,
             add_reactions=False,
             reactions=["\N{THUMBS UP SIGN}"],
-            forms={},
-            log_channel=None,
         )
         self.config.register_global(
             boxes=None,
             add_reactions=False,
             reactions=["\N{THUMBS UP SIGN}"],
-            forms={},
         )
         self.config.init_custom("REQUEST", 1)
         self.config.register_custom("REQUEST", data={})
@@ -107,12 +104,11 @@ class RequestBox(commands.Cog):
         await ctx.tick()
 
     @has_active_box()
-    @commands.guild_only()  # TODO # Change this with additional logic.
+    @commands.guild_only()
     @commands.command()
     async def request(
         self,
         ctx,
-        channel: Optional[discord.TextChannel],
         *,
         request: str = "",
     ):
@@ -131,19 +127,7 @@ class RequestBox(commands.Cog):
         if self.antispam[ctx.guild][ctx.author].spammy:
             return await ctx.send(_("You've send too many requests recently."))
 
-        ids = await self.config.guild(ctx.guild).boxes()
         channels = await self.config.guild(ctx.guild).boxes()
-        print(channels)
-        if channel is None:
-            channel = ids
-            if not channels:
-                return await ctx.send(
-                    _("Cannot find channels to send to, even though configured.")
-                )
-
-        elif channel != channels:
-            return await ctx.send(_("That channel is not a requests channel."))
-
         if not request:
             return await ctx.send(_("Please try again while including a request."))
 

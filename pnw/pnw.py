@@ -281,14 +281,12 @@ class PnW(commands.Cog):
             name = nation_data["name"]
             nationid = nation_data["nationid"]
             continent = nation_data["continent"]
-            social_policy = nation_data["socialpolicy"]
             color = nation_data["color"]
             leadername = nation_data["leadername"]
             nationrank = nation_data["nationrank"]
             score = nation_data["score"]
             alliance = nation_data["alliance"]
             last_active = nation_data["minutessinceactive"]
-            government = nation_data["government"]
             domestic_policy = nation_data["domestic_policy"]
             war_policy = nation_data["war_policy"]
             founded = nation_data["founded"]
@@ -308,8 +306,6 @@ class PnW(commands.Cog):
             embed.add_field(name="Score", value=score, inline=True)
             embed.add_field(name="Alliance", value=alliance, inline=True)
             embed.add_field(name="Continent", value=continent, inline=True)
-            embed.add_field(name="Social Policy", value=social_policy, inline=True)
-            embed.add_field(name="Government", value=government, inline=True)
             embed.add_field(name="Domestic Policy", value=domestic_policy, inline=True)
             embed.add_field(name="War Policy", value=war_policy, inline=True)
             embed.add_field(name="Age of nation", value=f"{age} Days Old", inline=True)

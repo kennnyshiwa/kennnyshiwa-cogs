@@ -252,6 +252,16 @@ class PnW(commands.Cog):
             name = self.escape_query("".join(name))
             key = False
             nations_data = await self.nations_lookup(ctx)
+            success = nations_data["success"]
+            try:
+                if success == False:
+                    await ctx.send(
+                        f"Your api seems to be invalid, make sure its correct and follow the instructions in {ctx.prefix}pnwkey"
+                    )
+                    return
+            except:
+                pass
+
             for I in nations_data["nations"]:
                 if name.lower() == I["nation"].lower():
                     key = True
@@ -284,6 +294,7 @@ class PnW(commands.Cog):
             founded = nation_data["founded"]
             age = nation_data["daysold"]
             flag = nation_data["flagurl"]
+            cities = nation_data["cities"]
 
             embed = discord.Embed(
                 title="Nation Info for {}".format(name),
@@ -301,10 +312,12 @@ class PnW(commands.Cog):
             embed.add_field(name="Government", value=government, inline=True)
             embed.add_field(name="Domestic Policy", value=domestic_policy, inline=True)
             embed.add_field(name="War Policy", value=war_policy, inline=True)
-            embed.add_field(name="Founded", value=founded, inline=True)
             embed.add_field(name="Age of nation", value=f"{age} Days Old", inline=True)
+            embed.add_field(name="Number of Cities", value=cities, inline=True)
             embed.set_image(url=flag)
-            embed.set_footer(text="Last active: {} minutes ago".format(last_active))
+            embed.set_footer(
+                text="Last active: {} minutes ago | Founded {}".format(last_active, founded)
+            )
             await ctx.send(embed=embed)
 
     @commands.bot_has_permissions(embed_links=True)
@@ -317,6 +330,16 @@ class PnW(commands.Cog):
             name = self.escape_query("".join(name))
             key = False
             alliances_data = await self.alliances_lookup(ctx)
+            success = alliances_data["success"]
+            try:
+                if success == False:
+                    await ctx.send(
+                        f"Your api seems to be invalid, make sure its correct and follow the instructions in {ctx.prefix}pnwkey"
+                    )
+                    return
+            except:
+                pass
+
             for I in alliances_data["alliances"]:
                 if name.lower() == I["name"].lower():
                     key = True
@@ -377,12 +400,24 @@ class PnW(commands.Cog):
         Provides information about the alliance linked to the ID you have given.
         """
         data = await self.city_api(ctx, id)
+        try:
+            success = data["success"]
+            if success == False:
+                if data["general_message"]:
+                    await ctx.send(
+                        f"Your api seems to be invalid, make sure its correct and follow the instructions in {ctx.prefix}pnwkey"
+                    )
+                    return
+        except:
+            pass
+
         if not data:
             await ctx.send("I can't get the data from the API. Try again later.")
             return
-        if data["success"] == True:
-            pass
-        else:
+        try:
+            if data["success"] == True:
+                pass
+        except:
             await ctx.send("That city doesn't exist")
             return
         nation = await self.do_lookup(ctx, data["nationid"])
@@ -517,6 +552,17 @@ Drydocks               {data['imp_drydock']}"""
         async with ctx.typing():
             query = self.escape_query("".join(query))
             trade_data = await self.tradeprice_lookup(ctx, query)
+            try:
+                success = trade_data["success"]
+                if success == False:
+                    if trade_data["general_message"]:
+                        await ctx.send(
+                            f"Your api seems to be invalid, make sure its correct and follow the instructions in {ctx.prefix}pnwkey"
+                        )
+                        return
+            except:
+                pass
+
             if not trade_data:
                 await ctx.send("I can't get the data from the API. Try again later.")
                 return
@@ -572,6 +618,16 @@ Drydocks               {data['imp_drydock']}"""
             name = self.escape_query("".join(name))
             key = False
             alliances_data = await self.alliances_lookup(ctx)
+            success = alliances_data["success"]
+            try:
+                if success == False:
+                    await ctx.send(
+                        f"Your api seems to be invalid, make sure its correct and follow the instructions in {ctx.prefix}pnwkey"
+                    )
+                    return
+            except:
+                pass
+
             for I in alliances_data["alliances"]:
                 if name.lower() == I["name"].lower():
                     key = True
@@ -629,6 +685,15 @@ Drydocks               {data['imp_drydock']}"""
         Show Top 50 Alliances
         """
         top50 = await self.alliances_lookup(ctx)
+        success = top50["success"]
+        try:
+            if success == False:
+                await ctx.send(
+                    f"Your api seems to be invalid, make sure its correct and follow the instructions in {ctx.prefix}pnwkey"
+                )
+                return
+        except:
+            pass
         output = ""
         for alliance in (top50["alliances"])[0:50]:
             arank = alliance["rank"]
@@ -764,6 +829,15 @@ Drydocks               {data['imp_drydock']}"""
             name = self.escape_query("".join(name))
             key = False
             nations_data = await self.nations_lookup(ctx)
+            success = nations_data["success"]
+            try:
+                if success == False:
+                    await ctx.send(
+                        f"Your api seems to be invalid, make sure its correct and follow the instructions in {ctx.prefix}pnwkey"
+                    )
+                    return
+            except:
+                pass
             for I in nations_data["nations"]:
                 if name.lower() == I["nation"].lower():
                     key = True

@@ -24,6 +24,7 @@ I agree
 | [trackerinfo](https://github.com/kennnyshiwa/kennnyshiwa-cogs/tree/v3-cogs/trackerinfo) | Collection of embeds that display information about various private tracker websites |
 | [space](https://github.com/kennnyshiwa/kennnyshiwa-cogs/tree/v3-cogs/space) | Space commands to show pictures and other information about space |
 | [pottermore](https://github.com/kennnyshiwa/kennnyshiwa-cogs/tree/v3-cogs/pottermore) | Find your hogwarts house and lookup information about Harry Potter characters |
+| [lastfm](https://github.com/kennnyshiwa/kennnyshiwa-cogs/tree/v3-cogs/lastfm) | Pull LastFM statistics of a user including last played song and top 10 songs |
 
 # Support/Contact
 You can reach me on Discord kennnyshiwa#1337
@@ -41,3 +42,5 @@ You can also join my [Discord Server](https://discord.gg/TEeXcDY) . Feel free to
 [Sinbad](https://github.com/mikeshardmind/) - RequestBox (orginial logic from his suggesstionbox)
 
 [SharkyTheKing](https://github.com/SharkyTheKing/) - RequestBox (Helped with the reaction add logic for claiming requests)
+
+[Paddo](https://github.com/PaddoInWonderland/ValeOfMushrooms) - LastFM (FOr orginially writing the cog, will be taking over development as needed)

@@ -1,0 +1,7 @@
+{
+  "author" : "Paddo",
+  "bot_version" : [3, 0, 0],
+  "description" : "Last.fm playing",
+  "short" : "Get currently playing and recently played tracks from Last.fm",
+  "tags" : ["last.fm", "lastfm", "paddo", "music"]
+}

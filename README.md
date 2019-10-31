@@ -43,4 +43,4 @@ You can also join my [Discord Server](https://discord.gg/TEeXcDY) . Feel free to
 
 [SharkyTheKing](https://github.com/SharkyTheKing/) - RequestBox (Helped with the reaction add logic for claiming requests)
 
-[Paddo](https://github.com/PaddoInWonderland/ValeOfMushrooms) - LastFM (FOr orginially writing the cog, will be taking over development as needed)
+[Paddo](https://github.com/PaddoInWonderland/ValeOfMushrooms) - LastFM (For orginially writing the cog, will be taking over development as needed)

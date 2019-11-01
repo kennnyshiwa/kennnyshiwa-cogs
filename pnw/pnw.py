@@ -876,6 +876,12 @@ Drydocks               {data['imp_drydock']}"""
                 allianceid = "None"
             else:
                 allianceid = nation_data["allianceid"]
+            intscore = float(score)
+            low_defense_range = int(intscore * 0.57143)
+            high_defense_range = int(intscore * 1.33335)
+            low_offense_range = int(intscore * 0.75)
+            high_offense_range = int(intscore * 1.75)
+            
 
             embed = discord.Embed(
                 title="Military Info for {}".format(name),
@@ -896,7 +902,9 @@ Drydocks               {data['imp_drydock']}"""
                     Aircraft: {aircraft}
                     Ships: {ships}
                     Missiles: {missiles}
-                    Nukes: {nukes}"""
+                    Nukes: {nukes}
+                    Defense Range: {low_defense_range} - {high_defense_range}
+                    Offense Range: {low_offense_range} - {high_offense_range}"""
                 ),
             )
 

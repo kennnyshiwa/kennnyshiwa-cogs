@@ -1,5 +1,5 @@
 import discord
-from redbot.core import commands, checks
+from redbot.core import commands
 
 class Screenshare(commands.Cog):
     """Generate a screenshare link for a voice channel"""
@@ -8,6 +8,7 @@ class Screenshare(commands.Cog):
         self.bot = bot
 
     @commands.command()
+    @commands.guild_only()
     async def screenshare(self, ctx):
         """Generate the screenshare link for the authors current voice channel"""
         guildid = ctx.guild.id

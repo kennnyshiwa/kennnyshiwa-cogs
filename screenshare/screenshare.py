@@ -21,8 +21,8 @@ class Screenshare(commands.Cog):
         channelid = channel.id
 
         await ctx.send(
-            "Here is the link for screen sharing in {channel}\n"
-            "<https://discordapp.com/channels/{guildid}/{channelid}>".format(
+            "Here is the link for screen sharing in `{channel}`\n"
+            "https://discordapp.com/channels/{guildid}/{channelid} (click to show group message interface)".format(
                 channel = channel,
                 guildid = guildid,
                 channelid = channelid

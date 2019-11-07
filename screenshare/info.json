@@ -1,0 +1,15 @@
+{
+	"author": [
+		"kennnyshiwa"
+	],
+	"description": "Generate screenshare links for VC channels",
+	"hidden": false,
+	"install_msg": "Thanks for installing, have fun.",
+	"short": "Generate screenshare links for VC channels",
+	"tags": [
+		"bots",
+		"voice",
+		"screenshare",
+	],
+	"type": "COG"
+}

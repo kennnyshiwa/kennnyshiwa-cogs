@@ -26,6 +26,7 @@ I agree
 | [pottermore](https://github.com/kennnyshiwa/kennnyshiwa-cogs/tree/v3-cogs/pottermore) | Find your hogwarts house and lookup information about Harry Potter characters |
 | [lastfm](https://github.com/kennnyshiwa/kennnyshiwa-cogs/tree/v3-cogs/lastfm) | Pull LastFM statistics of a user including last played song and top 10 songs |
 | [screenshare](https://github.com/kennnyshiwa/kennnyshiwa-cogs/tree/v3-cogs/screenshare) | Generate a link for screensharing in a voice channel |
+| [tickets](https://github.com/kennnyshiwa/kennnyshiwa-cogs/tree/v3-cogs/tickets) | Ticket cog for creating, updating and handling tickets for your server |
 
 # Support/Contact
 You can reach me on Discord kennnyshiwa#1337
@@ -44,4 +45,4 @@ You can also join my [Discord Server](https://discord.gg/TEeXcDY) . Feel free to
 
 [SharkyTheKing](https://github.com/SharkyTheKing/) - RequestBox (Helped with the reaction add logic for claiming requests)
 
-[Paddo](https://github.com/PaddoInWonderland/ValeOfMushrooms) - LastFM (For orginially writing the cog, will be taking over development as needed)
+[Paddo](https://github.com/PaddoInWonderland/ValeOfMushrooms) - LastFM, Tickets (For orginially writing the cog, will be taking over development as needed and providing future updates)

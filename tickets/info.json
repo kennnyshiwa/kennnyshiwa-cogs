@@ -1,0 +1,8 @@
+{
+  "author" : "Paddo",
+  "bot_version" : [3, 0, 0],
+  "description" : "A ticket system that works with channels",
+  "short" : "A ticket system that works with channels",
+  "tags" : ["tickets", "paddo", "support", "modding"],
+  "install_msg" : "Hey there! Thank you for installing the alpha version of Tickets. If you need any help, have feedback, or just want to talk to the creator (I have :coffee: , :tea: and :cookie: ), visit: https://discord.gg/sm8SbG8"
+}

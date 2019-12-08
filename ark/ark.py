@@ -90,6 +90,7 @@ class Ark(commands.Cog):
             # Create embedded message
             embed = discord.Embed(
                 title="ARK Search Result",
+                url=cpu_data["Link"],
                 description="Query was `%s`" % query,
                 color=await ctx.embed_color(),
             )

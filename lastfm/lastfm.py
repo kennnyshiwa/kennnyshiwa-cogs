@@ -138,11 +138,6 @@ class LastFM(BaseCog):
         else:
             message = response['message']
         await ctx.send(message)
-    
-    @_lastfm.command(name='check')
-    async def _check(self, ctx):
-        username = await self.config.user(ctx.author).username()
-        await ctx.send(username)
 
     @_lastfm.command(name='recent')
     async def _recent(self, ctx):

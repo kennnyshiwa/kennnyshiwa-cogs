@@ -60,7 +60,7 @@ class LastFM(BaseCog):
         session = aiohttp.ClientSession(connector=aiohttp.TCPConnector())
         async with session.get(self.lf_gateway, params=payload) as r:        
             data = await r.json()
-        session.close()
+        await session.close()
         return data
 
     # {
@@ -77,11 +77,16 @@ class LastFM(BaseCog):
     async def _nowplaying(self, ctx):
         """Shows the current played song"""
         username = await self.config.user(ctx.author).username()
+        if username == "":
+            return await ctx.send("You need to set a userame first")
 
         method = 'user.getRecentTracks'
         limit = 1
         response = await self._api_request(method=method, username=username, limit=limit) 
         user = response['recenttracks']['@attr']['user']
+        if response['recenttracks']['track'] == []:
+            print(response['recenttracks']['track'])
+            return await ctx.send("{} is not playing anything, check to make sure you set the right lastfm username".format(user))
         track = response['recenttracks']['track'][0]
         if '@attr' in track:
             if track['@attr']['nowplaying'] == 'true':

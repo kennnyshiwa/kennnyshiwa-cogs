@@ -2,6 +2,7 @@ import discord
 
 from redbot.core import commands, checks, Config
 from redbot.core.utils.menus import menu, DEFAULT_CONTROLS
+from redbot.core.utils.common_filters import filter_mass_mentions
 
 import random
 import aiohttp
@@ -81,7 +82,9 @@ class Space(Core, commands.Cog):
             query = self.escape_query("".join(query))
             space_data = await self.get_space_pic_data(ctx, query)
             if space_data is None:
-                await ctx.send(f"Looks like you got lost in space looking for `{query}`")
+                await ctx.send(
+                    f"Looks like you got lost in space looking for `{filter_mass_mentions(query)}`"
+                )
                 return
             if space_data is False:
                 return

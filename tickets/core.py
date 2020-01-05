@@ -92,8 +92,11 @@ class TicketsCore:
 
         sessions = await self.config.guild(guild).sessions()
 
-        if str(channel.id) in sessions and await self.config.guild(guild).ticket_role() in [role.id for role in author.roles]:
-
+        if str(channel.id) not in sessions:
+            return await channel.send("Make sure you are doing this within the tickt channel that you want to close.")
+        if await self.config.guild(guild).ticket_role() not in [role.id for role in author.roles]:
+            return await channel.send("You do not have the proper role to manage tickets")
+        else:
             member = guild.get_member(sessions[str(channel.id)])
             ticket_id = str(channel.name).split('-')[1]
 
@@ -110,8 +113,6 @@ class TicketsCore:
 
             async with self.config.guild(guild).sessions() as session:
                     session.pop(channel.id, None)
-        else:
-            await channel.send("This needs to be run in the ticket channel you want to close")
 
     async def purge_tickets(self, context):
         try:

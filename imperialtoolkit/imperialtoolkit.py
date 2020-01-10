@@ -129,9 +129,7 @@ class ImperialToolkit(Listeners, commands.Cog):
     @commands.bot_has_permissions(embed_links=True)
     @commands.command()
     async def botstat(self, ctx):
-        """
-        Get stats about the bot including messages sent and recieved and other info.
-        """
+        """Get stats about the bot including messages sent and recieved and other info."""
         async with ctx.typing():
             cpustats = psutil.cpu_percent()
             ramusage = psutil.virtual_memory()
@@ -182,6 +180,7 @@ class ImperialToolkit(Listeners, commands.Cog):
             channels = sum(len(s.channels) for s in self.bot.guilds)
             numcommands = len(self.bot.commands)
             uptime = str(self.get_bot_uptime())
+            emojis = len(self.bot.emojis)
             tracks_played = "`{:,}`".format(self.counter["tracks_played"])
             try:
                 total_num = "`{:,}`".format(len(lavalink.active_players()))
@@ -208,7 +207,7 @@ class ImperialToolkit(Listeners, commands.Cog):
                     "OS: {os}\n"
                     "CPU Info: `{cpu}`\n"
                     "Core Count: `{cores}`\n"
-                    "Total Ram: `{ram}`"
+                    "Total Ram: ``{ram}``"
                 ).format(
                     cpu_usage=str(cpustats),
                     ram_usage=str(ramusage.percent),
@@ -221,6 +220,7 @@ class ImperialToolkit(Listeners, commands.Cog):
                     cores=cpucount,
                     ram=ram_ios,
                 ),
+                inline=False
             )
             embed.add_field(
                 name="\N{ROBOT FACE} Bot Info",
@@ -228,6 +228,7 @@ class ImperialToolkit(Listeners, commands.Cog):
                     "Servers: `{servs:,}`\n"
                     "Users: `{users:,}`\n"
                     "Shard{s}: `{shard:,}`\n"
+                    "Emojis: `{emojis:,}`\n"
                     "Playing Music on: `{totalnum:}` servers\n"
                     "Tracks Played: `{tracksplayed:}`\n"
                     "Channels: `{channels:,}`\n"
@@ -238,6 +239,7 @@ class ImperialToolkit(Listeners, commands.Cog):
                     users=totalusers,
                     s="s" if shards >= 2 else "",
                     shard=shards,
+                    emojis=emojis,
                     totalnum=total_num,
                     tracksplayed=tracks_played,
                     channels=channels,
@@ -261,7 +263,7 @@ class ImperialToolkit(Listeners, commands.Cog):
                 ),
             )
             embed.set_thumbnail(url=ctx.bot.user.avatar_url_as(static_format="png"))
-            embed.set_footer(text=await ctx.bot.db.help.tagline())
+            embed.set_footer(text=await ctx.bot._config.help.tagline())
 
         return await ctx.send(embed=embed)
 

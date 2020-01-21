@@ -93,7 +93,7 @@ class TicketsCore:
         sessions = await self.config.guild(guild).sessions()
 
         if str(channel.id) not in sessions:
-            return await channel.send("Make sure you are doing this within the tickt channel that you want to close.")
+            return await channel.send("Make sure you are doing this within the ticket channel that you want to close.")
         if await self.config.guild(guild).ticket_role() not in [role.id for role in author.roles]:
             return await channel.send("You do not have the proper role to manage tickets")
         else:

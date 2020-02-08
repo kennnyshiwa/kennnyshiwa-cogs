@@ -1,43 +1,22 @@
 import discord
 
-from redbot.core import commands, checks, Config
+from redbot.core import commands, checks
 from redbot.core.utils.menus import menu, DEFAULT_CONTROLS
-
-import random
-import aiohttp
-import asyncio
-import contextlib
-
-from random import choice
 
 from .core import Core
 
 
-class Space(Core, commands.Cog):
+class Space(Core):
     """Show pics of space."""
-
-    __author__ = "kennnyshiwa"
-
-    def __init__(self, bot):
-        self.bot = bot
-        self.cache = {"date": None, "new_channels": []}
-
-        default_channel = dict(auto_apod=False, last_apod_sent=None)
-        self.config = Config.get_conf(self, 3765640575174574082, force_registration=True)
-        self.config.register_channel(**default_channel)
-
-        self.session = aiohttp.ClientSession()
-        self.auto_apod_loop = bot.loop.create_task(self.auto_apod(bot))
-        self.new_channels_loop = bot.loop.create_task(self.check_new_channels(bot))
 
     @commands.group()
     @checks.mod_or_permissions(manage_channels=True)
-    async def spaceset(self, ctx):
+    async def spaceset(self, ctx: commands.Context):
         """Group commands for Space cog settings."""
         pass
 
     @spaceset.command()
-    async def autoapod(self, ctx, channel: discord.TextChannel = None):
+    async def autoapod(self, ctx: commands.Context, channel: discord.TextChannel = None):
         """
         Choose if you want to automatically receive \"Astronomy Picture of the Day\" every day.
 
@@ -59,7 +38,7 @@ class Space(Core, commands.Cog):
 
     @commands.command()
     @commands.bot_has_permissions(embed_links=True)
-    async def apod(self, ctx):
+    async def apod(self, ctx: commands.Context):
         """Astronomy Picture of the Day."""
         async with ctx.typing():
             msg = await self.apod_text(
@@ -72,7 +51,7 @@ class Space(Core, commands.Cog):
 
     @commands.command()
     @commands.bot_has_permissions(embed_links=True)
-    async def spacepic(self, ctx, *, query):
+    async def spacepic(self, ctx: commands.Context, *, query: str):
         """
         Lookup pictures from space!
         Note - Some pictures are from presentations and other educational talks
@@ -108,7 +87,7 @@ class Space(Core, commands.Cog):
 
     @commands.command()
     @commands.bot_has_permissions(embed_links=True)
-    async def isslocation(self, ctx):
+    async def isslocation(self, ctx: commands.Context):
         """Show the Current location of the ISS."""
         async with ctx.typing():
             data = await self.get_data("http://api.open-notify.org/iss-now.json")
@@ -128,7 +107,7 @@ class Space(Core, commands.Cog):
 
     @commands.command()
     @commands.bot_has_permissions(embed_links=True)
-    async def astronauts(self, ctx):
+    async def astronauts(self, ctx: commands.Context):
         """Show who is currently in space."""
         async with ctx.typing():
             data = await self.get_data("http://api.open-notify.org/astros.json")

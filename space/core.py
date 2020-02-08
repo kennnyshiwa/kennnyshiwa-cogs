@@ -1,6 +1,7 @@
 import discord
 
-from redbot.core import Config
+from redbot.core.bot import Red
+from redbot.core import commands, Config
 
 import random
 import aiohttp
@@ -8,24 +9,79 @@ import asyncio
 import logging
 import contextlib
 
+from typing import Union
 from random import choice, sample
 
 log = logging.getLogger("red.Cog.Space")
 
 
-class Core:
-    def __init__(self, bot):
+class Core(commands.Cog):
+
+    __author__ = "kennnyshiwa"
+
+    def __init__(self, bot: Red):
         self.bot = bot
-        self.cache: dict
-        self.config: Config
-        self.session: aiohttp.ClientSession()
-        self.auto_apod_loop: bot.loop
-        self.new_channels_loop: bot.loop
+        self.cache = {"date": None, "new_channels": []}
+
+        self.config = Config.get_conf(self, 3765640575174574082, force_registration=True)
+        self.config.register_channel(auto_apod=False, last_apod_sent=None)
+
+        self.session = aiohttp.ClientSession()
+        self.auto_apod_loop = bot.loop.create_task(self.auto_apod())
+        self.new_channels_loop = bot.loop.create_task(self.check_new_channels())
 
     def cog_unload(self):
         self.bot.loop.create_task(self.session.close())
         self.auto_apod_loop.cancel()
         self.new_channels_loop.cancel()
+
+    async def auto_apod(self):
+        """
+        The task for sending APOD every day automatically.
+        Check every 15 minutes to know if there is a new image.
+        """
+        await self.bot.wait_until_ready()
+        while True:
+            data = await self.get_data(
+                "https://api.nasa.gov/planetary/apod?api_key=pM1xDdu2D9jATa3kc2HE0xnLsPHdoG9cNGg850WR"
+            )
+            if self.cache["date"] != data["date"]:
+                all_channels = await self.config.all_channels()
+                for channels in all_channels.items():
+                    if channels[1]["auto_apod"]:
+                        if channels[1]["last_apod_sent"] != data["date"]:
+                            channel = self.bot.get_channel(id=channels[0])
+                            await self.maybe_send_embed(
+                                channel, await self.apod_text(data, channel)
+                            )
+                            await self.config.channel(channel).last_apod_sent.set(data["date"])
+                self.cache["date"] = data["date"]
+            else:
+                await asyncio.sleep(900)
+                continue
+
+    async def check_new_channels(self):
+        """
+        Task used to check if there is new channels in config file.
+        Check every 5 seconds.
+        """
+        await self.bot.wait_until_ready()
+        while True:
+            await asyncio.sleep(5)
+            if self.cache["new_channels"]:
+                all_channels = await self.config.all_channels()
+                for channels in all_channels.items():
+                    if channels[1]["auto_apod"]:
+                        for new_channels in self.cache["new_channels"]:
+                            channel = self.bot.get_channel(id=new_channels)
+                            msg = await self.apod_text(
+                                await self.get_data(
+                                    "https://api.nasa.gov/planetary/apod?api_key=pM1xDdu2D9jATa3kc2HE0xnLsPHdoG9cNGg850WR"
+                                ),
+                                channel,
+                            )
+                            await self.maybe_send_embed(channel, msg)
+                            self.cache["new_channels"].remove(new_channels)
 
     async def get_data(self, url):
         """Function used to fetch data from APIs."""
@@ -63,54 +119,8 @@ class Core:
             em.set_footer(text="Today is {}".format(date))
             return em
 
-    async def auto_apod(self, bot):
-        """
-        The task for sending APOD every day automatically.
-        Check every 15 minutes to know if there is a new image.
-        """
-        await self.bot.wait_until_ready()
-        while self is self.bot.get_cog("Space"):
-            data = await self.get_data(
-                "https://api.nasa.gov/planetary/apod?api_key=pM1xDdu2D9jATa3kc2HE0xnLsPHdoG9cNGg850WR"
-            )
-            if self.cache["date"] != data["date"]:
-                all_channels = await self.config.all_channels()
-                for channels in all_channels.items():
-                    if channels[1]["auto_apod"]:
-                        if channels[1]["last_apod_sent"] != data["date"]:
-                            channel = bot.get_channel(id=channels[0])
-                            await self.maybe_send_embed(
-                                channel, await self.apod_text(data, channel)
-                            )
-                            await self.config.channel(channel).last_apod_sent.set(data["date"])
-                self.cache["date"] = data["date"]
-            else:
-                await asyncio.sleep(900)
-                continue
-
-    async def check_new_channels(self, bot):
-        """
-        Task used to check if there is new channels in config file.
-        Check every 5 seconds.
-        """
-        await self.bot.wait_until_ready()
-        while self is self.bot.get_cog("Space"):
-            await asyncio.sleep(5)
-            if self.cache["new_channels"]:
-                all_channels = await self.config.all_channels()
-                for channels in all_channels.items():
-                    if channels[1]["auto_apod"]:
-                        for new_channels in self.cache["new_channels"]:
-                            channel = bot.get_channel(id=new_channels)
-                            msg = await self.apod_text(
-                                await self.get_data(
-                                    "https://api.nasa.gov/planetary/apod?api_key=pM1xDdu2D9jATa3kc2HE0xnLsPHdoG9cNGg850WR"
-                                )
-                            )
-                            await self.maybe_send_embed(channel, msg)
-                            self.cache["new_channels"].remove(new_channels)
-
-    def star_wars_gifs(self):
+    @staticmethod
+    def star_wars_gifs():
         gifs = choice(
             [
                 "https://media2.giphy.com/media/bR4poFy22rgUE/source.gif",
@@ -129,7 +139,7 @@ class Core:
         )
         return gifs
 
-    async def get_space_pic_data(self, ctx, query: str):
+    async def get_space_pic_data(self, ctx: commands.Context, query: str):
         """Run space pic lookup"""
         data = await self.get_data(f"https://images-api.nasa.gov/search?q={query}")
         if not data:
@@ -152,11 +162,13 @@ class Core:
             return sample(space_data, 10)
         return space_data  # this means we have between 0 and 10 pages return all
 
-    def escape_query(self, query) -> str:
+    @staticmethod
+    def escape_query(query: str) -> str:
         """Escape mentions from queries"""
         return query.replace("`", "'")
 
-    async def maybe_send_embed(self, type, msg):
+    @staticmethod
+    async def maybe_send_embed(type: Union[commands.Context, discord.TextChannel], msg: str):
         try:
             if isinstance(msg, discord.Embed):
                 await type.send(embed=msg)

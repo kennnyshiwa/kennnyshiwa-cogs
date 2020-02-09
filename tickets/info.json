@@ -1,5 +1,5 @@
 {
-  "author" : "Paddo, kennnyshiwa",
+  "author" : ["Paddo", "kennnyshiwa"],
   "bot_version" : [3, 0, 0],
   "description" : "A ticket system that works with channels",
   "short" : "A ticket system that works with channels",

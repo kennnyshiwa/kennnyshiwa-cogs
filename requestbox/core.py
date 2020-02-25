@@ -171,51 +171,34 @@ class RequestBox(commands.Cog):
         """
         Detects for when someone adds reaction
         """
-        if reaction.message.guild is not None:
-            request = await self.config.guild(reaction.message.guild).boxes()   # Making sure reaction is purely in specific channel
-            reactions = self.config.guild(reaction.message.guild).reactions()   #   If this is True, then it'll clear all reactions
-            if request is None:
+        if user.bot:
+            return
+        if not reaction.message.embeds:
+            return
+        if not reaction.message.guild:
+            return
+        if reaction.message.author != self.bot.user:
+            return
+        request = await self.config.guild(reaction.message.guild).boxes()   # Making sure reaction is purely in specific channel
+        if request is None:
+            return
+        chan = discord.utils.get(reaction.message.guild.channels, id=int(request))
+        if reaction.message.channel.id != request:
+            return
+        chan = reaction.message.channel
+        if "Request Claimed:" in str(reaction.message.embeds[0].fields):   # Detecting if this field is already there, if it is then do nothing, if it's not then add field
+            return
+        em = reaction.message.embeds[0]
+        em.add_field(
+            name="Request Claimed:",
+            value="{} has claimed this.".format(user.mention),
+        )
+        try:
+            await reaction.message.edit(embed=em)
+        except:
+            return
+        if await self.config.guild(reaction.message.guild).reactions(): #   If this is True, then it'll clear all reactions
+            try:
+                await reaction.message.clear_reactions()
+            except discord.Errors.Forbidden:
                 pass
-            else:
-                chan = discord.utils.get(reaction.message.guild.channels, id=int(request))
-                if reaction.message.channel != chan:
-                    return False
-                elif reaction.message.channel == chan:
-                    if user == self.bot.user: # Making sure to ignore the bot if you have it setup to add reactions to itself
-                        return False
-                    else:
-                        if (
-                            reaction.message.embeds
-                            and "Request Claimed:" in str(reaction.message.embeds[0].fields)
-                            or "has claimed this." in reaction.message.content or not reaction.message.embeds   # Detecting if this field is already there, if it is then do nothing, if it's not then add field
-                        ):
-                            return False
-                        else:
-                            try:
-                                react = reaction.message
-                                em = react.embeds[0]
-                                em.add_field(
-                                    name="Request Claimed:",
-                                    value="{} has claimed this.".format(user.mention),
-                                )
-                                await react.edit(embed=em)
-                                if await reactions is True:
-                                    await react.clear_reactions()
-                                else:
-                                    pass
-                            except IndexError:
-                                try:
-                                    react = reaction.message
-                                    await react.edit(
-                                        content="{} has claimed this.".format(user.display_name)    # If there's no embed, this will edit the message
-                                    )
-                                    if await reactions is True:
-                                        await react.clear_reactions()
-                                    else:
-                                        pass
-                                except:
-                                    pass
-                            except discord.Forbidden:
-                                pass
-        else:
-            return False

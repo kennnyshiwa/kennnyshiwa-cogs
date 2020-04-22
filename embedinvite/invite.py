@@ -17,9 +17,7 @@ class EmbedInvite(commands.Cog):
         default = {
             "support": False,
             "support_serv": None,
-            "description": "Thanks for choosing to invite {name} to your server".format(
-                name=self.bot.user.name
-            ),
+            "description": "Thanks for choosing to invite {name} to your server",
             "setpermissions": "",
         }
         self.config = Config.get_conf(self, 376564057517457408, force_registration=True)
@@ -45,7 +43,8 @@ class EmbedInvite(commands.Cog):
         """
         Set the embed description.
         Leave blank for default description
-        Default: "Thanks for choosing to invite ______ to your server"
+        Default: "Thanks for choosing to invite {name} to your server"
+        Use `{name}` in your message to display bot name.
         Enter ``None`` to disable the description
         """
         if text == "":
@@ -107,7 +106,8 @@ class EmbedInvite(commands.Cog):
         if support_serv is None and support is True:
             return await ctx.send("Bot Owner needs to set a support server!")
         embed = discord.Embed(
-            description=await self.config.description(), color=await ctx.embed_color()
+            description=(await self.config.description()).replace("{name}", self.bot.user.name),
+            color=await ctx.embed_color(),
         )
         embed.set_author(
             name=ctx.bot.user.name, icon_url=ctx.bot.user.avatar_url_as(static_format="png")

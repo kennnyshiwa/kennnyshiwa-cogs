@@ -21,7 +21,7 @@ class Core(commands.Cog):
 
     def __init__(self, bot: Red):
         self.bot = bot
-        self.cache = {"date": None, "new_channels": []}
+        self.cache = {"new_channels": []}
 
         self.config = Config.get_conf(self, 3765640575174574082, force_registration=True)
         self.config.register_channel(auto_apod=False, last_apod_sent=None)
@@ -42,10 +42,12 @@ class Core(commands.Cog):
         """
         await self.bot.wait_until_ready()
         while True:
-            data = await self.get_data(
-                "https://api.nasa.gov/planetary/apod?api_key=pM1xDdu2D9jATa3kc2HE0xnLsPHdoG9cNGg850WR"
-            )
-            if self.cache["date"] != data["date"]:
+            try:
+                data = await self.get_data(
+                    "https://api.nasa.gov/planetary/apod?api_key=pM1xDdu2D9jATa3kc2HE0xnLsPHdoG9cNGg850WR"
+                )
+                if not data:
+                    continue
                 all_channels = await self.config.all_channels()
                 for channels in all_channels.items():
                     if channels[1]["auto_apod"]:
@@ -55,35 +57,37 @@ class Core(commands.Cog):
                                 channel, await self.apod_text(data, channel)
                             )
                             await self.config.channel(channel).last_apod_sent.set(data["date"])
-                self.cache["date"] = data["date"]
-            else:
-                await asyncio.sleep(900)
-                continue
+            except Exception as error:
+                log.exception("Exception in auto_apod task: ", exc_info=error)
+            await asyncio.sleep(900)
 
     async def check_new_channels(self):
         """
         Task used to check if there is new channels in config file.
-        Check every 5 seconds.
+        Check every 15 seconds.
         """
         await self.bot.wait_until_ready()
         while True:
-            await asyncio.sleep(5)
-            if self.cache["new_channels"]:
-                all_channels = await self.config.all_channels()
-                for channels in all_channels.items():
-                    if channels[1]["auto_apod"]:
-                        for new_channels in self.cache["new_channels"]:
-                            channel = self.bot.get_channel(id=new_channels)
-                            msg = await self.apod_text(
-                                await self.get_data(
-                                    "https://api.nasa.gov/planetary/apod?api_key=pM1xDdu2D9jATa3kc2HE0xnLsPHdoG9cNGg850WR"
-                                ),
-                                channel,
-                            )
-                            await self.maybe_send_embed(channel, msg)
-                            self.cache["new_channels"].remove(new_channels)
+            await asyncio.sleep(15)
+            try:
+                if self.cache["new_channels"]:
+                    all_channels = await self.config.all_channels()
+                    for channels in all_channels.items():
+                        if channels[1]["auto_apod"]:
+                            for new_channels in self.cache["new_channels"]:
+                                channel = self.bot.get_channel(id=new_channels)
+                                msg = await self.apod_text(
+                                    await self.get_data(
+                                        "https://api.nasa.gov/planetary/apod?api_key=pM1xDdu2D9jATa3kc2HE0xnLsPHdoG9cNGg850WR"
+                                    ),
+                                    channel,
+                                )
+                                await self.maybe_send_embed(channel, msg)
+                                self.cache["new_channels"].remove(new_channels)
+            except Exception as error:
+                log.exception("Exception in check_new_channels task: ", exc_info=error)
 
-    async def get_data(self, url):
+    async def get_data(self, url: str):
         """Function used to fetch data from APIs."""
         try:
             async with self.session.get(url) as resp:
@@ -96,27 +100,24 @@ class Core(commands.Cog):
             log.error(str(error))
             return None
 
-    async def apod_text(self, data, context):
+    async def apod_text(self, data: dict, context: Union[commands.Context, discord.TextChannel]):
         if not data:
             return "Astronomy Picture of the Day: `Impossible to get Nasa API.`"
 
         details = data["explanation"]
-        title = data["title"]
-        url = data["url"]
-        date = data["date"]
         if len(details) > 1024:
-            return f"**Astronomy Picture of the Day**\n\n__{title}__```{details}```Today is **{date}**\n{url}"
+            return f"**Astronomy Picture of the Day**\n\n__{data['title']}__```{details}```Today is **{data['date']}**\n{data['url']}"
         else:
             em = discord.Embed(
                 color=await self.bot.get_embed_color(context)
                 if hasattr(self.bot, "get_embed_color")
                 else self.bot.color,
                 title="Astronomy Picture of the Day",
-                url="{}".format(url),
+                url="{}".format(data["url"]),
             )
-            em.set_image(url=url)
-            em.add_field(name=title, value=details)
-            em.set_footer(text="Today is {}".format(date))
+            em.set_image(url=data["url"])
+            em.add_field(name=data["title"], value=details)
+            em.set_footer(text="Today is {}".format(data["date"]))
             return em
 
     @staticmethod
@@ -168,12 +169,14 @@ class Core(commands.Cog):
         return query.replace("`", "'")
 
     @staticmethod
-    async def maybe_send_embed(type: Union[commands.Context, discord.TextChannel], msg: str):
+    async def maybe_send_embed(
+        destination: Union[commands.Context, discord.TextChannel], msg: str
+    ):
         try:
             if isinstance(msg, discord.Embed):
-                await type.send(embed=msg)
+                await destination.send(embed=msg)
             else:
-                await type.send(msg)
+                await destination.send(msg)
         except (discord.NotFound, discord.Forbidden, discord.HTTPException) as error:
             log.error(str(error))
             return

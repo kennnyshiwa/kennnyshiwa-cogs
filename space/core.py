@@ -53,6 +53,9 @@ class Core(commands.Cog):
                     if channels[1]["auto_apod"]:
                         if channels[1]["last_apod_sent"] != data["date"]:
                             channel = self.bot.get_channel(id=channels[0])
+                            if not channel:
+                                await self.config.channel_from_id(channels[0]).auto_apod.set(False)
+                                continue
                             await self.maybe_send_embed(
                                 channel, await self.apod_text(data, channel)
                             )
@@ -76,6 +79,9 @@ class Core(commands.Cog):
                         if channels[1]["auto_apod"]:
                             for new_channels in self.cache["new_channels"]:
                                 channel = self.bot.get_channel(id=new_channels)
+                                if not channel:
+                                    await self.config.channel_from_id(new_channels).auto_apod.set(False)
+                                    continue
                                 msg = await self.apod_text(
                                     await self.get_data(
                                         "https://api.nasa.gov/planetary/apod?api_key=pM1xDdu2D9jATa3kc2HE0xnLsPHdoG9cNGg850WR"

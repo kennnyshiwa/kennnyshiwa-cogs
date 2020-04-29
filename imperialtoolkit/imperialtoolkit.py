@@ -124,7 +124,7 @@ class ImperialToolkit(commands.Cog):
                 cpu = "unknown"
             cpucount = psutil.cpu_count()
             ramamount = psutil.virtual_memory()
-            ram_ios = "{0:<11} {1:>{width}}".format("", self._size(ramamount.total), width=width)
+            ram_ios = "{1:>{width}}".format("", self._size(ramamount.total), width=width)
 
             servers = len(self.bot.guilds)
             shards = self.bot.shard_count
@@ -159,7 +159,7 @@ class ImperialToolkit(commands.Cog):
                     "OS: {os}\n"
                     "CPU Info: `{cpu}`\n"
                     "Core Count: `{cores}`\n"
-                    "Total Ram: ``{ram}``"
+                    "Total Ram: `{ram}`"
                 ).format(
                     cpu_usage=str(cpustats),
                     ram_usage=str(ramusage.percent),

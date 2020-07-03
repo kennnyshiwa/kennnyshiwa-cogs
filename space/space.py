@@ -13,7 +13,6 @@ class Space(Core):
     @checks.mod_or_permissions(manage_channels=True)
     async def spaceset(self, ctx: commands.Context):
         """Group commands for Space cog settings."""
-        pass
 
     @spaceset.command()
     async def autoapod(self, ctx: commands.Context, channel: discord.TextChannel = None):
@@ -27,7 +26,7 @@ class Space(Core):
         auto_apod = await self.config.channel(channel).auto_apod()
         await self.config.channel(channel).auto_apod.set(not auto_apod)
         if not auto_apod:
-            self.cache["new_channels"].append(channel.id)
+            self.cache.append(channel.id)
         msg = (
             "I will now automatically send Astronomy Picture of the Day every day in this channel."
             if not auto_apod

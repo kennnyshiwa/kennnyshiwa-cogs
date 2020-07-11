@@ -99,12 +99,10 @@ class Core(commands.Cog):
         try:
             async with self.session.get(url) as resp:
                 if resp.status != 200:
-                    log.error(f"Can't get data from {url}, code: {resp.status}")
                     return None
                 data = await resp.json()
                 return data
-        except aiohttp.client_exceptions.ClientConnectionError as error:
-            log.error(str(error))
+        except aiohttp.ClientConnectionError:
             return None
 
     async def apod_text(self, data: dict, context: Union[commands.Context, discord.TextChannel]):
@@ -184,6 +182,5 @@ class Core(commands.Cog):
                 await destination.send(embed=msg)
             else:
                 await destination.send(msg)
-        except (discord.NotFound, discord.Forbidden, discord.HTTPException) as error:
-            log.error(str(error))
+        except (discord.NotFound, discord.Forbidden, discord.HTTPException):
             return

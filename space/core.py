@@ -12,7 +12,7 @@ import contextlib
 from typing import Union
 from random import choice, sample
 
-log = logging.getLogger("red.Cog.Space")
+log = logging.getLogger("red.kennnyshiwa-cogs.Space")
 
 
 class Core(commands.Cog):
@@ -21,7 +21,7 @@ class Core(commands.Cog):
 
     def __init__(self, bot: Red):
         self.bot = bot
-        self.cache = {"new_channels": []}
+        self.cache = []
 
         self.config = Config.get_conf(self, 3765640575174574082, force_registration=True)
         self.config.register_channel(auto_apod=False, last_apod_sent=None)
@@ -34,6 +34,7 @@ class Core(commands.Cog):
         self.bot.loop.create_task(self.session.close())
         self.auto_apod_loop.cancel()
         self.new_channels_loop.cancel()
+        self.cache.clear()
 
     async def auto_apod(self):
         """
@@ -43,16 +44,14 @@ class Core(commands.Cog):
         await self.bot.wait_until_ready()
         while True:
             try:
-                data = await self.get_data(
-                    "https://api.nasa.gov/planetary/apod?api_key=pM1xDdu2D9jATa3kc2HE0xnLsPHdoG9cNGg850WR"
-                )
+                data = await self.get_data("https://api.martinethebot.com/images/apod")
                 if not data:
                     continue
                 all_channels = await self.config.all_channels()
                 for channels in all_channels.items():
                     if channels[1]["auto_apod"]:
                         if channels[1]["last_apod_sent"] != data["date"]:
-                            channel = self.bot.get_channel(id=channels[0])
+                            channel = self.bot.get_channel(channels[0])
                             if not channel:
                                 await self.config.channel_from_id(channels[0]).auto_apod.set(False)
                                 continue
@@ -67,29 +66,31 @@ class Core(commands.Cog):
     async def check_new_channels(self):
         """
         Task used to check if there is new channels in config file.
-        Check every 15 seconds.
+        Check every 2 minutes.
         """
         await self.bot.wait_until_ready()
         while True:
-            await asyncio.sleep(15)
+            await asyncio.sleep(120)
             try:
-                if self.cache["new_channels"]:
+                if self.cache:
                     all_channels = await self.config.all_channels()
                     for channels in all_channels.items():
                         if channels[1]["auto_apod"]:
-                            for new_channels in self.cache["new_channels"]:
-                                channel = self.bot.get_channel(id=new_channels)
+                            for new_channels in self.cache:
+                                channel = self.bot.get_channel(new_channels)
                                 if not channel:
-                                    await self.config.channel_from_id(new_channels).auto_apod.set(False)
+                                    await self.config.channel_from_id(new_channels).auto_apod.set(
+                                        False
+                                    )
                                     continue
                                 msg = await self.apod_text(
                                     await self.get_data(
-                                        "https://api.nasa.gov/planetary/apod?api_key=pM1xDdu2D9jATa3kc2HE0xnLsPHdoG9cNGg850WR"
+                                        "https://api.martinethebot.com/images/apod"
                                     ),
                                     channel,
                                 )
                                 await self.maybe_send_embed(channel, msg)
-                                self.cache["new_channels"].remove(new_channels)
+                                self.cache.remove(new_channels)
             except Exception as error:
                 log.exception("Exception in check_new_channels task: ", exc_info=error)
 
@@ -98,12 +99,10 @@ class Core(commands.Cog):
         try:
             async with self.session.get(url) as resp:
                 if resp.status != 200:
-                    log.error(f"Can't get data from {url}, code: {resp.status}")
                     return None
                 data = await resp.json()
                 return data
-        except aiohttp.client_exceptions.ClientConnectionError as error:
-            log.error(str(error))
+        except aiohttp.ClientConnectionError:
             return None
 
     async def apod_text(self, data: dict, context: Union[commands.Context, discord.TextChannel]):
@@ -183,6 +182,5 @@ class Core(commands.Cog):
                 await destination.send(embed=msg)
             else:
                 await destination.send(msg)
-        except (discord.NotFound, discord.Forbidden, discord.HTTPException) as error:
-            log.error(str(error))
+        except (discord.NotFound, discord.Forbidden, discord.HTTPException):
             return

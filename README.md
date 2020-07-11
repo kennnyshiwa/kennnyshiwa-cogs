@@ -29,9 +29,7 @@ I agree
 | [tickets](https://github.com/kennnyshiwa/kennnyshiwa-cogs/tree/v3-cogs/tickets) | Ticket cog for creating, updating and handling tickets for your server |
 
 # Support/Contact
-You can reach me on Discord kennnyshiwa#1337
-
-You can also join my [Discord Server](https://discord.gg/TEeXcDY) . Feel free to DM if you need any help or have questions
+For any suggestions or issues, feel free to ask in the #support-othercogs channel of [Red - Cog Support server](https://discord.gg/GET4DVk)
 
 # Contributors:
 

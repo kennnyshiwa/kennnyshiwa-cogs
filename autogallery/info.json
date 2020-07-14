@@ -1,0 +1,8 @@
+{
+    "author" : ["kennnyshiwa"],
+    "install_msg" : "Thank you for installing my cog!",
+    "name" : "AutoGallery",
+    "short" : "Automatically post pictures into gallery channels!",
+    "description" : "Set channels as galleries where any pictures sent in them get sent into the master gallery channel",
+    "tags" : ["gallery"]
+}

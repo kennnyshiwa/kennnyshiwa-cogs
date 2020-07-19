@@ -93,11 +93,11 @@ class Autogallery(Cog):
             return
         embed = discord.Embed(color=0x4aff00, timestamp=datetime.utcnow())
         for attachment in message.attachments:
-            print(attachment)
             if attachment.filename.endswith(".png") or attachment.filename.endswith(".jpg") or attachment.filename.endswith(".gif"):
                 pass
             else:
                 return
             embed.set_author(name=message.author, icon_url=str(message.author.avatar_url))
+            embed.set_footer(text=message.channel)
             embed.set_image(url=attachment.url)
             await gallerychannel.send(embed=embed)

@@ -8,6 +8,10 @@ __author__ = "kennnyshiwa"
 class Listemoji(commands.Cog):
     """List all available emojis in a server"""
 
+    async def red_delete_data_for_user(self, **kwargs):
+        """ Nothing to delete """
+        return
+
     def __init__(self, bot):
         self.bot = bot
 

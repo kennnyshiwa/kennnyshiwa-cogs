@@ -6,6 +6,7 @@ import aiohttp
 import os
 from redbot.core import commands, Config
 from redbot.core.i18n import Translator
+from typing import Literal
 
 _ = Translator('Last_FM', __file__)
 
@@ -16,6 +17,16 @@ BaseCog = getattr(commands, "Cog", object)
 
 
 class LastFM(BaseCog):
+
+    async def red_delete_data_for_user(
+        self,
+        *,
+        requester: Literal["discord_deleted_user", "owner", "user", "user_strict"],
+        user_id: int,
+    ):
+        """This cog stores a user ID to match them to their lastfm user
+        this will wipe their saved username from the cog"""
+        await self.config.user_from_id(user_id).clear()
     
     default_member_settings = {"username": ""}
 

@@ -3,9 +3,10 @@ from typing import Optional
 import discord
 from redbot.core.config import Config
 from redbot.core import commands, checks
+from redbot.core.utils import AsyncIter
 from redbot.core.i18n import Translator, cog_i18n
 from redbot.core.utils.antispam import AntiSpam
-
+from typing import Literal
 from .checks import has_active_box
 
 _ = Translator("??", __file__)
@@ -19,6 +20,29 @@ class RequestBox(commands.Cog):
 
     __author__ = "kennnyshiwa, Sharky The King, Sinbad"
     __version__ = "1.0.6"
+
+    async def red_delete_data_for_user(
+        self,
+        *,
+        requester: Literal["discord_deleted_user", "owner", "user", "user_strict"],
+        user_id: int,
+    ):
+        if requester == "discord_deleted_user":
+            # user is deleted, must comply on IDs here...
+
+            data = await self.config.all_members()
+            await self.config.user_from_id(user_id).clear()
+            async for guild_id, members in AsyncIter(data.items(), steps=100):
+                if user_id in members:
+                    await self.config.member_from_ids(guild_id, user_id).clear()
+
+            grp = self.config.custom("REQUEST")
+
+            async with grp as data:
+                async for message_id, request in AsyncIter(data.items(), steps=100):
+                    if d := request.get("data"):
+                        if d.get("author_id", 0) == user_id:
+                            d["author_id"] = 0
 
     def __init__(self, bot):
         super().__init__()

@@ -9,6 +9,10 @@ class Trackerinfo(commands.Cog):
 
     __author__ = "kennnyshiwa"
 
+    async def red_delete_data_for_user(self, **kwargs):
+        """ Nothing to delete """
+        return
+
     def __init__(self, bot):
         self.bot = bot
         self.session = aiohttp.ClientSession(loop=self.bot.loop)

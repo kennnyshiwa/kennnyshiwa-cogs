@@ -2,6 +2,7 @@ import contextlib
 
 from redbot.core import commands, Config
 from redbot.core.utils.menus import menu, DEFAULT_CONTROLS
+from typing import Literal
 import discord
 
 import aiohttp
@@ -30,6 +31,17 @@ class Pottermore(commands.Cog):
     """Lookup information about the Harry Potter Universe"""
 
     __author__ = "kennnyshiwa"
+
+    async def red_delete_data_for_user(
+        self,
+        *,
+        requester: Literal["discord_deleted_user", "owner", "user", "user_strict"],
+        user_id: int,
+    ):
+        """This cog stores a user ID to match them to their Harry Potter house,
+        this will wipe their saved house from the cog"""
+        await self.config.user_from_id(user_id).clear()
+
 
     def __init__(self, bot):
         self.bot = bot

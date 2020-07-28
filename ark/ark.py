@@ -9,6 +9,10 @@ class Ark(commands.Cog):
 
     __author__ = ["kennnyshiwa", "Beryju"]
 
+    async def red_delete_data_for_user(self, **kwargs):
+        """ Nothing to delete """
+        return
+
     special_queries = {
         "@everyone": "Hah. Nice try. Being very funny. Cheeky cunt.",
         "@here": "You thought this would work too, very funny",

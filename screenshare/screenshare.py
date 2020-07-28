@@ -4,6 +4,10 @@ from redbot.core import commands
 class Screenshare(commands.Cog):
     """Generate a screenshare link for a voice channel"""
 
+    async def red_delete_data_for_user(self, **kwargs):
+        """ Nothing to delete """
+        return
+
     def __init__(self, bot):
         self.bot = bot
 

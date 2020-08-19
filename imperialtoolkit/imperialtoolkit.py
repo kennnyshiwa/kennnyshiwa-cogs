@@ -123,7 +123,7 @@ class ImperialToolkit(commands.Cog):
                 osver = "Could not parse OS, report this on Github."
 
             try:
-                cpu = cpuinfo.get_cpu_info()["brand"]
+                cpu = cpuinfo.get_cpu_info()["brand_raw"]
             except:
                 cpu = "unknown"
             cpucount = psutil.cpu_count()

@@ -124,6 +124,11 @@ class Core(commands.Cog):
                 title="Astronomy Picture of the Day",
                 url="{}".format(data["url"]),
             )
+            em.set_author(
+                name="Astronomy Picture of the Day",
+                url="https://apod.nasa.gov/apod/astropix.html",
+                icon_url="https://i.imgur.com/Wh8jY9c.png",
+            )
             em.set_image(url=data["url"])
             em.add_field(name=data["title"], value=details)
             em.set_footer(text="Image Credits: {} • Today is {}".format(data["copyright"], data["date"]))

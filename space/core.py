@@ -126,7 +126,7 @@ class Core(commands.Cog):
             )
             em.set_image(url=data["url"])
             em.add_field(name=data["title"], value=details)
-            em.set_footer(text="Today is {}".format(data["date"]))
+            em.set_footer(text="Image Credits: {} • Today is {}".format(data["copyright"], data["date"]))
             return em
 
     @staticmethod

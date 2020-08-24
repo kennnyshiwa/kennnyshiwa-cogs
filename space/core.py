@@ -121,12 +121,17 @@ class Core(commands.Cog):
                 color=await self.bot.get_embed_color(context)
                 if hasattr(self.bot, "get_embed_color")
                 else self.bot.color,
-                title="Astronomy Picture of the Day",
+                title=data["title"],
                 url="{}".format(data["url"]),
             )
+            em.set_author(
+                name="Astronomy Picture of the Day",
+                url="https://apod.nasa.gov/apod/astropix.html",
+                icon_url="https://i.imgur.com/Wh8jY9c.png",
+            )
             em.set_image(url=data["url"])
-            em.add_field(name=data["title"], value=details)
-            em.set_footer(text="Today is {}".format(data["date"]))
+            em.add_field(name="\u200b", value=details)
+            em.set_footer(text="Image Credits: {} • Today is {}".format(data["copyright"], data["date"]))
             return em
 
     @staticmethod

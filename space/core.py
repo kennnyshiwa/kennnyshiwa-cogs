@@ -114,7 +114,7 @@ class Core(commands.Cog):
             return "Astronomy Picture of the Day: `Impossible to get Nasa API.`"
 
         details = data["explanation"]
-        if len(details) > 1024:
+        if len(details) > 2048:
             return f"**Astronomy Picture of the Day**\n\n__{data['title']}__```{details}```Today is **{data['date']}**\n{data['url']}"
         else:
             em = discord.Embed(
@@ -123,6 +123,7 @@ class Core(commands.Cog):
                 else self.bot.color,
                 title=data["title"],
                 url="{}".format(data["url"]),
+                description=details,
             )
             em.set_author(
                 name="Astronomy Picture of the Day",
@@ -130,7 +131,6 @@ class Core(commands.Cog):
                 icon_url="https://i.imgur.com/Wh8jY9c.png",
             )
             em.set_image(url=data["url"])
-            em.add_field(name="\u200b", value=details)
             em.set_footer(text="Image Credits: {} • Today is {}".format(data["copyright"], data["date"]))
             return em
 

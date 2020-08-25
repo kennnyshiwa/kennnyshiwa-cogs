@@ -114,11 +114,6 @@ class Core(commands.Cog):
             return "Astronomy Picture of the Day: `Impossible to get Nasa API.`"
 
         details = data["explanation"]
-        try:
-            credits = data["copyright"]
-        except KeyError:
-            credits = None
-            pass
         if len(details) > 2048:
             return f"**Astronomy Picture of the Day**\n\n__{data['title']}__```{details}```Today is **{data['date']}**\n{data['url']}"
         else:
@@ -127,7 +122,7 @@ class Core(commands.Cog):
                 if hasattr(self.bot, "get_embed_color")
                 else self.bot.color,
                 title=data["title"],
-                url="{}".format(data["url"]),
+                url=data["url"],
                 description=details,
             )
             em.set_author(
@@ -138,10 +133,8 @@ class Core(commands.Cog):
             em.set_image(url=data["url"])
             em.set_footer(
                 text="{copyright}Today is {date}".format(
-                    copyright="Image Credits: {} • ".format(
-                        credits
-                    )
-                    if credits
+                    copyright=f"Image Credits: {data['copyright']} • "
+                    if data.get("copyright")
                     else "",
                     date=data["date"],
                 )

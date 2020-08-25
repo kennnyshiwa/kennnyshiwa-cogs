@@ -114,6 +114,11 @@ class Core(commands.Cog):
             return "Astronomy Picture of the Day: `Impossible to get Nasa API.`"
 
         details = data["explanation"]
+        try:
+            credits = data["copyright"]
+        except KeyError:
+            credits = None
+            pass
         if len(details) > 2048:
             return f"**Astronomy Picture of the Day**\n\n__{data['title']}__```{details}```Today is **{data['date']}**\n{data['url']}"
         else:
@@ -131,7 +136,7 @@ class Core(commands.Cog):
                 icon_url="https://i.imgur.com/Wh8jY9c.png",
             )
             em.set_image(url=data["url"])
-            em.set_footer(text="Image Credits: {} • Today is {}".format(data["copyright"], data["date"]))
+            em.set_footer(text="Image Credits: {} • Today is {}".format(credits, data["date"]))
             return em
 
     @staticmethod

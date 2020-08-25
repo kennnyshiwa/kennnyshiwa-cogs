@@ -136,7 +136,16 @@ class Core(commands.Cog):
                 icon_url="https://i.imgur.com/Wh8jY9c.png",
             )
             em.set_image(url=data["url"])
-            em.set_footer(text="Image Credits: {} • Today is {}".format(credits, data["date"]))
+            em.set_footer(
+                text="{copyright}Today is {date}".format(
+                    copyright="Image Credits: {} • ".format(
+                        credits
+                    )
+                    if credits
+                    else "",
+                    date=data["date"],
+                )
+            )
             return em
 
     @staticmethod

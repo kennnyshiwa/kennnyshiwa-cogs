@@ -122,7 +122,7 @@ class Core(commands.Cog):
                 if hasattr(self.bot, "get_embed_color")
                 else self.bot.color,
                 title=data["title"],
-                url="{}".format(data["url"]),
+                url=data["url"],
                 description=details,
             )
             em.set_author(
@@ -131,7 +131,14 @@ class Core(commands.Cog):
                 icon_url="https://i.imgur.com/Wh8jY9c.png",
             )
             em.set_image(url=data["url"])
-            em.set_footer(text="Image Credits: {} • Today is {}".format(data["copyright"], data["date"]))
+            em.set_footer(
+                text="{copyright}Today is {date}".format(
+                    copyright=f"Image Credits: {data['copyright']} • "
+                    if data.get("copyright")
+                    else "",
+                    date=data["date"],
+                )
+            )
             return em
 
     @staticmethod

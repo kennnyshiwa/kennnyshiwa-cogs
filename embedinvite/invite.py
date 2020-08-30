@@ -129,7 +129,7 @@ class EmbedInvite(commands.Cog):
             text="{} made possible with the support of Red Discord Bot".format(
                 ctx.bot.user.display_name
             ),
-            icon_url="https://cdn.discordapp.com/icons/133049272517001216/83b39ff510bb7c3f5aeb51270af09ad3.webp",
+            icon_url="https://cdn.discordapp.com/icons/133049272517001216/a_aab012f3206eb514cac0432182e9e9ec.gif",
         )
         await ctx.send(embed=embed)
 

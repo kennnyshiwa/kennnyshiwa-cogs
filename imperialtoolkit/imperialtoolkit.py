@@ -4,9 +4,7 @@ import sys
 import cpuinfo
 import platform
 import lavalink
-import asyncio
-import contextlib
-from collections import defaultdict, Counter
+from collections import Counter
 
 from datetime import datetime
 

@@ -113,10 +113,14 @@ class LastFM(BaseCog):
                 tags = await self._api_request(method='track.getTopTags', track=song, artist=artist, autocorrect=1)
                 trackinfo = await self._api_request(method='track.getInfo', track=song, artist=artist, username=username)
 
-                if 'userplaycount' in trackinfo['track']:
-                    playcount = trackinfo['track']['userplaycount']
-                else:
+                try:
+                    if 'userplaycount' in trackinfo['track']:
+                        playcount = trackinfo['track']['userplaycount']
+                    else:
+                        playcount = '0'
+                except:
                     playcount = '0'
+                    pass
 
                 if 'error' not in tags:
                     tags = ', '.join(['[{}]({})'.format(tag['name'], tag['url']) for tag in tags['toptags']['tag'][:10]])

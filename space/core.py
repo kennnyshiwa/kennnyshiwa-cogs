@@ -57,7 +57,6 @@ class Core(commands.Cog):
                         if channels[1]["last_apod_sent"] != data["date"]:
                             channel = self.bot.get_channel(channels[0])
                             if not channel:
-                                await self.config.channel_from_id(channels[0]).auto_apod.set(False)
                                 continue
                             await self.maybe_send_embed(
                                 channel, await self.apod_text(data, channel)

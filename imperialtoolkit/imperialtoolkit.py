@@ -4,9 +4,7 @@ import sys
 import cpuinfo
 import platform
 import lavalink
-import asyncio
-import contextlib
-from collections import defaultdict, Counter
+from collections import Counter
 
 from datetime import datetime
 
@@ -37,9 +35,7 @@ class ImperialToolkit(commands.Cog):
         self.bot = bot
         self.counter = Counter()
         self.sticky_counter = Counter()
-        self._user_count = 0
-        lavalink.register_event_listener(self.event_handler) 
-        self.user_task = asyncio.create_task(self._get_user_count())
+        lavalink.register_event_listener(self.event_handler)
 
     def cog_unload(self):
         lavalink.unregister_event_listener(self.event_handler)
@@ -59,20 +55,6 @@ class ImperialToolkit(commands.Cog):
         )
         uptime = humanize_timedelta(timedelta=delta)
         return uptime
-
-    async def _get_user_count(self, ):
-        await self.bot.wait_until_ready()
-        with contextlib.suppress(asyncio.CancelledError):
-            self._user_count = len(self.bot.users)
-            while True:
-                temp_data = defaultdict(set)
-                async for s in AsyncIter(self.bot.guilds):
-                    if s.unavailable:
-                        continue
-                    async for m in AsyncIter(s.members):
-                        temp_data["Unique Users"].add(m.id)
-                self._user_count = len(temp_data["Unique Users"])
-                await asyncio.sleep(30)
 
     @staticmethod
     def _size(num):
@@ -132,18 +114,13 @@ class ImperialToolkit(commands.Cog):
 
             servers = len(self.bot.guilds)
             shards = self.bot.shard_count
-            totalusers = self._user_count
+            totalusers = len(self.bot.users)
             channels = sum(len(s.channels) for s in self.bot.guilds)
             numcommands = len(self.bot.commands)
             uptime = str(self.get_bot_uptime())
             emojis = len(self.bot.emojis)
             tracks_played = "`{:,}`".format(self.counter["tracks_played"])
-            try:
-                total_num = "`{:,}`".format(len(lavalink.active_players()))
-            except AttributeError:
-                total_num = "`{:,}`".format(
-                    len([p for p in lavalink.players if p.current is not None])
-                )
+            total_num = "`{:,}`".format(len(lavalink.active_players()))
 
             red = red_version_info
             dpy = discord.__version__
@@ -176,7 +153,7 @@ class ImperialToolkit(commands.Cog):
                     cores=cpucount,
                     ram=ram_ios,
                 ),
-                inline=False
+                inline=False,
             )
             embed.add_field(
                 name="\N{ROBOT FACE} Bot Info",

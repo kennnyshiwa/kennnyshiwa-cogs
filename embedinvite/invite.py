@@ -119,7 +119,7 @@ class EmbedInvite(commands.Cog):
         embed.set_thumbnail(url=ctx.bot.user.avatar_url_as(static_format="png"))
         embed.add_field(
             name="Bot Invite",
-            value="https://discordapp.com/oauth2/authorize?client_id={}&scope=bot&permissions={}".format(
+            value="https://discord.com/oauth2/authorize?client_id={}&scope=bot&permissions={}".format(
                 self.bot.user.id, permissions
             ),
         )
@@ -129,7 +129,7 @@ class EmbedInvite(commands.Cog):
             text="{} made possible with the support of Red Discord Bot".format(
                 ctx.bot.user.display_name
             ),
-            icon_url="https://cdn.discordapp.com/icons/133049272517001216/83b39ff510bb7c3f5aeb51270af09ad3.webp",
+            icon_url="https://cdn.discord.com/icons/133049272517001216/83b39ff510bb7c3f5aeb51270af09ad3.webp",
         )
         await ctx.send(embed=embed)
 

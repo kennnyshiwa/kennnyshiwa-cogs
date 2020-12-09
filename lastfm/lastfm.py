@@ -89,7 +89,7 @@ class LastFM(BaseCog):
         """Shows the current played song"""
         username = await self.config.user(ctx.author).username()
         if username == "":
-            return await ctx.send("You need to set a userame first")
+            return await ctx.send("You need to set a username first")
 
         method = 'user.getRecentTracks'
         limit = 1

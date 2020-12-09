@@ -48,7 +48,7 @@ class Core(commands.Cog):
         await self.bot.wait_until_ready()
         while True:
             try:
-                data = await self.get_data("https://api.martinethebot.com/images/apod")
+                data = await self.get_data("https://api.martinebot.com/images/apod")
                 if not data:
                     continue
                 all_channels = await self.config.all_channels()
@@ -88,7 +88,7 @@ class Core(commands.Cog):
                                     continue
                                 msg = await self.apod_text(
                                     await self.get_data(
-                                        "https://api.martinethebot.com/images/apod"
+                                        "https://api.martinebot.com/images/apod"
                                     ),
                                     channel,
                                 )

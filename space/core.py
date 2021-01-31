@@ -17,7 +17,8 @@ log = logging.getLogger("red.kennnyshiwa-cogs.Space")
 
 class Core(commands.Cog):
 
-    __author__ = "kennnyshiwa"
+    __author__ = ["kennnyshiwa", "Predä"]
+    __version__  = "1.1"
 
     async def red_delete_data_for_user(self, **kwargs):
         """ Nothing to delete """
@@ -25,32 +26,28 @@ class Core(commands.Cog):
 
     def __init__(self, bot: Red):
         self.bot = bot
-        self.cache = []
 
         self.config = Config.get_conf(self, 3765640575174574082, force_registration=True)
         self.config.register_channel(auto_apod=False, last_apod_sent=None)
 
         self.session = aiohttp.ClientSession()
         self.auto_apod_loop = bot.loop.create_task(self.auto_apod())
-        self.new_channels_loop = bot.loop.create_task(self.check_new_channels())
 
     def cog_unload(self):
         self.bot.loop.create_task(self.session.close())
         self.auto_apod_loop.cancel()
-        self.new_channels_loop.cancel()
-        self.cache.clear()
 
     async def auto_apod(self):
         """
         The task for sending APOD every day automatically.
-        Check every 15 minutes to know if there is a new image.
+        Check every hour to know if there is a new image.
         """
         await self.bot.wait_until_ready()
         while True:
             try:
                 data = await self.get_data("https://api.martinebot.com/images/apod")
                 if not data:
-                    continue
+                    raise Exception("Failed to fetch API in auto_apod task.")
                 all_channels = await self.config.all_channels()
                 for channels in all_channels.items():
                     if channels[1]["auto_apod"]:
@@ -62,40 +59,10 @@ class Core(commands.Cog):
                                 channel, await self.apod_text(data, channel)
                             )
                             await self.config.channel(channel).last_apod_sent.set(data["date"])
-            except Exception as error:
-                log.exception("Exception in auto_apod task: ", exc_info=error)
-            await asyncio.sleep(900)
-
-    async def check_new_channels(self):
-        """
-        Task used to check if there is new channels in config file.
-        Check every 2 minutes.
-        """
-        await self.bot.wait_until_ready()
-        while True:
-            await asyncio.sleep(120)
-            try:
-                if self.cache:
-                    all_channels = await self.config.all_channels()
-                    for channels in all_channels.items():
-                        if channels[1]["auto_apod"]:
-                            for new_channels in self.cache:
-                                channel = self.bot.get_channel(new_channels)
-                                if not channel:
-                                    await self.config.channel_from_id(new_channels).auto_apod.set(
-                                        False
-                                    )
-                                    continue
-                                msg = await self.apod_text(
-                                    await self.get_data(
-                                        "https://api.martinebot.com/images/apod"
-                                    ),
-                                    channel,
-                                )
-                                await self.maybe_send_embed(channel, msg)
-                                self.cache.remove(new_channels)
-            except Exception as error:
-                log.exception("Exception in check_new_channels task: ", exc_info=error)
+            except Exception:
+                log.exception("Exception in auto_apod task:")
+            finally:
+                await asyncio.sleep(3600)
 
     async def get_data(self, url: str):
         """Function used to fetch data from APIs."""

@@ -125,8 +125,8 @@ class LastFM(BaseCog):
                 em = discord.Embed()
                 em.set_thumbnail(url=image)
                 em.add_field(name=_('**Artist**'), value='[{}]({})'.format(artist, artist_url))
-                em.add_field(name=_('**Track**'), value='[{}]({})'.format(song, track_url))
                 em.add_field(name=_('**Album**'), value='[{}]({})'.format(album, album_url))
+                em.add_field(name=_('**Track**'), value='[{}]({})'.format(song, track_url), inline=False)
                 if tags:
                     em.add_field(name=_('**Tags**'), value=tags, inline=False)
                 await ctx.send(embed=em)

@@ -1,13 +1,17 @@
-import redbot.core.data_manager as datam
 import json
-import urllib
-import discord
-import aiohttp
 import os
-from redbot.core import commands, Config
-from redbot.core.i18n import Translator
+import re
+import urllib
 from typing import Literal
+
+import aiohttp
+import discord
+import redbot.core.data_manager as datam
 from bs4 import BeautifulSoup as Soup
+from redbot.core import Config, checks, commands
+from redbot.core.i18n import Translator
+from redbot.core.utils.menus import start_adding_reactions
+from redbot.core.utils.predicates import ReactionPredicate
 
 _ = Translator('Last_FM', __file__)
 
@@ -18,27 +22,19 @@ BaseCog = getattr(commands, "Cog", object)
 
 
 class LastFM(BaseCog):
-
-    async def red_delete_data_for_user(
-        self,
-        *,
-        requester: Literal["discord_deleted_user", "owner", "user", "user_strict"],
-        user_id: int,
-    ):
-        """This cog stores a user ID to match them to their lastfm user
-        this will wipe their saved username from the cog"""
-        await self.config.user_from_id(user_id).clear()
     
     default_member_settings = {"username": ""}
 
     default_user_settings = default_member_settings
+
+    default_guild_settings = {"emote": "🎵"}
 
     def __init__(self, bot):
         self.bot = bot
         self.config = Config.get_conf(self, 376564057517457408, force_registration=True)
         self.config.register_member(**self.default_member_settings)
         self.config.register_user(**self.default_user_settings)
-
+        self.config.register_guild(**self.default_guild_settings)
 
         self.lf_gateway = 'http://ws.audioscrobbler.com/2.0/'
 
@@ -75,6 +71,16 @@ class LastFM(BaseCog):
         await session.close()
         return data
 
+    async def red_delete_data_for_user(
+        self,
+        *,
+        requester: Literal["discord_deleted_user", "owner", "user", "user_strict"],
+        user_id: int,
+    ):
+        """This cog stores a user ID to match them to their lastfm user
+        this will wipe their saved username from the cog"""
+        await self.config.user_from_id(user_id).clear()
+
     async def _get_spotify_uri(self, track_url: str) -> str:
         """Fetches the spotify URI from the LastFM track information page"""
         async with aiohttp.ClientSession() as session:
@@ -101,6 +107,7 @@ class LastFM(BaseCog):
     async def _nowplaying(self, ctx):
         """Shows the current played song"""
         username = await self.config.user(ctx.author).username()
+
         if username == "":
             return await ctx.send("You need to set a username first")
 
@@ -108,46 +115,61 @@ class LastFM(BaseCog):
         limit = 1
         response = await self._api_request(method=method, username=username, limit=limit) 
         user = response['recenttracks']['@attr']['user']
+
         if response['recenttracks']['track'] == []:
             print(response['recenttracks']['track'])
             return await ctx.send("{} is not playing anything, check to make sure you set the right lastfm username".format(user))
+
         track = response['recenttracks']['track'][0]
-        if '@attr' in track:
-            if track['@attr']['nowplaying'] == 'true':
-                artist = track['artist']['#text']
-                artist_url = await self._url_decode('https://www.last.fm/music/{}'.format(artist.replace(' ', '+')))
-                song = track['name']
-                track_url = await self._url_decode(track['url'])
 
-                album = track['album']['#text']
-                album_url = await self._url_decode('https://www.last.fm/music/{}/{}'.format(artist.replace(' ', '+'), album.replace(' ', '+')))
-
-                image = track['image'][-1]['#text']
-                tags = await self._api_request(method='track.getTopTags', track=song, artist=artist, autocorrect=1)
-                trackinfo = await self._api_request(method='track.getInfo', track=song, artist=artist, username=username)
-
-                if 'error' not in tags:
-                    tags = ', '.join(['[{}]({})'.format(tag['name'], tag['url']) for tag in tags['toptags']['tag'][:10]])
-                else:
-                    tags = None
-
-                song = [song if len(song) < 18 else song[:18] + '...'][0]
-                artist = [artist if len(artist) < 18 else artist[:18] + '...'][0]
-                album = [album if len(album) < 18 else album[:18] + '...'][0]
-                spotify_uri = await self._get_spotify_uri(track_url)
-
-                em = discord.Embed()
-                em.set_thumbnail(url=image)
-                em.add_field(name=_('**Artist**'), value='[{}]({})'.format(artist, artist_url))
-                em.add_field(name=_('**Album**'), value='[{}]({})'.format(album, album_url))
-                em.add_field(name=_('**Track**'), value='[{}]({})'.format(song, track_url), inline=False)
-                if spotify_uri:
-                    em.add_field(name='**Spotify**', value='[Listen]({})'.format(spotify_uri), inline=False)
-                if tags:
-                    em.add_field(name=_('**Tags**'), value=tags, inline=False)
-                await ctx.send(embed=em)
-        else:
+        if '@attr' not in track:
             await ctx.send(_('{} is not playing any song right now').format(user))
+            return
+
+        if track['@attr']['nowplaying'] == 'true':
+            artist = track['artist']['#text']
+            artist_url = await self._url_decode('https://www.last.fm/music/{}'.format(artist.replace(' ', '+')))
+            song = track['name']
+            track_url = await self._url_decode(track['url'])
+
+            album = track['album']['#text']
+            album_url = await self._url_decode('https://www.last.fm/music/{}/{}'.format(artist.replace(' ', '+'), album.replace(' ', '+')))
+
+            image = track['image'][-1]['#text']
+            tags = await self._api_request(method='track.getTopTags', track=song, artist=artist, autocorrect=1)
+            trackinfo = await self._api_request(method='track.getInfo', track=song, artist=artist, username=username)
+
+            if 'error' not in tags:
+                tags = ', '.join(['[{}]({})'.format(tag['name'], tag['url']) for tag in tags['toptags']['tag'][:10]])
+            else:
+                tags = None
+
+            song = [song if len(song) < 18 else song[:18] + '...'][0]
+            artist = [artist if len(artist) < 18 else artist[:18] + '...'][0]
+            album = [album if len(album) < 18 else album[:18] + '...'][0]
+            spotify_uri = await self._get_spotify_uri(track_url)
+
+            em = discord.Embed()
+            em.set_thumbnail(url=image)
+            em.add_field(name=_('**Artist**'), value='[{}]({})'.format(artist, artist_url))
+            em.add_field(name=_('**Album**'), value='[{}]({})'.format(album, album_url))
+            em.add_field(name=_('**Track**'), value='[{}]({})'.format(song, track_url), inline=False)
+            
+            if tags:
+                em.add_field(name=_('**Tags**'), value=tags, inline=False)
+            
+            msg = await ctx.send(embed=em)
+
+            if not spotify_uri:
+                return
+
+            emote = await self.config.guild(ctx.guild).emote()
+            start_adding_reactions(msg, (emote))
+            predicate = ReactionPredicate.with_emojis((emote), msg)
+            reaction, user = await ctx.bot.wait_for("reaction_add", check=predicate)
+
+            if predicate.result == 0:
+                await ctx.send(f"{user.mention} {spotify_uri}")
 
     @commands.group(name='lastfm', aliases=['lf'])
     async def _lastfm(self, ctx):
@@ -191,3 +213,12 @@ class LastFM(BaseCog):
         else:
             message = response['message']
             await ctx.send(message)
+
+    @_lastfm.command(name='setreact')
+    @commands.guild_only()
+    @checks.mod()
+    async def _set_react(self, ctx, emote: str):
+        """Sets the emote for the now playing embed to view the Spotify link"""
+        async with self.config.guild(ctx.guild).emote() as guild_emote:
+            guild_emote = emote
+            await ctx.message.add_reaction(guild_emote)

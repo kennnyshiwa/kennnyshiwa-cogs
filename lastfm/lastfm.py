@@ -84,7 +84,7 @@ class LastFM(BaseCog):
         try:
             spotify_uri = page.find("a", {"class": "play-this-track-playlink--spotify"}).get("href")
         except AttributeError:
-            return ""
+            return None
         return spotify_uri
 
     # {
@@ -142,11 +142,9 @@ class LastFM(BaseCog):
                 em.add_field(name=_('**Album**'), value='[{}]({})'.format(album, album_url))
                 em.add_field(name="\u200B", value="\u200B") # Blank field
                 em.add_field(name=_('**Track**'), value='[{}]({})'.format(song, track_url))
-                if spotify_uri:
-                    em.add_field(name='**Spotify**', value='[Open with Spotify]({})'.format(spotify_uri))
                 if tags:
                     em.add_field(name=_('**Tags**'), value=tags, inline=False)
-                await ctx.send(embed=em)
+                await ctx.send(content=spotify_uri, embed=em)
         else:
             await ctx.send(_('{} is not playing any song right now').format(user))
 

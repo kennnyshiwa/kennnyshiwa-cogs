@@ -75,7 +75,7 @@ class LastFM(BaseCog):
         await session.close()
         return data
 
-    async def _get_spotify_url(self, track_url: str) -> str:
+    async def _get_spotify_uri(self, track_url: str) -> str:
         """Fetches the spotify URI from the LastFM track information page"""
         async with aiohttp.ClientSession() as session:
             async with session.get(track_url) as response:

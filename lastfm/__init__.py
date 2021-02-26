@@ -5,5 +5,6 @@ __red_end_user_data_statement__ = (
     "This will wipe their saved username from the cog"
 )
 
+
 def setup(bot):
     bot.add_cog(LastFM(bot))

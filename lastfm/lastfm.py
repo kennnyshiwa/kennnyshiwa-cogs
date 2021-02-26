@@ -129,7 +129,7 @@ class LastFM(BaseCog):
             if not spotify_url:
                 return
 
-            emote = await self.config.guild(ctx.guild).emote()
+            emote = await self.config.guild(ctx.guild).emote() if ctx.guild else "🎵"
             start_adding_reactions(msg, (emote))
             predicate = ReactionPredicate.with_emojis((emote), msg)
             reaction, user = await ctx.bot.wait_for("reaction_add", check=predicate)

@@ -140,11 +140,14 @@ class LastFM(BaseCog):
                 em.set_thumbnail(url=image)
                 em.add_field(name=_('**Artist**'), value='[{}]({})'.format(artist, artist_url))
                 em.add_field(name=_('**Album**'), value='[{}]({})'.format(album, album_url))
-                em.add_field(name="\u200B", value="\u200B") # Blank field
-                em.add_field(name=_('**Track**'), value='[{}]({})'.format(song, track_url))
+                if spotify_uri:
+                    em.add_field(name="\u200B", value="\u200B") # Blank field
+                em.add_field(name=_('**Track**'), value='[{}]({})'.format(song, track_url), inline=True if spotify_uri else False)
+                if spotify_uri:
+                    em.add_field(name='**Spotify**', value='[Listen]({})'.format(spotify_uri))
                 if tags:
                     em.add_field(name=_('**Tags**'), value=tags, inline=False)
-                await ctx.send(content=spotify_uri, embed=em)
+                await ctx.send(embed=em)
         else:
             await ctx.send(_('{} is not playing any song right now').format(user))
 

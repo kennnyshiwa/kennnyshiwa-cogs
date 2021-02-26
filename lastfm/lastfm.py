@@ -7,6 +7,7 @@ import os
 from redbot.core import commands, Config
 from redbot.core.i18n import Translator
 from typing import Literal
+from bs4 import BeautifulSoup as Soup
 
 _ = Translator('Last_FM', __file__)
 
@@ -74,6 +75,18 @@ class LastFM(BaseCog):
         await session.close()
         return data
 
+    async def _get_spotify_url(self, track_url: str) -> str:
+        """Fetches the spotify URI from the LastFM track information page"""
+        async with aiohttp.ClientSession() as session:
+            async with session.get(track_url) as response:
+                page_text = await response.text()
+        page = Soup(page_text, 'html.parser')
+        try:
+            spotify_uri = page.find("a", {"class": "play-this-track-playlink--spotify"}).get("href")
+        except AttributeError:
+            return ""
+        return spotify_uri
+
     # {
     #   'servers': {
     #               'youtube': false|true
@@ -121,12 +134,16 @@ class LastFM(BaseCog):
                 song = [song if len(song) < 18 else song[:18] + '...'][0]
                 artist = [artist if len(artist) < 18 else artist[:18] + '...'][0]
                 album = [album if len(album) < 18 else album[:18] + '...'][0]
+                spotify_uri = await self._get_spotify_uri(track_url)
 
                 em = discord.Embed()
                 em.set_thumbnail(url=image)
                 em.add_field(name=_('**Artist**'), value='[{}]({})'.format(artist, artist_url))
                 em.add_field(name=_('**Album**'), value='[{}]({})'.format(album, album_url))
-                em.add_field(name=_('**Track**'), value='[{}]({})'.format(song, track_url), inline=False)
+                em.add_field(name="\u200B", value="\u200B") # Blank field
+                em.add_field(name=_('**Track**'), value='[{}]({})'.format(song, track_url))
+                if spotify_uri:
+                    em.add_field(name='**Spotify**', value='[Open with Spotify]({})'.format(spotify_uri))
                 if tags:
                     em.add_field(name=_('**Tags**'), value=tags, inline=False)
                 await ctx.send(embed=em)

@@ -38,9 +38,10 @@ class LastFM(BaseCog):
 
         self.lf_gateway = "http://ws.audioscrobbler.com/2.0/"
 
-        self.payload = {}
-        self.payload["api_key"] = "c44979d5d86ff515ba9fba378c610474"
-        self.payload["format"] = "json"
+        self.payload = {
+            "api_key": "c44979d5d86ff515ba9fba378c610474",
+            "format": "json",
+        }
 
     @commands.command(name="nowplaying")
     async def _nowplaying(self, ctx):
@@ -96,11 +97,10 @@ class LastFM(BaseCog):
 
             if "error" not in tags:
                 tags = ", ".join(
-                    [
-                        "[{}]({})".format(tag["name"], tag["url"])
-                        for tag in tags["toptags"]["tag"][:10]
-                    ]
+                    "[{}]({})".format(tag["name"], tag["url"])
+                    for tag in tags["toptags"]["tag"][:10]
                 )
+
             else:
                 tags = None
 

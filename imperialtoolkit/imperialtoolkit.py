@@ -53,8 +53,7 @@ class ImperialToolkit(commands.Cog):
         delta = datetime.utcnow() - (
             self.bot.uptime if hasattr(self.bot, "uptime") else self.bot._uptime
         )
-        uptime = humanize_timedelta(timedelta=delta)
-        return uptime
+        return humanize_timedelta(timedelta=delta)
 
     @staticmethod
     def _size(num):
@@ -72,7 +71,11 @@ class ImperialToolkit(commands.Cog):
             cpustats = psutil.cpu_percent()
             ramusage = psutil.virtual_memory()
             netusage = psutil.net_io_counters()
-            width = max([len(self._size(n)) for n in [netusage.bytes_sent, netusage.bytes_recv]])
+            width = max(
+                len(self._size(n))
+                for n in [netusage.bytes_sent, netusage.bytes_recv]
+            )
+
             net_ios = (
                 "\u200b"
                 "\n"

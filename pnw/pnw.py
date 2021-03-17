@@ -270,9 +270,7 @@ class PnW(commands.Cog):
                 if name.lower() == I["nation"].lower():
                     key = True
                     nid = I["nationid"]
-            if key == True:
-                pass
-            else:
+            if not key:
                 nid = name
             nation_data = await self.do_lookup(ctx, nid)
             if not nation_data:
@@ -344,9 +342,7 @@ class PnW(commands.Cog):
                 if name.lower() == I["name"].lower():
                     key = True
                     alid = I["id"]
-            if key == True:
-                pass
-            else:
+            if not key:
                 alid = name
             alliance_data = await self.alliance_lookup(ctx, alid)
             if not alliance_data:
@@ -402,12 +398,11 @@ class PnW(commands.Cog):
         data = await self.city_api(ctx, id)
         try:
             success = data["success"]
-            if success == False:
-                if data["general_message"]:
-                    await ctx.send(
-                        f"Your api seems to be invalid, make sure its correct and follow the instructions in {ctx.prefix}pnwkey"
-                    )
-                    return
+            if success == False and data["general_message"]:
+                await ctx.send(
+                    f"Your api seems to be invalid, make sure its correct and follow the instructions in {ctx.prefix}pnwkey"
+                )
+                return
         except:
             pass
 
@@ -415,8 +410,7 @@ class PnW(commands.Cog):
             await ctx.send("I can't get the data from the API. Try again later.")
             return
         try:
-            if data["success"] == True:
-                pass
+            pass
         except:
             await ctx.send("That city doesn't exist")
             return
@@ -554,12 +548,11 @@ Drydocks               {data['imp_drydock']}"""
             trade_data = await self.tradeprice_lookup(ctx, query)
             try:
                 success = trade_data["success"]
-                if success == False:
-                    if trade_data["general_message"]:
-                        await ctx.send(
-                            f"Your api seems to be invalid, make sure its correct and follow the instructions in {ctx.prefix}pnwkey"
-                        )
-                        return
+                if success == False and trade_data["general_message"]:
+                    await ctx.send(
+                        f"Your api seems to be invalid, make sure its correct and follow the instructions in {ctx.prefix}pnwkey"
+                    )
+                    return
             except:
                 pass
 
@@ -632,9 +625,7 @@ Drydocks               {data['imp_drydock']}"""
                 if name.lower() == I["name"].lower():
                     key = True
                     alid = I["id"]
-            if key == True:
-                pass
-            else:
+            if not key:
                 alid = name
             bank_data = await self.bank_lookup(ctx, alid)
             if not bank_data:
@@ -643,8 +634,6 @@ Drydocks               {data['imp_drydock']}"""
             if bank_data["success"] == False:
                 await ctx.send("Unable to access this information. You are not in this alliance.")
                 return
-            else:
-                pass
             name = bank_data["alliance_bank_contents"][0]["name"]
             alid = bank_data["alliance_bank_contents"][0]["alliance_id"]
             money = bank_data["alliance_bank_contents"][0]["money"]
@@ -725,14 +714,14 @@ Drydocks               {data['imp_drydock']}"""
                     r = tobuy / 100 + 1.0
                     for _ in range(int(r)):
                         factor = input + count
-                        count = count + 100
+                        count += 100
                         if tobuy >= 100:
                             buying = 100
-                            tobuy = tobuy - 100
+                            tobuy -= 100
                         else:
                             buying = tobuy
                         x = (((factor - 10) ** 2.2) / 710) + 300
-                        cost = cost + x * buying
+                        cost += x * buying
                 else:
                     x = (((input - 10) ** 2.2) / 710) + 300
                     cost = x * tobuy
@@ -773,14 +762,14 @@ Drydocks               {data['imp_drydock']}"""
                     r = tobuy // 500 + 1.0
                     for _ in range(int(r)):
                         factor = input + count
-                        count = count + 500
+                        count += 500
                         if tobuy >= 500:
                             buying = 500
-                            tobuy = tobuy - 500
+                            tobuy -= 500
                         else:
                             buying = tobuy
                         x = 0.002 * (factor - 20) ** 2 + 50
-                        cost = cost + x * buying
+                        cost += x * buying
                 else:
                     x = 0.002 * (input - 20) ** 2 + 50
                     cost = x * tobuy
@@ -842,9 +831,7 @@ Drydocks               {data['imp_drydock']}"""
                 if name.lower() == I["nation"].lower():
                     key = True
                     nid = I["nationid"]
-            if key == True:
-                pass
-            else:
+            if not key:
                 nid = name
             nation_data = await self.do_lookup(ctx, nid)
             if not nation_data:
@@ -885,7 +872,7 @@ Drydocks               {data['imp_drydock']}"""
             high_defense_range = int(intscore * 1.33335)
             low_offense_range = int(intscore * 0.75)
             high_offense_range = int(intscore * 1.75)
-            
+
 
             embed = discord.Embed(
                 title="Military Info for {}".format(name),

@@ -115,10 +115,7 @@ class Space(Core):
                 await ctx.send("I can't get the data from the API. Try again later.")
                 return
 
-            astrosnauts = []
-            for astros in data["people"]:
-                astrosnauts.append(astros["name"])
-
+            astrosnauts = [astros["name"] for astros in data["people"]]
             embed = discord.Embed(title="Who's in space?", color=await ctx.embed_color())
             embed.add_field(name="Current Astronauts in space", value="\n".join(astrosnauts))
         return await ctx.send(embed=embed)

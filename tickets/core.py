@@ -101,23 +101,22 @@ class TicketsCore:
             return await channel.send("Make sure you are doing this within the ticket channel that you want to close.")
         if await self.config.guild(guild).ticket_role() not in [role.id for role in author.roles]:
             return await channel.send("You do not have the proper role to manage tickets")
-        else:
-            member = guild.get_member(sessions[str(channel.id)])
-            ticket_id = str(channel.name).split('-')[1]
+        member = guild.get_member(sessions[str(channel.id)])
+        ticket_id = str(channel.name).split('-')[1]
 
-            closed_category = await self.config.guild(guild).closed_category()
-            closed_category = self.bot.get_channel(closed_category)
+        closed_category = await self.config.guild(guild).closed_category()
+        closed_category = self.bot.get_channel(closed_category)
 
-            await channel.set_permissions(member, read_messages=True, send_messages=False)
-            await channel.edit(category=closed_category,
-                               topic=channel.topic+self.ticket_info_format.format(
-                                    ticket=ticket_id,
-                                    datetime=datetime.utcnow().strftime('%d/%m/%Y %H:%M:%S'),
-                                    author=author.display_name,
-                                    information='Ticket closed'))
+        await channel.set_permissions(member, read_messages=True, send_messages=False)
+        await channel.edit(category=closed_category,
+                           topic=channel.topic+self.ticket_info_format.format(
+                                ticket=ticket_id,
+                                datetime=datetime.utcnow().strftime('%d/%m/%Y %H:%M:%S'),
+                                author=author.display_name,
+                                information='Ticket closed'))
 
-            async with self.config.guild(guild).sessions() as session:
-                    session.pop(channel.id, None)
+        async with self.config.guild(guild).sessions() as session:
+                session.pop(channel.id, None)
 
     async def purge_tickets(self, context):
         try:

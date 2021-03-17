@@ -50,15 +50,17 @@ class Core(commands.Cog):
                     raise Exception("Failed to fetch API in auto_apod task.")
                 all_channels = await self.config.all_channels()
                 for channels in all_channels.items():
-                    if channels[1]["auto_apod"]:
-                        if channels[1]["last_apod_sent"] != data["date"]:
-                            channel = self.bot.get_channel(channels[0])
-                            if not channel:
-                                continue
-                            await self.maybe_send_embed(
-                                channel, await self.apod_text(data, channel)
-                            )
-                            await self.config.channel(channel).last_apod_sent.set(data["date"])
+                    if (
+                        channels[1]["auto_apod"]
+                        and channels[1]["last_apod_sent"] != data["date"]
+                    ):
+                        channel = self.bot.get_channel(channels[0])
+                        if not channel:
+                            continue
+                        await self.maybe_send_embed(
+                            channel, await self.apod_text(data, channel)
+                        )
+                        await self.config.channel(channel).last_apod_sent.set(data["date"])
             except Exception:
                 log.exception("Exception in auto_apod task:")
             finally:
@@ -82,34 +84,33 @@ class Core(commands.Cog):
         details = data["explanation"]
         if len(details) > 2048:
             return f"**Astronomy Picture of the Day**\n\n__{data['title']}__```{details}```Today is **{data['date']}**\n{data['url']}"
-        else:
-            em = discord.Embed(
-                color=await self.bot.get_embed_color(context)
-                if hasattr(self.bot, "get_embed_color")
-                else self.bot.color,
-                title=data["title"],
-                url=data["url"],
-                description=details,
+        em = discord.Embed(
+            color=await self.bot.get_embed_color(context)
+            if hasattr(self.bot, "get_embed_color")
+            else self.bot.color,
+            title=data["title"],
+            url=data["url"],
+            description=details,
+        )
+        em.set_author(
+            name="Astronomy Picture of the Day",
+            url="https://apod.nasa.gov/apod/astropix.html",
+            icon_url="https://i.imgur.com/Wh8jY9c.png",
+        )
+        em.set_image(url=data["url"])
+        em.set_footer(
+            text="{copyright}Today is {date}".format(
+                copyright=f"Image Credits: {data['copyright']} • "
+                if data.get("copyright")
+                else "",
+                date=data["date"],
             )
-            em.set_author(
-                name="Astronomy Picture of the Day",
-                url="https://apod.nasa.gov/apod/astropix.html",
-                icon_url="https://i.imgur.com/Wh8jY9c.png",
-            )
-            em.set_image(url=data["url"])
-            em.set_footer(
-                text="{copyright}Today is {date}".format(
-                    copyright=f"Image Credits: {data['copyright']} • "
-                    if data.get("copyright")
-                    else "",
-                    date=data["date"],
-                )
-            )
-            return em
+        )
+        return em
 
     @staticmethod
     def star_wars_gifs():
-        gifs = choice(
+        return choice(
             [
                 "https://media2.giphy.com/media/bR4poFy22rgUE/source.gif",
                 "https://media.giphy.com/media/pvDp7Ewpzt0o8/giphy.gif",
@@ -125,7 +126,6 @@ class Core(commands.Cog):
                 "https://media3.giphy.com/media/rsIuy6pUXTvSU/source.gif",
             ]
         )
-        return gifs
 
     async def get_space_pic_data(self, ctx: commands.Context, query: str):
         """Run space pic lookup"""

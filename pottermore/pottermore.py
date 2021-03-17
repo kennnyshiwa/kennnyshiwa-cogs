@@ -118,10 +118,7 @@ class Pottermore(commands.Cog):
         if not pottermore_data:
             await ctx.send("🔮 Muggle error! Could not find `%s`" % query)
             return
-        if "alias" in pottermore_data:
-            alias = pottermore_data["alias"]
-        else:
-            alias = ""
+        alias = pottermore_data["alias"] if "alias" in pottermore_data else ""
         embed = discord.Embed(
             title=pottermore_data["name"], description=alias, color=await ctx.embed_color()
         )

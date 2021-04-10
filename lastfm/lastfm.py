@@ -32,22 +32,27 @@ class LastFM(BaseCog):
     def __init__(self, bot):
         self.bot = bot
         self.config = Config.get_conf(self, 376564057517457408, force_registration=True)
+
         self.config.register_member(**self.default_member_settings)
         self.config.register_user(**self.default_user_settings)
         self.config.register_guild(**self.default_guild_settings)
 
         self.lf_gateway = "http://ws.audioscrobbler.com/2.0/"
 
-        self.payload = {}
-        self.payload["api_key"] = "c44979d5d86ff515ba9fba378c610474"
-        self.payload["format"] = "json"
+        self.payload = {"api_key": "c44979d5d86ff515ba9fba378c610474", "format": "json"}
+
+    @commands.group(name="lastfm", aliases=["lf"])
+    async def _lastfm(self, ctx: commands.Context):
+        """Get Last.fm statistics of a user."""
 
     @commands.command(name="nowplaying")
-    async def _nowplaying(self, ctx):
+    async def _nowplaying(self, ctx: commands.Context, member: discord.Member = None):
         """Shows the current played song"""
-        username = await self.config.user(ctx.author).username()
+        username = await self.config.user(member or ctx.author).username()
 
-        if username == "":
+        if not username and member:
+            return await ctx.send(f"No username set for {member.display_name}")
+        elif not username:
             return await ctx.send("You need to set a username first")
 
         method = "user.getRecentTracks"
@@ -107,7 +112,6 @@ class LastFM(BaseCog):
             song = [song if len(song) < 18 else song[:18] + "..."][0]
             artist = [artist if len(artist) < 18 else artist[:18] + "..."][0]
             album = [album if len(album) < 18 else album[:18] + "..."][0]
-            spotify_url = await self._get_spotify_url(track_url)
 
             em = discord.Embed()
             em.set_thumbnail(url=image)
@@ -126,6 +130,7 @@ class LastFM(BaseCog):
 
             msg = await ctx.send(embed=em)
 
+            spotify_url = await self._get_spotify_url(track_url)
             if not spotify_url:
                 return
 
@@ -138,12 +143,8 @@ class LastFM(BaseCog):
                 await msg.clear_reactions()
                 await ctx.send(spotify_url)
 
-    @commands.group(name="lastfm", aliases=["lf"])
-    async def _lastfm(self, ctx):
-        """Get Last.fm statistics of a user."""
-
     @_lastfm.command(name="set")
-    async def _set(self, ctx, username: str):
+    async def _set(self, ctx: commands.Context, username: str):
         """Set a username"""
         method = "user.getInfo"
         response = await self._api_request(method=method, username=username)
@@ -155,10 +156,16 @@ class LastFM(BaseCog):
         await ctx.send(message)
 
     @_lastfm.command(name="recent")
-    async def _recent(self, ctx):
+    async def _recent(self, ctx: commands.Context, member: discord.Member = None):
         """Shows recent tracks"""
-        username = await self.config.user(ctx.author).username()
-        limit = "10"
+        username = await self.config.user(member or ctx.author).username()
+
+        if not username and member:
+            return await ctx.send(f"No username set for {member.display_name}")
+        elif not username:
+            return await ctx.send("You need to set a username first")
+
+        limit = 10
         method = "user.getRecentTracks"
         response = await self._api_request(
             method=method, username=username, limit=limit
@@ -197,25 +204,27 @@ class LastFM(BaseCog):
     @_lastfm.command(name="setreact")
     @commands.guild_only()
     @checks.mod()
-    async def _set_react(self, ctx, emote: str):
+    async def _set_react(self, ctx: commands.Context, emote: discord.Emoji):
         """Sets the emote for the now playing embed to view the Spotify link"""
-        async with self.config.guild(ctx.guild).emote() as guild_emote:
-            guild_emote = emote
-            await ctx.message.add_reaction(guild_emote)
+        if (emote.guild and emote.guild == ctx.guild) or (not emote.guild):
+            await self.config.guild(ctx.guild).emote.set(emote)
+            await ctx.message.add_reaction(emote)
+        else:
+            
 
     # Helper functions
 
     async def _api_request(
         self,
-        method=None,
-        username=None,
-        limit=None,
-        artist=None,
-        track=None,
+        method: str = "",
+        username: str = "",
+        limit: int = None,
+        artist: str = "",
+        track: str = "",
         mbid=None,
-        autocorrect=None,
+        autocorrect: int = None,
     ):
-        payload = self.payload
+        payload = self.payload.copy()
 
         if method:
             payload["method"] = method
@@ -226,14 +235,12 @@ class LastFM(BaseCog):
         if track:
             payload["track"] = track
         if limit:
-            payload["limit"] = int(limit)
+            payload["limit"] = limit
         if autocorrect:
             payload["autocorrect"] = autocorrect
 
-        session = aiohttp.ClientSession(connector=aiohttp.TCPConnector())
-        async with session.get(self.lf_gateway, params=payload) as r:
+        async with aiohttp.request("GET", self.lf_gateway, params=payload) as r:
             data = await r.json()
-        await session.close()
         return data
 
     async def red_delete_data_for_user(
@@ -249,11 +256,10 @@ class LastFM(BaseCog):
     async def _get_spotify_url(self, track_url: str) -> str:
         """Fetches the spotify url from the LastFM track information page"""
         try:
-            async with aiohttp.ClientSession(
-                timeout=aiohttp.ClientTimeout(total=2.0)
-            ) as session:
-                async with session.get(track_url) as response:
-                    page_text = await response.text()
+            async with aiohttp.request(
+                "GET", track_url, timeout=aiohttp.ClientTimeout(total=2.0)
+            ) as response:
+                page_text = await response.text()
         except aiohttp.ServerTimeoutError:
             return
         page = Soup(page_text, "html.parser")
@@ -265,7 +271,7 @@ class LastFM(BaseCog):
             return
         return spotify_url
 
-    async def _url_decode(self, url):
+    async def _url_decode(self, url: str):
         # Fuck non-ascii URLs!!!@##$@
         url = urllib.parse.urlparse(url)
         url = "{0.scheme}://{0.netloc}{1}".format(url, urllib.parse.quote(url.path))

@@ -1,5 +1,5 @@
 {
-  "author" : ["Paddo", "Kennnyshiwa"],
+  "author" : ["Issy", "Kennnyshiwa", "Paddo"],
   "bot_version" : [3, 0, 0],
   "description" : "Last.fm playing",
   "short" : "Get currently playing and recently played tracks from Last.fm",

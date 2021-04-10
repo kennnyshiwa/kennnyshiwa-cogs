@@ -48,9 +48,11 @@ class LastFM(BaseCog):
     @commands.command(name="nowplaying")
     async def _nowplaying(self, ctx: commands.Context, member: discord.Member = None):
         """Shows the current played song"""
-        username = await self.config.user(ctx.author).username()
+        username = await self.config.user(member or ctx.author).username()
 
-        if not username:
+        if not username and member:
+            return await ctx.send(f"No username set for {member.display_name}")
+        elif not username:
             return await ctx.send("You need to set a username first")
 
         method = "user.getRecentTracks"
@@ -156,12 +158,11 @@ class LastFM(BaseCog):
     @_lastfm.command(name="recent")
     async def _recent(self, ctx: commands.Context, member: discord.Member = None):
         """Shows recent tracks"""
-        user = member or ctx.author
-        username = await self.config.user(user).username()
+        username = await self.config.user(member or ctx.author).username()
 
         if not username and member:
-            username = await self.config.user(ctx.author).username()
-        if not username:
+            return await ctx.send(f"No username set for {member.display_name}")
+        elif not username:
             return await ctx.send("You need to set a username first")
 
         limit = 10

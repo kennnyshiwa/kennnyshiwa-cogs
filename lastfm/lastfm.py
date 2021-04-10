@@ -42,7 +42,7 @@ class LastFM(BaseCog):
         self.payload = {"api_key": "c44979d5d86ff515ba9fba378c610474", "format": "json"}
 
     @commands.group(name="lastfm", aliases=["lf"])
-    async def _lastfm(self, ctx):
+    async def _lastfm(self, ctx: commands.Context):
         """Get Last.fm statistics of a user."""
 
     @commands.command(name="nowplaying")
@@ -142,7 +142,7 @@ class LastFM(BaseCog):
                 await ctx.send(spotify_url)
 
     @_lastfm.command(name="set")
-    async def _set(self, ctx, username: str):
+    async def _set(self, ctx: commands.Context, username: str):
         """Set a username"""
         method = "user.getInfo"
         response = await self._api_request(method=method, username=username)
@@ -154,7 +154,7 @@ class LastFM(BaseCog):
         await ctx.send(message)
 
     @_lastfm.command(name="recent")
-    async def _recent(self, ctx, member: discord.Member = None):
+    async def _recent(self, ctx: commands.Context, member: discord.Member = None):
         """Shows recent tracks"""
         user = member or ctx.author
         username = await self.config.user(user).username()
@@ -203,10 +203,13 @@ class LastFM(BaseCog):
     @_lastfm.command(name="setreact")
     @commands.guild_only()
     @checks.mod()
-    async def _set_react(self, ctx, emote: str):
+    async def _set_react(self, ctx: commands.Context, emote: discord.Emoji):
         """Sets the emote for the now playing embed to view the Spotify link"""
-        await self.config.guild(ctx.guild).emote.set(emote)
-        await ctx.message.add_reaction(emote)
+        if (emote.guild and emote.guild == ctx.guild) or (not emote.guild):
+            await self.config.guild(ctx.guild).emote.set(emote)
+            await ctx.message.add_reaction(emote)
+        else:
+            
 
     # Helper functions
 
@@ -267,7 +270,7 @@ class LastFM(BaseCog):
             return
         return spotify_url
 
-    async def _url_decode(self, url):
+    async def _url_decode(self, url: str):
         # Fuck non-ascii URLs!!!@##$@
         url = urllib.parse.urlparse(url)
         url = "{0.scheme}://{0.netloc}{1}".format(url, urllib.parse.quote(url.path))

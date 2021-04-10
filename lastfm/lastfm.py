@@ -217,7 +217,7 @@ class LastFM(BaseCog):
         self,
         method: str = "",
         username: str = "",
-        limit: int = 0,
+        limit: int = None,
         artist: str = "",
         track: str = "",
         mbid=None,

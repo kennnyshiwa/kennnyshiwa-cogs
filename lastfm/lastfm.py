@@ -209,8 +209,6 @@ class LastFM(BaseCog):
         if (emote.guild and emote.guild == ctx.guild) or (not emote.guild):
             await self.config.guild(ctx.guild).emote.set(emote)
             await ctx.message.add_reaction(emote)
-        else:
-            
 
     # Helper functions
 

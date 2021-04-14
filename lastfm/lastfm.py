@@ -206,11 +206,9 @@ class LastFM(BaseCog):
     @checks.mod()
     async def _set_react(self, ctx: commands.Context, emote: discord.Emoji):
         """Sets the emote for the now playing embed to view the Spotify link"""
-        if (emote.guild and emote.guild == ctx.guild) or (not emote.guild):
+        if (emote.guild and emote.guild in self.bot.guilds) or (not emote.guild):
             await self.config.guild(ctx.guild).emote.set(emote)
             await ctx.message.add_reaction(emote)
-        else:
-            
 
     # Helper functions
 

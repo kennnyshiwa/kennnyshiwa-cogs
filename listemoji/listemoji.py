@@ -16,6 +16,7 @@ class Listemoji(commands.Cog):
         self.bot = bot
 
     @commands.command()
+    @commands.guild_only()
     @checks.admin_or_permissions(manage_emojis=True)
     async def listemoji(self, ctx: commands.Context, ids: bool = False):
         """Lists all available emojis in a server, perfect for an emoji channel"""

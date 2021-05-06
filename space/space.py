@@ -25,14 +25,17 @@ class Space(Core):
         channel = ctx.channel if not channel else channel
         auto_apod = await self.config.channel(channel).auto_apod()
         await self.config.channel(channel).auto_apod.set(not auto_apod)
-        if not auto_apod:
-            self.cache.append(channel.id)
         msg = (
             "I will now automatically send Astronomy Picture of the Day every day in this channel."
             if not auto_apod
             else "No longer sending Astronomy Picture of the Day every day in this channel."
         )
         await channel.send(msg)
+        if not auto_apod:
+            data = await self.get_data("https://api.martinebot.com/images/apod")
+            apod_text = await self.apod_text(data, channel)
+            await self.maybe_send_embed(channel, apod_text)
+            await self.config.channel(channel).last_apod_sent.set(data["date"])
         await ctx.tick()
 
     @commands.command()
@@ -40,13 +43,11 @@ class Space(Core):
     async def apod(self, ctx: commands.Context):
         """Astronomy Picture of the Day."""
         async with ctx.typing():
-            msg = await self.apod_text(
-                await self.get_data(
-                    "https://api.nasa.gov/planetary/apod?api_key=pM1xDdu2D9jATa3kc2HE0xnLsPHdoG9cNGg850WR"
-                ),
+            apod_text = await self.apod_text(
+                await self.get_data("https://api.martinebot.com/images/apod"),
                 ctx,
             )
-            await self.maybe_send_embed(ctx, msg)
+        return await self.maybe_send_embed(ctx, apod_text)
 
     @commands.command()
     @commands.bot_has_permissions(embed_links=True)

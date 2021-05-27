@@ -160,8 +160,6 @@ class Trackerinfo(commands.Cog):
         website = f'Website is {"down" if website == "0" else "up"}'
         irc = data["IRC"]
         irc = f'IRC is {"down" if irc == "0" else "up"}'
-        ircannounce = data["IRCTorrentAnnouncer"]
-        ircannounce = f'IRC Announce is {"down" if ircannounce == "0" else "up"}'
         tracker = data["TrackerHTTPS"]
         if tracker == "0":
             trackerstatus = "down"
@@ -177,7 +175,6 @@ class Trackerinfo(commands.Cog):
         embed.set_image(url="https://mtv.trackerstatus.info/images/logo.png")
         embed.add_field(name="Website", value="{}".format(website))
         embed.add_field(name="IRC", value="{}".format(irc))
-        embed.add_field(name="IRC Torrent Announcer", value="{}".format(ircannounce))
         embed.add_field(name="TrackerHTTP", value="{}".format(tracker))
 
         await ctx.send(embed=embed)

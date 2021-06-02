@@ -45,7 +45,7 @@ class LastFM(BaseCog):
     async def _lastfm(self, ctx: commands.Context):
         """Get Last.fm statistics of a user."""
 
-    @commands.command(name="nowplaying")
+    @_lastfm.command(name="nowplaying", aliases=["np"])
     async def _nowplaying(self, ctx: commands.Context, member: discord.Member = None):
         """Shows the current played song"""
         username = await self.config.user(member or ctx.author).username()

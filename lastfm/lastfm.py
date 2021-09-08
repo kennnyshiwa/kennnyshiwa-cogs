@@ -238,7 +238,10 @@ class LastFM(BaseCog):
             payload["autocorrect"] = autocorrect
 
         async with aiohttp.request("GET", self.lf_gateway, params=payload) as r:
-            data = await r.json()
+            try:
+                data = await r.json()
+            except aiohttp.ClientConnectorError:
+                await ctx.send("Error communicating with Last.fm. Please try again shortly.")
         return data
 
     async def red_delete_data_for_user(

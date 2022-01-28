@@ -23,6 +23,7 @@ class EmbedInvite(commands.Cog):
             "support_serv": None,
             "description": "Thanks for choosing to invite {name} to your server",
             "setpermissions": "",
+            "command_scope": False
         }
         self.config = Config.get_conf(self, 376564057517457408, force_registration=True)
         self.config.register_global(**default)
@@ -97,6 +98,18 @@ class EmbedInvite(commands.Cog):
             return await ctx.send("Permissions value disabled")
         await self.config.setpermissions.set(text)
         await ctx.send("Permissions set")
+        
+    @invitesettings.command()
+    async def commandscope(self, ctx, value: bool = None):
+        """
+        Add `applications.commands` scope to the invite URL***
+        """
+        if value:
+            await self.config.command_scope.set(True)
+            await ctx.send("The `applications.commands` scope set to `True` and added to invite URL.")
+        else:
+            await self.config.command_scope.set(False)
+            await ctx.send("The `applications.commands` scope set to `False` and removed from invite URL.")
 
     @commands.command()
     @commands.bot_has_permissions(embed_links=True)
@@ -107,6 +120,7 @@ class EmbedInvite(commands.Cog):
         permissions = await self.config.setpermissions()
         support_serv = await self.config.support_serv()
         support = await self.config.support()
+        cmdscope = await self.config.command_scope()
         if support_serv is None and support is True:
             return await ctx.send("Bot Owner needs to set a support server!")
         embed = discord.Embed(
@@ -117,12 +131,20 @@ class EmbedInvite(commands.Cog):
             name=ctx.bot.user.name, icon_url=ctx.bot.user.avatar_url_as(static_format="png")
         )
         embed.set_thumbnail(url=ctx.bot.user.avatar_url_as(static_format="png"))
-        embed.add_field(
-            name="Bot Invite",
-            value="https://discord.com/oauth2/authorize?client_id={}&scope=bot&permissions={}".format(
-                self.bot.user.id, permissions
-            ),
-        )
+        if cmdscope:
+            embed.add_field(
+                name="Bot Invite",
+                value="https://discord.com/oauth2/authorize?client_id={}&scope=bot+applications.commands&permissions={}".format(
+                    self.bot.user.id, permissions
+                ),
+            )
+        else:
+            embed.add_field(
+                name="Bot Invite",
+                value="https://discord.com/oauth2/authorize?client_id={}&scope=bot&permissions={}".format(
+                    self.bot.user.id, permissions
+                ),
+            )
         if support:
             embed.add_field(name="Support Server", value="{}".format(support_serv))
         embed.set_footer(

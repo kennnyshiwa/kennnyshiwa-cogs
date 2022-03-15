@@ -109,16 +109,22 @@ class LastFM(BaseCog):
             else:
                 tags = None
 
-            song = [song if len(song) < 18 else song[:18] + "..."][0]
-            artist = [artist if len(artist) < 18 else artist[:18] + "..."][0]
-            album = [album if len(album) < 18 else album[:18] + "..."][0]
+            song = [song if len(song) < 32 else song[:32] + "..."][0]
+            artist = [artist if len(artist) < 32 else artist[:32] + "..."][0]
+            album = [album if len(album) < 32 else album[:32] + "..."][0]
 
             em = discord.Embed()
             em.set_thumbnail(url=image)
             em.add_field(
-                name=_("**Artist**"), value="[{}]({})".format(artist, artist_url)
+                name=_("**Artist**"),
+                value="[{}]({})".format(artist, artist_url),
+                inline=False,
             )
-            em.add_field(name=_("**Album**"), value="[{}]({})".format(album, album_url))
+            em.add_field(
+                name=_("**Album**"),
+                value="[{}]({})".format(album, album_url),
+                inline=False,
+            )
             em.add_field(
                 name=_("**Track**"),
                 value="[{}]({})".format(song, track_url),

@@ -95,7 +95,7 @@ class Autogallery(Cog):
         gallerychannel = self.bot.get_channel(gallery)
         if not gallerychannel.permissions_for(message.guild.me).embed_links:
             return
-        embed = discord.Embed(color=0x4aff00, timestamp=datetime.utcnow(), url=url(message.jump_url))
+        embed = discord.Embed(color=0x4aff00, timestamp=datetime.utcnow(), url=message.jump_url)
         for attachment in message.attachments:
             if attachment.filename.endswith(".png") or attachment.filename.endswith(".jpg") or attachment.filename.endswith(".gif"):
                 pass

@@ -104,5 +104,5 @@ class Autogallery(Cog):
             embed.set_author(name=message.author, icon_url=str(message.author.avatar_url))
             embed.set_footer(text=message.channel)
             embed.set_image(url=attachment.url)
-            embed.description=f"[**Link**]({message.jump_url}) | {message.content}"
+            embed.description=f"[**Link**]({message.jump_url})\n{message.content}"
             await gallerychannel.send(embed=embed)
